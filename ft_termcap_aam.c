@@ -307,8 +307,8 @@ void	ft_press_key(t_history *hist, int fd_hist, char *line)
 			ft_key_left(&pos);
 		else if (!ft_strncmp(str, "\e[C", 3))		//* стрелка вправо
 			ft_key_right(line, &pos);
-		else if (!ft_strncmp(str, "\x7f", 3))		//* стрелка backspace
-			ft_key_backspace(&hist, &line, & pos);
+		else if (!ft_strncmp(str, "\x7f", 1))		//* стрелка backspace
+			ft_key_backspace(&hist, &line, &pos);
 		else if (!ft_strncmp(str, "\e[3", 3))		//* стрелка delete
 			ft_key_delete(&hist, &line, &pos);
 		else
@@ -323,8 +323,11 @@ void	ft_press_key(t_history *hist, int fd_hist, char *line)
 	write(0, hist->line, pos);
 
 	write(1, "\n", 1);
-	write(fd_hist, hist->line, ft_strlen(hist->line));
-	write(fd_hist, "\n", 1);
+	if (hist->line[0] != '\0')
+	{
+		write(fd_hist, hist->line, ft_strlen(hist->line));
+		write(fd_hist, "\n", 1);
+	}
 }
 
 int main(int argc, char const *argv[], char const *env[])
