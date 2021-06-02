@@ -323,7 +323,7 @@ void	ft_press_key(t_history *hist, int fd_hist, char *line)
 	write(0, hist->line, pos);
 
 	write(1, "\n", 1);
-	if (hist->line[0] != '\0')
+	if (hist->line[0] != '\0') //если последняя команда не пустая - записываем в файл истории
 	{
 		write(fd_hist, hist->line, ft_strlen(hist->line));
 		write(fd_hist, "\n", 1);
