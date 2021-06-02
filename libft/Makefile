@@ -1,19 +1,9 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: whector <marvin@42.fr>                     +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/03/24 15:11:37 by whector           #+#    #+#              #
-#    Updated: 2021/03/24 15:13:49 by whector          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = libft.a
 
 CC       = gcc
 CFLAGS   = -Wall -Wextra -Werror
+OFLAGS   = -O2
+DBGFLAGS = -g
 INCLUDES = -I includes/
 SRCDIR   = srcs/
 OBJDIR   = objs/
@@ -61,8 +51,9 @@ FLS = \
 		ft_lstlast \
 		ft_lstmap \
 		ft_lstnew \
-		ft_lstsize
-
+		ft_lstsize \
+		get_next_line \
+		get_next_line_utils
 
 SRC      = $(FLS)
 
@@ -84,6 +75,8 @@ $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c
 	@$(CC)		$(FLAGS) $(INCLUDES) -c $< -o $@ -MMD
 	@echo "Compiled $@"
 
+debug:
+	make FLAGS="$(CFLAGS) $(DBGFLAGS)" all
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
 

@@ -9,6 +9,8 @@
 # include <errno.h>
 # include <signal.h>
 # include <stdlib.h>
+# include "libft.h"
+# include "get_next_line.h"
 
 # define RL_BUFSIZE 128
 
@@ -29,6 +31,7 @@ typedef struct	    s_redir
 typedef struct	    s_pars
 {
     int                 error;
+    char                builtin;
     char                *path;
     char                **argv;
     char                f_spec[2];
@@ -38,6 +41,7 @@ typedef struct	    s_pars
 
 typedef struct      s_data
 {
+    int			        fd_hist;
     t_history           *history;
     t_pars              *curr_pars;
     char                **envp;
@@ -50,6 +54,11 @@ void				ft_parsclear(t_pars **lst, void (*del)(void*));
 t_history			*ft_historynew(char *line);
 void				ft_lstadd_front(t_history **lst, t_history *new);
 void				ft_historyclear(t_history **lst, void (*del)(void*));
+void	ft_new_list(t_history **list, char *str, int len);
+void	ft_add_list(t_history **list, char *str, int len);
+t_history	*ft_hist_create(t_history *hist, int fd_hist);
+void	ft_change_struct(t_history **list, char *str);
+void	ft_last_in_struct(t_history **list, char *str);
 
 void                init_struct(t_data *data, char **envp);
 void                load_history(t_data *data);
@@ -57,5 +66,6 @@ int                 main_loop(t_data *data);
 void		        free_strs(char **s);
 char                **copy_str_array(char **s);
 
+int                 ft_putchar(int c);
 
 #endif

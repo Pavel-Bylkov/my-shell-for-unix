@@ -57,3 +57,8 @@ char            **copy_str_array(char **s)
 	ft_strscpy(res, nstrs, s);
 	return (res);
 }
+
+int		ft_putchar(int c)
+{
+	return (write(1, &c, 1));
+}
