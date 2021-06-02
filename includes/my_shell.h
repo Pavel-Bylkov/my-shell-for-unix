@@ -8,6 +8,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <signal.h>
+# include <stdlib.h>
 
 # define RL_BUFSIZE 128
 
@@ -39,7 +40,7 @@ typedef struct      s_data
 {
     t_history           *history;
     t_pars              *curr_pars;
-    char                **envp
+    char                **envp;
 }                   t_data;
 
 t_pars				*ft_parsnew(char **argv, char f_spec);
@@ -55,5 +56,6 @@ void                load_history(t_data *data);
 int                 main_loop(t_data *data);
 void		        free_strs(char **s);
 char                **copy_str_array(char **s);
+
 
 #endif
