@@ -1,13 +1,13 @@
 NAME		= minishell
 
 LIBDIR		= ./libft/
-LIB			= $(LIBDIR)libft.a
-LIBFLAGS	= -ltermcap -L libft
+LIBFT		= $(LIBDIR)libft.a
+LIBFLAGS	= -L libft -lft -ltermcap
 
 CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc
 
-INCLUDES	= -I includes/ -I $(LIBDIR)includes/
+INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/.
 
 SRCDIR		= ./sources/
 OBJDIR		= ./objs/
@@ -25,11 +25,12 @@ SRC			= $(FLS)
 OBJ			= $(addprefix $(OBJDIR), $(SRC:=.o))
 DFLS		= $(SRC:=.d)
 
-all: $(NAME)
+all: $(LIBFT) | $(NAME)
 
 $(NAME):		$(LIBFT) $(OBJ)
 	@echo '----Making minishell ------'
-	$(CC)		$(CFLAGS) $(OBJ) $(INCLUDES) $(LIBFLAGS) -o $(NAME)
+	@make		-C libft/
+	$(CC)		$(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFLAGS) -o $(NAME)
 	@echo "Ready"
 
 $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c
@@ -42,7 +43,7 @@ include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
 tester:
 	./tests/test_42fr.sh
 
-$(LIBFT): libft_force_make
+$(LIBFT):
 	@echo '---Making libft ------'
 	@make		-C $(LIBDIR) --no-print-directory
 	@echo 'Making libft done'
