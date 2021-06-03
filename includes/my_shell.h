@@ -41,6 +41,8 @@ typedef struct      s_data
     t_history           *history;
     t_pars              *curr_pars;
     char                **envp;
+    int                 *index;  //* массив индексов (строк) массива envp
+    int                 size;   //* размер массива
 }                   t_data;
 
 t_pars				*ft_parsnew(char **argv, char f_spec);
@@ -56,5 +58,11 @@ void                load_history(t_data *data);
 int                 main_loop(t_data *data);
 void		        free_strs(char **s);
 char                **copy_str_array(char **s);
+
+
+int		ft_export(t_data data, t_pars pars); //! добавил
+void	ft_out_export(t_data data); //! добавил
+int		ft_strlen(char *str);  //! Добавил
+char	*ft_strdup(const char *s)  //! функция Libft
 
 #endif
