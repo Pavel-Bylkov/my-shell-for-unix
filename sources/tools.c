@@ -14,49 +14,49 @@ void		free_strs(char **s)
 	s = NULL;
 }
 
-static size_t	get_nstrs(char **str)
-{
-	size_t	n_strs;
-    int	i;
+//static size_t	get_nstrs(char **str) //!убрать
+//{
+//	size_t	n_strs;
+//    int	i;
 
-	i = -1;
-	n_strs = 0;
-	while (str[++i] != NULL)
-		n_strs++;
-	return (n_strs);
-}
+//	i = -1;
+//	n_strs = 0;
+//	while (str[++i] != NULL)
+//		n_strs++;
+//	return (n_strs);
+//}
 
-static void		ft_strscpy(char **res, size_t n, char **str)
-{
-	size_t	i;
+//static void		ft_strscpy(char **res, size_t n, char **str) //! убрать
+//{
+//	size_t	i;
 
-	i = 0;
-	while (str[i] != NULL && i < n)
-	{
-		res[i] = ft_strdup(str[i]);
-		if (res[i++] == NULL)
-		{
-			free_strs(res);
-			return ;
-		}
-	}
-	res[i] = NULL;
-}
+//	i = 0;
+//	while (str[i] != NULL && i < n)
+//	{
+//		res[i] = ft_strdup(str[i]);
+//		if (res[i++] == NULL)
+//		{
+//			free_strs(res);
+//			return ;
+//		}
+//	}
+//	res[i] = NULL;
+//}
 
-char            **copy_str_array(char **s)
-{
-	char	**res;
-	size_t	nstrs;
+//char            **copy_str_array(char **s)  //!Убрать
+//{
+//	char	**res;
+//	size_t	nstrs;
 
-	if (s == NULL)
-		return (NULL);
-	nstrs = get_nstrs(s);
-	res = (char **)malloc(sizeof(char *) * (nstrs + 1));
-	if (res == NULL)
-		return (NULL);
-	ft_strscpy(res, nstrs, s);
-	return (res);
-}
+//	if (s == NULL)
+//		return (NULL);
+//	nstrs = get_nstrs(s);
+//	res = (char **)malloc(sizeof(char *) * (nstrs + 1));
+//	if (res == NULL)
+//		return (NULL);
+//	ft_strscpy(res, nstrs, s);
+//	return (res);
+//}
 
 int		ft_putchar(int c)
 {
@@ -66,7 +66,8 @@ int		ft_putchar(int c)
 void                init_struct(t_data *data, char **envp)
 {
     data->curr_pars = NULL;
-    data->envp = copy_str_array(envp);
+	init_data(envp, data);
+	//data->envp = copy_str_array(envp);  //! Убрать
     data->history = NULL;
     data->fd_hist = -1;
     data->errors = errors_create();
@@ -135,7 +136,7 @@ int main_loop(t_data *data)
     }
 }
 
-int run_comands(t_data *data)
+int run_comands(t_data *data)  //! Функция aamarei (моя)
 {
     (void)data;
     return (0);

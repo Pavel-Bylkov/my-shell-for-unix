@@ -14,6 +14,8 @@ int main(int argc, char **argv, char **envp)
     // Запуск цикла команд.
     error = main_loop(&data);
 
+
+
     close(data.fd_hist);
     free_struct(&data);
 
