@@ -43,7 +43,6 @@ typedef struct	    s_redir
 typedef struct	    s_pars
 {
     int                 error;
-    char                builtin;
     char                *path;
     char                **argv;
     char                f_spec[2];
@@ -77,7 +76,7 @@ void                init_struct(t_data *data, char **envp);
 void                load_history(t_data *data);
 void save_history(t_data *data);
 int                 main_loop(t_data *data);
-//void		        free_strs(char **s);
+void		        free_strs(char **s);
 char                **copy_str_array(char **s);
 int read_line(t_data *data);
 int parse_line(t_data *data);
