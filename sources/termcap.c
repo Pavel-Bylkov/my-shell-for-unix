@@ -1,6 +1,5 @@
 #include "my_shell.h"
 
-#include <term.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -106,7 +105,7 @@ void	ft_key_left(int *pos)
 
 void	ft_key_right(char *line, int *pos)
 {
-	if (*pos < ft_strlen(line))
+	if (*pos < (int)ft_strlen(line))
 	{
 		tputs(tgetstr("nd", 0), 1, ft_putchar);
 		(*pos)++;
@@ -141,46 +140,52 @@ void	ft_key_symbol(t_history **hist, char **line, char *str, int *pos)
 	ft_change_struct(hist, *line);
 	(*pos)++;
 }
-void	ft_press_key(t_history *hist, int fd_hist, char *line)
+
+void    ft_press_key(t_data *data, char **line, int pos)
 {
 	char	str[5];
-	int		pos;
 	int		l;
 
-	pos = 0;
-	tputs(save_cursor, 1, ft_putchar);
 	l = read(0, str, 5);    //! Проверить на ошибку чтения
-	while (ft_strncmp(str, "\n", 1) != 0)
+	while (ft_strncmp(str, "\n", 1) != 0 && l > 0)
 	{
 		if (!ft_strncmp(str, "\e[A", 3))   //* стрелка вверх
-			ft_key_up(&hist, &line, &pos);
+			ft_key_up(&(data->history), line, &pos);
 		else if (!ft_strncmp(str, "\e[B", 3))		//* стрелка вниз
-			ft_key_down(&hist, &line, &pos);
+			ft_key_down(&(data->history), line, &pos);
 		else if (!ft_strncmp(str, "\e[D", 3))		//* стрелка влево
 			ft_key_left(&pos);
 		else if (!ft_strncmp(str, "\e[C", 3))		//* стрелка вправо
-			ft_key_right(line, &pos);
+			ft_key_right(*line, &pos);
 		else if (!ft_strncmp(str, "\x7f", 1))		//* стрелка backspace
-			ft_key_backspace(&hist, &line, &pos);
+			ft_key_backspace(&(data->history), line, &pos);
 		else if (!ft_strncmp(str, "\e[3", 3))		//* стрелка delete
-			ft_key_delete(&hist, &line, &pos);
+			ft_key_delete(&(data->history), line, &pos);
 		else
-			ft_key_symbol(&hist, &line, str, &pos);
+			ft_key_symbol(&(data->history), line, str, &pos);
 		ft_memset(str, 0, 5);
 		l = read(0, str, 5);
 	}
-	ft_last_in_struct(&hist, line);
-	ft_strcopy_fr(&line, hist->line);
-	tputs(restore_cursor, 1, ft_putchar);
-	pos = ft_strlen(hist->line);
-	write(0, hist->line, pos);
-    write(1, "\n", 1);
-
-    // Сохранение истории в файл .history / очистка памяти.
-    save_history(data);
 }
 
 int read_line(t_data *data)
 {
-
+    char *line;
+    int pos;
+        //! необходимо открыть файл для чтения и записи (если его нет, то создать). Всю историю (если она есть )
+	//! из файла скопировать в hist.line
+    line = (char *)malloc(sizeof(char) + 1);
+	line[0] = '\0';
+    tputs(save_cursor, 1, ft_putchar);
+    ft_press_key(data, &line, 0);
+    ft_last_in_struct(&(data->history), line);
+	ft_strcopy_fr(&line, data->history->line);
+	tputs(restore_cursor, 1, ft_putchar);
+    free(line);
+	pos = ft_strlen(data->history->line);
+	write(0, data->history->line, pos);
+    write(1, "\n", 1);
+    // Сохранение истории в файл .history / очистка памяти.
+    save_history(data);
+    return (0);
 }

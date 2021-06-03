@@ -1,50 +1,76 @@
 #include "my_shell.h"
 
-static void	ft_print_error(int fd, int errcode, t_data *data, int i)
+void		print_err(int errcode, t_data *data)
 {
-	char	*line;
+	t_error *tmp;
 
-	i = 1;
-	line = NULL;
-	while (i > 0)
+	tmp = data->errors;
+	while (tmp != NULL)
 	{
-		i = get_next_line(fd, &line);
-		if (line != NULL && !ft_strncmp(line, "code #", 6))
+		if (tmp->code == errcode)
 		{
-			if (ft_atoi(&line[6]) == errcode)
-			{
-				ft_putendl_fd("Error", 2);
-				while (i > 0 && line != NULL && ft_strncmp(line, "##", 2))
-				{
-					ft_putendl_fd(line, 2);
-					free(line);
-					i = get_next_line(fd, &line);
-				}
-				if (conf != NULL && conf->err_str != NULL)
-					ft_putendl_fd(conf->err_str, 2);
-			}
+			ft_putendl_fd(tmp->text, 2);
+			return ;
 		}
-		if (line != NULL)
-			free(line);
+		tmp = tmp->next;
 	}
 }
 
-void		print_err(int errcode, t_conf *conf)
+void	ft_add_error(t_error **list, char *str)
 {
-	int	fd;
+	int			j;
+	t_error	*temp;
 
-	if (errcode < 150)
-		ft_putendl_fd(strerror(errno), 2);
-	else
+	temp = (t_error *)malloc(sizeof(t_error));
+	j = 0;
+	while (str[j] && (ft_isdigit(str[j]) || str[j] == ' ' || str[j] == ':'))
+		j++;
+	temp->text = (char *)malloc(sizeof(char) * (ft_strlen(str) - j));
+	while (str[j] != '\0')
 	{
-		fd = open(ERRORS_FILE, O_RDONLY);
-		if (fd > 0)
-		{
-			ft_print_error(fd, errcode, conf, 1);
-			if (close(fd) != 0)
-				ft_putendl_fd("Error\nCannot close file with errors.", 2);
-		}
-		else
-			ft_putendl_fd("Error\nCannot open file with errors.", 2);
+		temp->text[j] = str[j];
+		j++;
 	}
+	temp->text[j] = '\0';
+	temp->code = ft_atoi(str);
+	temp->next = (*list);
+	(*list) = temp;
+}
+
+t_error 	*errors_create(void)
+{
+	t_error	*errors;
+	char	*line;
+	int		fd;
+	int		i;
+
+	errors = NULL;
+	fd = open(ERRORS_FILE, O_RDONLY);
+	if (fd > 0)
+	{
+		i = 1;
+		line = NULL;
+		while (i > 0)
+		{
+			i = get_next_line(fd, &line);
+			if (line != NULL)
+			{		
+				ft_add_error(&errors, line);
+				free(line);
+				line = NULL;
+			}
+		}
+		if (close(fd) != 0)
+			ft_putendl_fd("Error\nCannot close file with errors.", 2);
+	}
+	else
+		ft_putendl_fd("Error\nCannot open file with errors.", 2);
+	return (errors);
+}
+
+void		ft_exit_errcode(int errcode, t_data *data)
+{
+	print_err(errcode, data);
+	free_struct(data);
+	exit(EXIT_FAILURE);
 }

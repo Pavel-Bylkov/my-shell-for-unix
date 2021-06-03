@@ -1,14 +1,20 @@
 #include "my_shell.h"
 
-int read_line(t_data *data)
+int parse_line(t_data *data)
+{
+    (void)data;
+    return (0);
+}
+
+/*
+int fread_line(t_data *data)
 {
   int bufsize = RL_BUFSIZE;
   int position = 0;
   char *buffer = malloc(sizeof(char) * bufsize);
-  t_history			*tmp;
   int c;
 
-    data->history = t_history			*ft_historynew(char *line);
+  data->history = ft_historynew(buffer);
 
   if (!buffer) {
     fprintf(stderr, "lsh: ошибка выделения памяти\n");
@@ -30,7 +36,7 @@ int read_line(t_data *data)
 
     // Если мы превысили буфер, перераспределяем блок памяти
     if (position >= bufsize) {
-      bufsize += LSH_RL_BUFSIZE;
+      bufsize += RL_BUFSIZE;
       buffer = realloc(buffer, bufsize);
       if (!buffer) {
         fprintf(stderr, "lsh: ошибка выделения памяти\n");
@@ -39,3 +45,4 @@ int read_line(t_data *data)
     }
   }
 }
+*/

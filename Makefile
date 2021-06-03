@@ -15,7 +15,7 @@ OBJDIR		= ./objs/
 FLS			= \
 			main \
 			parser \
-			termacap \
+			termcap \
 			tools \
 			history \
 			errors
@@ -23,6 +23,7 @@ FLS			= \
 SRC			= $(FLS)
 
 OBJ			= $(addprefix $(OBJDIR), $(SRC:=.o))
+DFLS		= $(SRC:=.d)
 
 all: $(NAME)
 
@@ -35,6 +36,8 @@ $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p	$(OBJDIR)
 	@$(CC)		$(CFLAGS) $(INCLUDES) -c $< -o $@ -MMD
 	@echo "Compiled $@"
+
+include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
 
 tester:
 	./tests/test_42fr.sh

@@ -37,12 +37,6 @@ void	ft_add_list(t_history **list, char *str, int len)
 	(*list) = temp;
 }
 
-t_history	*ft_hist_create(t_history *hist, int fd_hist)
-{
-
-	return (hist);
-}
-
 void	ft_change_struct(t_history **list, char *str)
 {
 	int		k;
