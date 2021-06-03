@@ -18,7 +18,9 @@ FLS			= \
 			termcap \
 			tools \
 			history \
-			errors
+			errors \
+			../ft_export_aam \
+			../ft_minishell_aam
 
 SRC			= $(FLS)
 

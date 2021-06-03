@@ -4,7 +4,7 @@
 # include <stdio.h>
 # include <curses.h>
 # include <term.h>
-# include <termios.h> 
+# include <termios.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/types.h>
@@ -56,6 +56,8 @@ typedef struct      s_data
     t_history           *history;
     t_pars              *curr_pars;
     char                **envp;
+    int                 *index;  //* массив индексов (строк) массива envp
+    int                 size;   //* размер массива
     t_error             *errors;
 }                   t_data;
 
@@ -74,11 +76,11 @@ void	ft_last_in_struct(t_history **list, char *str);
 
 void                init_struct(t_data *data, char **envp);
 void                load_history(t_data *data);
-void save_history(t_data *data);
+void                save_history(t_data *data);
 int                 main_loop(t_data *data);
 void		        free_strs(char **s);
 char                **copy_str_array(char **s);
-int read_line(t_data *data);
+int                 read_line(t_data *data);
 int parse_line(t_data *data);
 int run_comands(t_data *data);
 int free_tmp_data(t_data *data);
@@ -87,5 +89,12 @@ int                 ft_putchar(int c);
 t_error 	*errors_create(void);
 void		ft_exit_errcode(int errcode, t_data *data);
 void		print_err(int errcode, t_data *data);
+
+
+int		ft_export(t_data data, t_pars pars);
+void	ft_out_export(t_data data);
+//int		ft_strlen(char *str);
+void	init_data(char **env, t_data *data);
+int		aam_main(t_data *data);
 
 #endif
