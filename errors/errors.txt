@@ -129,3 +129,4 @@
 131 : State not recoverable
 132 : Operation not possible due to RF-kill
 133 : Memory page has hardware error
+151 : Cannot open history

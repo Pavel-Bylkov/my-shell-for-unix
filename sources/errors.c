@@ -42,29 +42,28 @@ t_error 	*errors_create(void)
 	t_error	*errors;
 	char	*line;
 	int		fd;
-	int		i;
 
 	errors = NULL;
 	fd = open(ERRORS_FILE, O_RDONLY);
-	if (fd > 0)
-	{
-		i = 1;
-		line = NULL;
-		while (i > 0)
-		{
-			i = get_next_line(fd, &line);
-			if (line != NULL)
-			{		
-				ft_add_error(&errors, line);
-				free(line);
-				line = NULL;
-			}
+    if (fd < 0)
+        ft_putendl_fd("Error\nCannot open file with errors.", 2);
+    line = NULL;
+    while (get_next_line(fd, &line) > 0)
+    {
+		if (line != NULL)
+		{		
+			ft_add_error(&errors, line);
+			free(line);
+			line = NULL;
 		}
-		if (close(fd) != 0)
-			ft_putendl_fd("Error\nCannot close file with errors.", 2);
 	}
-	else
-		ft_putendl_fd("Error\nCannot open file with errors.", 2);
+    if (line)
+    {
+		ft_add_error(&errors, line);
+		free(line);
+	}
+    if (close(fd) != 0)
+		ft_putendl_fd("Error\nCannot close file with errors.", 2);		
 	return (errors);
 }
 
@@ -73,4 +72,18 @@ void		ft_exit_errcode(int errcode, t_data *data)
 	print_err(errcode, data);
 	free_struct(data);
 	exit(EXIT_FAILURE);
+}
+
+void				ft_errorsclear(t_error **lst)
+{
+	t_error	*tmp;
+
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		if ((*lst)->text)
+			free((*lst)->text);
+		free((*lst));
+		*lst = tmp;
+	}
 }

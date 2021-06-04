@@ -34,3 +34,6 @@ open .
 exit
 fgfvdf
 dfdgfgdvdf
+cd ..
+dfgdfg
+dfgdg
