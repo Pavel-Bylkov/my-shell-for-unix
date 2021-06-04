@@ -2,36 +2,30 @@
 #include "includes/my_shell.h"
 #include <string.h>
 
-
-char	*ft_strdup(const char *s)  //! функция Libft
-{
-	char	*str;
-	char	*rez;
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	str = (char *)malloc(i + 1);
-	if (str == NULL)
-		return (NULL);
-	rez = str;
-	while (*s)
-		*str++ = *(char *)s++;
-	*str = *(char *)s;
-	return (rez);
-}
-
 void	temp_init_pars(t_pars *struc)  //! Временная функция
 {
 	struc->path = NULL;
-	struc->argv = (char **)malloc(sizeof(char *) * 3);
-	struc->argv[0] = ft_strdup("echo");
-	struc->argv[1] = NULL;
-	//struc->argv[1] = ft_strdup("ddd'ddd");
-	//struc->argv[2] = NULL;
+	struc->argv = (char **)malloc(sizeof(char *) * 5);
+	struc->argv[0] = ft_strdup("export");
+	struc->argv[1] = ft_strdup("ddd'ddd");
+	struc->argv[2] = ft_strdup("tt");
+	struc->argv[3] = ft_strdup("tt=58");
+	//struc->argv[1] = NULL;
 
 }
+
+void	create_index(t_data *data)
+{
+	int		i;
+
+	if (data->index != NULL)
+		free(data->index);
+	data->index = (int *)malloc(sizeof(int) * (data->size));
+	i = -1;
+	while (++i < data->size)
+		data->index[i] = i;
+}
+
 
 void	init_data(char **env, t_data *data)
 {
@@ -47,9 +41,15 @@ void	init_data(char **env, t_data *data)
 	while (env[++i] != NULL)
 	{
 		data->envp[i] = ft_strdup(env[i]);
-		data->index[i] = i;
+		//data->index[i] = i;
 	}
 	data->envp[i] = NULL;
+
+	create_index(&(*data));
+
+
+	//data->index = (int *)malloc(sizeof(int) * data->size);
+
 }
 
 void	swap(int *a, int *b)
@@ -59,32 +59,6 @@ void	swap(int *a, int *b)
 	c = *a;
 	*a = *b;
 	*b = c;
-}
-
-
-int		ft_strcmp(const char *s1, const char *s2)
-{
-	unsigned char	str1;
-	unsigned char	str2;
-	if (s1 == NULL && s2 != NULL)
-		return (-1);
-	else if (s1 != NULL && s2 == NULL)
-		return (1);
-	else if (s1 == NULL && s2 == NULL)
-		return (0);
-	else
-	{
-		str1 = (unsigned char)*s1;
-		str2 = (unsigned char)*s2;
-		while (str1 != '\0' && str2 != '\0')
-		{
-			if (str1 != str2)
-				return (str1 - str2);
-			str1 = (unsigned char)(*(++s1));
-			str2 = (unsigned char)(*(++s2));
-		}
-		return (str1 - str2);
-	}
 }
 
 void	sort_mass(char **mas, int *id[], int size)
@@ -106,31 +80,54 @@ void	sort_mass(char **mas, int *id[], int size)
 	}
 }
 
+int		ft_choice_command_aam(t_data *data)
+{
+	if (data->curr_pars->path == NULL)
+	{
+		if (!ft_strcmp(data->curr_pars->argv[0], "export"))
+			ft_export(data, *data->curr_pars);
+	}
+	return (0);
+}
+
 int		aam_main(t_data *data)
 {
 	//t_pars		pars;
 	//t_data		data;
-	//int			i;
+	int			i;
 
-	//temp_init_pars(&pars);
+	data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
+
+	temp_init_pars(data->curr_pars); //! временное
 	//init_data(env, &data);
 
-	//i = 0;
+	//i = -1;
 	//printf("..\n..\n");
-	//while (i < data.size)
+	//while (++i < data->size)
 	//{
-	//	printf("%d - %s\n", data.index[i], data.envp[data.index[i]]);
+	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
 	//	i++;
 	//}
 
-	//printf("\nsize = %d\n\n", data.size);
+	printf("\nsize = %d\n\n", data->size);
 
 	sort_mass(data->envp, &data->index, data->size);
-	ft_export(*data, *data->curr_pars);
+	ft_choice_command_aam(data);
+	sort_mass(data->envp, &data->index, data->size);
+	data->curr_pars->argv[1] = NULL;
+	printf("\n%s\n", data->curr_pars->argv[1]);
+	ft_choice_command_aam(data);
 
-	//i = -1;
-	//while (++i < data.size)
-	//	printf("%d - %s\n", data.index[i], data.envp[data.index[i]]);
+	i = -1;
+	//while (++i < data->size)
+	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
+
+	printf("\nsize = %d\n\n", data->size);
+	while (++i < data->size)
+		printf("%s\n", data->envp[i]);
+
+	//while (1);
+
 	return (0);
 
 }

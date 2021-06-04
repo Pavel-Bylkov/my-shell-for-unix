@@ -26,7 +26,7 @@ void	print_pars(t_data *data)
 
 int run_comands(t_data *data)  //! Функция aamarei (моя)
 {
-    (void)data;
+    aam_main(data);
     return (0);
 }
 

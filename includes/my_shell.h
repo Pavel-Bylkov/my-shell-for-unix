@@ -101,10 +101,16 @@ void		        ft_exit_errcode(int errcode, t_data *data);
 void		        print_err(int errcode, t_data *data);
 
 
-int		            ft_export(t_data data, t_pars pars);
+int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);
-//int		ft_strlen(char *str);
 void	            init_data(char **env, t_data *data);
 int		            aam_main(t_data *data);
+char	            *ft_strcpy_fr(char *str1, char *str2);
+int		            ft_strcmp(const char *s1, const char *s2);
+void	            create_index(t_data *data);
+void	            sort_mass(char **mas, int *id[], int size);
+int		            ft_char_in_str(char *str, char c);
+char	            **ft_env_add(t_data *data, char *str);
+void	            ft_export_output_err(char *str);
 
 #endif

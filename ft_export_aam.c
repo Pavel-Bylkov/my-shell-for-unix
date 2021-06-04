@@ -1,56 +1,94 @@
 #include "includes/my_shell.h"
 
-char	*ft_strchr(const char *s, int c) //! Libft
-{
-	//char	sym;
-
-	//sym = c;
-	while (*s != '\0')
-		if (*s++ == c)
-			return ((char *)s - 1);
-	if (c == '\0')
-		return ((char *)s);
-	return (NULL);
-}
 
 void	ft_out_export(t_data data)
 {
 	int		i;
+	int		j;
 
 	i = -1;
+	printf("data.size = %d\n\n", data.size);
 	while (++i < data.size)
 	{
+		j = 0;
 		write(1, "declare -x ", 11);
-		write(1, data.envp[data.index[i]], ft_strlen(data.envp[data.index[i]]));
+		while (data.envp[data.index[i]][j] !='\0')
+		{
+			if (data.envp[data.index[i]][j] == '=')
+			{
+				write(1, &(data.envp[data.index[i]][j++]), 1);
+				write(1, "\"", 1);
+			}
+			if (data.envp[data.index[i]][j] != '\0')
+				write(1, &(data.envp[data.index[i]][j++]), 1);
+		}
+		if (ft_char_in_str(data.envp[i], '=') != (int)ft_strlen(data.envp[i]))
+			write(1, "\"", 1);
 		write(1, "\n", 1);
 	}
 }
 
-int		ft_env_add(t_data data, char *str)
-{
-	char	**new_env;
-	(void)str;
-
-	new_env = (char **)malloc(sizeof(char *) * (data.size + 2));
-	(void)new_env;
-	return (0);
-}
-
-int		ft_export(t_data data, t_pars pars)
+char	**ft_free_mas(char **mas)
 {
 	int		i;
-	if (pars.argv[1] == NULL)
-		ft_out_export(data);
+
+	i = 0;
+	while (mas[i] != NULL)
+		free(mas[i++]);
+	free(mas);
+	return (NULL);
+}
+
+char	*ft_env_work_add(char *line, char *str, int pos)
+{
+	char	*new_line;
+
+	if (ft_strlen(line) == (size_t)pos)
+		new_line = ft_strdup(str);
+	else if (line[pos] == '=' && str[pos] == '=')
+		new_line = ft_strdup(str);
 	else
+		new_line = ft_strdup(line);
+	return (new_line);
+}
+
+char	**ft_env_add(t_data *data, char *str)
+{
+	char	**new_env;
+	int		i;
+	int		pos;
+
+	new_env = (char **)malloc(sizeof(char *) * (data->size + 2));
+	if (new_env == NULL)
+		return (NULL);
+	i = 0;
+	pos = ft_char_in_str(str, '=');
+	while (data->envp[i])
 	{
-		i = 1;
-		while (pars.argv[i] != NULL)
+		new_env[i] = NULL;
+		if (ft_strncmp(data->envp[i], str, pos) == 0)
 		{
-			if (ft_strchr(pars.argv[i], '=') == NULL)
-				ft_env_add(data, pars.argv[i]);
+			new_env[i] = ft_env_work_add(data->envp[i], str, pos);
+			break ;
 		}
+		new_env[i] = ft_strdup(data->envp[i]);
+		i++;
 	}
+	if (i == data->size)
+		new_env[data->size++] = ft_strdup(str);
+	new_env[data->size] = NULL;
+	ft_free_mas(data->envp);
+	return (new_env);
+}
 
+void	ft_export_output_err(char *str)
+{
+	char	*err;
 
-	return (0);
+	err = ft_strdup("my_shell: export: ");
+	err = ft_strcpy_fr(err, "`");
+	err = ft_strcpy_fr(err, str);
+	err = ft_strcpy_fr(err, "': not a valid identifier\n");
+	write(1, err, ft_strlen(err));
+	free(err);
 }
