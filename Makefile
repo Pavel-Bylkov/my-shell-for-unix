@@ -5,7 +5,7 @@ LIBFT		= $(LIBDIR)libft.a
 LIBFLAGS	= -L libft -lft -ltermcap
 
 CFLAGS		= -Wall -Wextra -Werror
-CC			= gcc
+CC			= gcc -g
 
 INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/.
 
@@ -20,7 +20,9 @@ FLS			= \
 			history \
 			errors \
 			../ft_export_aam \
-			../ft_minishell_aam
+			../ft_minishell_aam \
+			../ft_str_utils_aam \
+			../ft_export_main_aam
 
 SRC			= $(FLS)
 
