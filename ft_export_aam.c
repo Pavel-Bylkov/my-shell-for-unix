@@ -2,9 +2,9 @@
 
 char	*ft_strchr(const char *s, int c) //! Libft
 {
-	char	sym;
+	//char	sym;
 
-	sym = c;
+	//sym = c;
 	while (*s != '\0')
 		if (*s++ == c)
 			return ((char *)s - 1);
@@ -32,6 +32,7 @@ int		ft_env_add(t_data data, char *str)
 	(void)str;
 
 	new_env = (char **)malloc(sizeof(char *) * (data.size + 2));
+	(void)new_env;
 	return (0);
 }
 

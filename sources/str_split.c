@@ -42,32 +42,32 @@ static size_t	get_nstrs(char *str)
 	n_strs = 0;
 	while (*str)
 	{
-		while (*str && *str == c)
+		while (*str && *str == ' ')
 			str++;
 		if (*str)
 			n_strs++;
-		while (*str && *str != c)
+		while (*str && *str != ' ')
 			str++;
 	}
 	return (n_strs);
 }
 
-static void		ft_strscpy(char **res, size_t n, char *str, char c)
+static void		ft_strscpy(char **res, size_t n, char *str)
 {
 	size_t	i;
 
 	i = 0;
 	while (*str && i < n)
 	{
-		while (*str && *str == c)
+		while (*str && *str == ' ')
 			str++;
-		res[i] = ft_strdupchr(str, c);
+		res[i] = ft_strdupchr(str, ' ');
 		if (res[i++] == NULL)
 		{
-			free_strs(res);
+			free_array((void **)res);
 			return ;
 		}
-		while (*str != c && *str)
+		while (*str != ' ' && *str)
 			str++;
 	}
 	res[i] = NULL;
@@ -86,6 +86,6 @@ char			**str_split(char *s)
 	res = (char **)malloc(sizeof(char *) * (nstrs + 1));
 	if (res == NULL)
 		return (NULL);
-	ft_strscpy(res, nstrs, str, c);
+	ft_strscpy(res, nstrs, str);
 	return (res);
 }

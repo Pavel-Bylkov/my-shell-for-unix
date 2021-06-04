@@ -64,8 +64,8 @@ typedef struct      s_data
     t_error             *errors;
 }                   t_data;
 
-// t_pars				*ft_parsnew(char **argv, char f_spec);
-// void				ft_parsadd_back(t_pars **lst, t_pars *new);
+t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
+void		        ft_parsadd_back(t_pars **lst, t_pars *new);
 // void				ft_parsclear(t_pars **lst, void (*del)(void*));
 
 t_history		    *new_history(char *str);
@@ -79,7 +79,9 @@ void	            ft_key_right(char *line, int *pos);
 void	            ft_key_left(int *pos);
 void	            ft_key_down(t_history **hist, char **line, int *pos);
 void	            ft_key_up(t_history **hist, char **line, int *pos);
-
+void	            ft_strcopy_fr(char **line, char *str);
+void                ft_press_key(t_data *data, char **line, int pos);
+char	            *ft_del_symbol(char *str, int i);
 void                init_struct(t_data *data, char **envp);
 void                load_history(t_data *data);
 void                save_history(t_data *data);

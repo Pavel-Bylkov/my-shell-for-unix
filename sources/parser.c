@@ -1,30 +1,35 @@
 #include "my_shell.h"
 
-t_pars				*ft_parsnew(int error, char *path, char **argv, char f_spec)
+t_pars		*ft_parsnew(int error, char *path, char **argv, char *f_spec)
 {
-    t_pars  *rez;
-	  int     j;
+	t_pars	*rez;
+	int		j;
 
-    rez = (t_pars *)malloc(sizeof(*rez));
-    if (rez == NULL)
-        return (NULL);
-    if (path)
-    {
-        j = -1;
-        rez->path = (char *)malloc(sizeof(char) * ft_strlen(path) + 1);
-        while (path[++j] != '\0')
-          rez->path[j] = path[j];
-        rez->path[j] = '\0';
-    }
-    else
-      rez->path = NULL;
-    rez->argv = argv;
-    rez->next = NULL;
-    rez->redirect = NULL;
-    return (rez);
+	rez = (t_pars *)malloc(sizeof(*rez));
+	if (rez == NULL)
+		return (NULL);
+	if (path)
+	{
+		j = -1;
+		rez->path = (char *)malloc(sizeof(char) * ft_strlen(path) + 1);
+		while (path[++j] != '\0')
+			rez->path[j] = path[j];
+		rez->path[j] = '\0';
+	}
+	else
+		rez->path = NULL;
+	rez->argv = argv;
+	rez->next = NULL;
+	rez->redirect = NULL;
+	rez->error = error;
+	j = -1;
+	while (f_spec[++j] != '\0')
+		rez->f_spec[j] = f_spec[j];
+	rez->f_spec[j] = '\0';
+	return (rez);
 }
 
-void				ft_parsadd_back(t_pars **lst, t_pars *new)
+void		ft_parsadd_back(t_pars **lst, t_pars *new)
 {
 	t_pars	*last;
 
@@ -34,7 +39,7 @@ void				ft_parsadd_back(t_pars **lst, t_pars *new)
 	{
 		last = *lst;
 		while (last->next != NULL)
-		  last = last->next;
+			last = last->next;
 		last->next = new;
 	}
 }
@@ -44,6 +49,9 @@ void				ft_parsadd_back(t_pars **lst, t_pars *new)
 int parse_line(t_data *data)
 {
     t_pars *current;
+
+	(void)current;
+	(void)data;
 
     return (0);
 }

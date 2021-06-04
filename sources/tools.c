@@ -39,8 +39,8 @@ int free_tmp_data(t_data *data)
 void free_struct(t_data *data)
 {
     data->curr_pars = NULL;
-	free_array(data->envp);
+	free_array((void **)data->envp);
 	ft_historyclear(&(data->history));
 	ft_errorsclear(&(data->errors));
-	free_array(data->index);
+	free_array((void **)data->index);
 }
