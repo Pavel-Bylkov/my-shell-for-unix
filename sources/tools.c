@@ -124,21 +124,22 @@ int main_loop(t_data *data)
 	term.c_lflag &=~(ICANON);
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
-    while (1)
-    {
-        ft_putstr_fd("my_shell>$ ", 1);
-        error = read_line(data);
-        error = parse_line(data);
+    //while (1)
+    //{
+    //    ft_putstr_fd("my_shell>$ ", 1);
+    //    error = read_line(data);
+        //error = parse_line(data);
         error = run_comands(data);
-        error = free_tmp_data(data);
-        if (error != 0)
-            return (error);
-    }
+    //    error = free_tmp_data(data);
+    //    if (error != 0)
+    //        return (error);
+    //}
+	return (0);
 }
 
 int run_comands(t_data *data)  //! Функция aamarei (моя)
 {
-    (void)data;
+    aam_main(data);
     return (0);
 }
 
