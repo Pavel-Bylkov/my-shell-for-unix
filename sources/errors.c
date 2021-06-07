@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-void		print_err(int errcode, t_data *data)
+int		print_err(int errcode, t_data *data)
 {
 	t_error *tmp;
 
@@ -10,10 +10,12 @@ void		print_err(int errcode, t_data *data)
 		if (tmp->code == errcode)
 		{
 			ft_putendl_fd(tmp->text, 2);
-			return ;
+			return (-1);
 		}
 		tmp = tmp->next;
 	}
+	ft_putendl_fd("my_shell: Error code is not define.", 2);
+	return (-1);
 }
 
 void	ft_add_error(t_error **list, char *str)

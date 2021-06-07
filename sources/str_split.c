@@ -160,23 +160,32 @@ static int		get_len_command(char *str)
 		return (ft_strlen(str));
 }
 
-static size_t	get_ncommand(char *str)
+static size_t	get_ncommand(t_data *data)
 {
 	size_t	n_strs;
 	int     i;
+	int		len;
+	char	*str;
 
 	n_strs = 0;
 	i = 0;
+	str = data->history->line;
 	while (str[i])
 	{
 		if (str[i])
 			n_strs++;
-		i += get_len_command(&str[i]);
+		// проверить на пустые команды - выйти с ошибкой без парсинга
+		len = get_len_command(&str[i]);
+		if (len == 0 && str[i] == '|')
+			return (print_err(152, data));
+		else if (len == 0 && str[i] == ';')
+			return (print_err(153, data));
+		i += len;
 	}
 	return (n_strs);
 }
 
-static void		commandscpy(char **res, size_t n, char *str)
+static void		*commandscpy(char **res, size_t n, char *str)
 {
 	size_t	i;
     int     j;
@@ -191,26 +200,30 @@ static void		commandscpy(char **res, size_t n, char *str)
 		if (res[i++] == NULL)
 		{
 			free_array((void **)res);
-			return ;
+			return (NULL);
 		}
 		j += len + 1;
 	}
 	res[i] = NULL;
 }
 
-char	**get_commands(char *line)
+char	**get_commands(t_data *data)
 {
 	int i;
 	char **commands;
 	size_t	nstrs;
 
 	// сделать по аналогии разложение на команды, с оставлением окончания.
-	if (line == NULL)
+	if (data->history->line == NULL)
 		return (NULL);
-	nstrs = get_ncommand(line);
-	commands = (char **)malloc(sizeof(char *) * (nstrs + 1));
-	if (commands == NULL)
-		return (NULL);
-	commandscpy(commands, nstrs, line);
-	return (commands);
+	nstrs = get_ncommand(data);
+	if (nstrs > -1)
+	{
+		commands = (char **)malloc(sizeof(char *) * (nstrs + 1));
+		if (commands == NULL)
+			return (NULL);
+		if (commandscpy(commands, nstrs, data->history->line) != NULL)
+			return (commands);
+	}
+	return (NULL);
 }

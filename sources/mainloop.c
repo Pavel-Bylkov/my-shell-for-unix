@@ -16,13 +16,11 @@ int main_loop(t_data *data)
     {
         ft_putstr_fd("my_shell>$ ", 1);
         error = read_line(data);
-        ft_putendl_fd("read_line done", 1);
-        // error = parse_line(data, error);
-        ft_putendl_fd("parse done", 1);
-        //error = run_comands(data);
-        error = free_tmp_data(data);
-        if (error != 0)
-            return (error);
+        //ft_putendl_fd("read_line done", 1);
+        error = parse_line(data, error);
+        //ft_putendl_fd("parse done", 1);
+        run_comands(data, error);
+        free_tmp_data(data);
     }
 }
 

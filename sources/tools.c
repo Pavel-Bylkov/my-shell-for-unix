@@ -4,14 +4,17 @@ void		free_array(void **s)
 {
 	size_t	i;
 
-	i = 0;
-	while (s[i] != NULL)
+	if (s != NULL)
 	{
-		free(s[i]);
-		s[i++] = NULL;
+		i = 0;
+		while (s[i] != NULL)
+		{
+			free(s[i]);
+			s[i++] = NULL;
+		}
+		free(s);
+		s = NULL;
 	}
-	free(s);
-	s = NULL;
 }
 
 int		ft_putchar(int c)
@@ -24,9 +27,11 @@ void	print_pars(t_data *data)
 	(void)data;
 }
 
-int run_comands(t_data *data)  //! Функция aamarei (моя)
+int run_comands(t_data *data, int error)  //! Функция aamarei (моя)
 {
-    aam_main(data);
+	if (error != 0)
+		return (error);
+    //aam_main(data);
     return (0);
 }
 

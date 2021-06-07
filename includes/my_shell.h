@@ -35,7 +35,7 @@ typedef struct	    s_history
 
 typedef struct	    s_redir
 {
-    char                f_spec[2];
+    char                f_spec[10];
     char                *out;
     struct s_history	*next;
 }				    t_redir;
@@ -45,7 +45,7 @@ typedef struct	    s_pars
     int                 error;
     char                *path;
     char                **argv;
-    char                f_spec[2];
+    char                f_spec[10];
     t_redir             *redirect;
     struct s_pars       *next;
 }				    t_pars;
@@ -89,14 +89,14 @@ void		        free_array(void **s);
 int                 read_line(t_data *data);
 int                 parse_line(t_data *data, int error);
 char			    **str_split(char *s);
-int                 run_comands(t_data *data);
+int                 run_comands(t_data *data, int error);
 int                 free_tmp_data(t_data *data);
 void                free_struct(t_data *data);
 int                 ft_putchar(int c);
 t_error             *errors_create(void);
 void				ft_errorsclear(t_error **lst);
 void		        ft_exit_errcode(int errcode, t_data *data);
-void		        print_err(int errcode, t_data *data);
+int		            print_err(int errcode, t_data *data);
 int			        quaote_is_open(char *str, int n);
 int                 backslash_is_active(char *str, int n);
 
