@@ -14,8 +14,12 @@ OBJDIR		= ./objs/
 
 FLS			= \
 			main \
+			init_structs \
+			mainloop \
 			parser \
+			str_split \
 			termcap \
+			termcap_keys \
 			tools \
 			history \
 			errors \

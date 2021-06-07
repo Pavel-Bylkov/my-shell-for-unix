@@ -1,5 +1,6 @@
 #include "includes/my_shell.h"
 
+
 void	ft_out_export(t_data data)
 {
 	int		i;
