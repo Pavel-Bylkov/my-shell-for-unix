@@ -46,53 +46,40 @@ void		ft_parsadd_back(t_pars **lst, t_pars *new)
 
 // void				ft_parsclear(t_pars **lst, void (*del)(void*));
 
-int parse_line(t_data *data)
+t_redir		*get_redirects(char *str)
 {
-    t_pars *current;
+	t_redir		*new=NULL;
 
-	(void)current;
-	(void)data;
+	(void)str;
+	returm (new);
+}
 
+t_pars		*pars_command(char *str)
+{
+	t_pars		*new=NULL;
+	int			i;
+
+	i = -1;
+	while (str[++i])
+	{
+		(void)i;
+	}
+	new->redirect = get_redirects(str);
+	return (new);
+}
+
+int parse_line(t_data *data, int error)
+{
+	int i;
+	char **commands;
+
+	if (error != 0)
+		return (error);
+	commands = get_commands(data->history->line); // последний символ | или ;
+	i = -1;
+	while (commands[++i] != NULL) // идем до конца строки
+		// если нашли редиректы - создаем список
+		ft_parsadd_back(&(data->curr_pars), pars_command(commands[i]));
+	free(commands);
     return (0);
 }
-
-/*
-int fread_line(t_data *data)
-{
-  int bufsize = RL_BUFSIZE;
-  int position = 0;
-  char *buffer = malloc(sizeof(char) * bufsize);
-  int c;
-
-  data->history = ft_historynew(buffer);
-
-  if (!buffer) {
-    fprintf(stderr, "lsh: ошибка выделения памяти\n");
-    exit(EXIT_FAILURE);
-  }
-
-  while (1) {
-    // Читаем символ
-    c = getchar();
-
-    // При встрече с EOF заменяем его нуль-терминатором и возвращаем буфер
-    if (c == EOF || c == '\n') {
-      buffer[position] = '\0';
-      return buffer;
-    } else {
-      buffer[position] = c;
-    }
-    position++;
-
-    // Если мы превысили буфер, перераспределяем блок памяти
-    if (position >= bufsize) {
-      bufsize += RL_BUFSIZE;
-      buffer = realloc(buffer, bufsize);
-      if (!buffer) {
-        fprintf(stderr, "lsh: ошибка выделения памяти\n");
-        exit(EXIT_FAILURE);
-      }
-    }
-  }
-}
-*/

@@ -29,8 +29,6 @@ typedef struct	    s_error
 typedef struct	    s_history
 {
     char                *line;
-    char                *quaotes;
-    char                quaote_open;
     struct s_history    *prev;
     struct s_history	*next;
 }				    t_history;
@@ -89,7 +87,7 @@ int                 main_loop(t_data *data);
 void		        free_array(void **s);
 //char                **copy_str_array(char **s);
 int                 read_line(t_data *data);
-int                 parse_line(t_data *data);
+int                 parse_line(t_data *data, int error);
 char			    **str_split(char *s);
 int                 run_comands(t_data *data);
 int                 free_tmp_data(t_data *data);
@@ -99,7 +97,8 @@ t_error             *errors_create(void);
 void				ft_errorsclear(t_error **lst);
 void		        ft_exit_errcode(int errcode, t_data *data);
 void		        print_err(int errcode, t_data *data);
-
+int			        quaote_is_open(char *str, int n);
+int                 backslash_is_active(char *str, int n);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);

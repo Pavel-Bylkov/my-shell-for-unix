@@ -130,3 +130,6 @@
 132 : Operation not possible due to RF-kill
 133 : Memory page has hardware error
 151 : Cannot open history
+152 : syntax error near unexpected token `|'
+153 : syntax error near unexpected token `;'
+154 : command not found

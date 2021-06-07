@@ -85,34 +85,45 @@ void	ft_key_symbol(t_data *data, char **line, char *str, int *pos)
 	(*pos)++;
 }
 
+void	choise_keys(char *str, t_data *data, char **line, int *pos)
+{
+	if (!ft_strncmp(str, "\e[A", 3))   //* стрелка вверх
+		ft_key_up(&(data->history), line, pos);
+	else if (!ft_strncmp(str, "\e[B", 3))		//* стрелка вниз
+		ft_key_down(&(data->history), line, pos);
+	else if (!ft_strncmp(str, "\e[D", 3))		//* стрелка влево
+		ft_key_left(pos);
+	else if (!ft_strncmp(str, "\e[C", 3))		//* стрелка вправо
+		ft_key_right(*line, pos);
+	else if (!ft_strncmp(str, "\x7f", 1))		//* стрелка backspace
+		ft_key_backspace(&(data->history), line, pos);
+	else if (!ft_strncmp(str, "\e[3", 3))		//* стрелка delete
+		ft_key_delete(&(data->history), line, pos);
+	else if (!ft_strncmp(str, "\e[2", 3))		//! клавиша insert проверить
+		data->insert_flag = (data->insert_flag == 0);
+	else
+		ft_key_symbol(data, line, str, pos);
+}
+//! после игнора перевода строки в истории исчезает и слеш и \n
+//! история сохраняется при переходах верж вниз и перехода к новой строке
 void    ft_press_key(t_data *data, char **line, int pos)
 {
 	char	str[5];
 	int		l;
+	int		endl_ignor;
+	int		len;
 
 	l = read(0, str, 5);    //! Проверить на ошибку чтения
-	while ((data->history->quaote_open != 0 || 
-			ft_strncmp(str, "\n", 1) != 0) && l > 0)
+	endl_ignor = 0;
+	while ((endl_ignor || ft_strncmp(str, "\n", 1) != 0) && l > 0)
 	{
-		if (data->history->quaote_open != 0 && ft_strncmp(str, "\n", 1) == 0)
+		choise_keys(str, data, line, &pos);
+		if (endl_ignor && ft_strncmp(str, "\n", 1) == 0)
 			ft_putstr_fd("> ", 1);  //! Возможно перенести вниз или добавить \n
-		if (!ft_strncmp(str, "\e[A", 3))   //* стрелка вверх
-			ft_key_up(&(data->history), line, &pos);
-		else if (!ft_strncmp(str, "\e[B", 3))		//* стрелка вниз
-			ft_key_down(&(data->history), line, &pos);
-		else if (!ft_strncmp(str, "\e[D", 3))		//* стрелка влево
-			ft_key_left(&pos);
-		else if (!ft_strncmp(str, "\e[C", 3))		//* стрелка вправо
-			ft_key_right(*line, &pos);
-		else if (!ft_strncmp(str, "\x7f", 1))		//* стрелка backspace
-			ft_key_backspace(&(data->history), line, &pos);
-		else if (!ft_strncmp(str, "\e[3", 3))		//* стрелка delete
-			ft_key_delete(&(data->history), line, &pos);
-		else if (!ft_strncmp(str, "\e[2", 3))		//! клавиша insert проверить
-			data->insert_flag = (data->insert_flag == 0);
-		else
-			ft_key_symbol(data, line, str, &pos);
 		ft_memset(str, 0, 5);
 		l = read(0, str, 5);
+		len = ft_strlen(data->history->line);
+		endl_ignor = (backslash_is_active(data->history->line, len) ||
+						quaote_is_open(data->history->line, len) != 0);
 	}
 }

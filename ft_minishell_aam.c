@@ -34,8 +34,8 @@ void	init_data(char **env, t_data *data)
 	i = 0;
 	while (env[i] != NULL)
 		i++;
-	data->envp = (char **)malloc(sizeof(char *) * (i));
-	data->index = (int *)malloc(sizeof(int) * (i - 1));
+	data->envp = (char **)malloc(sizeof(char *) * (i + 1));
+	//data->index = (int *)malloc(sizeof(int) * (i));
 	data->size = i;
 	i = -1;
 	while (env[++i] != NULL)
