@@ -15,10 +15,10 @@ int main_loop(t_data *data)
     while (1)
     {
         ft_putstr_fd("my_shell>$ ", 1);
-        error = read_line(data);
-        error = parse_line(data);
+        //error = read_line(data);
+        //error = parse_line(data);
         error = run_comands(data);
-        error = free_tmp_data(data);
+        //error = free_tmp_data(data);
         if (error != 0)
             return (error);
     }

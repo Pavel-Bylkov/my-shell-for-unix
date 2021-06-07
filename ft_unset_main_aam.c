@@ -1,21 +1,20 @@
 #include "my_shell.h"
 
-int	ft_export(t_data *data, t_pars pars)
+int	ft_unset(t_data *data, t_pars pars)
 {
 	int		i;
 
-	if (pars.argv[1] == NULL)
-		ft_out_export(*data);
-	else
+	if (pars.argv[1] != NULL)
 	{
 		i = 1;
 		while (pars.argv[i] != NULL)
 		{
-			if (pars.argv[i][0] == '='
+			if ((ft_char_in_str(pars.argv[i], '=')
+					!= (int)ft_strlen(pars.argv[i]))
 				|| (pars.argv[i][0] >=48 && pars.argv[i][0] <=57))
 				ft_export_output_err(pars.argv[i]);
 			else
-				data->envp = ft_env_add(data, pars.argv[i]);
+				data->envp = ft_env_del(data, pars.argv[i]);
 			i++;
 		}
 		create_index(&(*data));

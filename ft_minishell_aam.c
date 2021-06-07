@@ -2,15 +2,43 @@
 #include "includes/my_shell.h"
 #include <string.h>
 
+
+//char	*ft_strdup(const char *s)  //! функция Libft
+//{
+//	char	*str;
+//	char	*rez;
+//	size_t	i;
+
+//	i = 0;
+//	while (s[i])
+//		i++;
+//	str = (char *)malloc(i + 1);
+//	if (str == NULL)
+//		return (NULL);
+//	rez = str;
+//	while (*s)
+//		*str++ = *(char *)s++;
+//	*str = *(char *)s;
+//	return (rez);
+//}
+
 void	temp_init_pars(t_pars *struc)  //! Временная функция
 {
 	struc->path = NULL;
 	struc->argv = (char **)malloc(sizeof(char *) * 5);
-	struc->argv[0] = ft_strdup("export");
-	struc->argv[1] = ft_strdup("ddd'ddd");
-	struc->argv[2] = ft_strdup("tt");
-	struc->argv[3] = ft_strdup("tt=58");
-	//struc->argv[1] = NULL;
+	//struc->argv[0] = ft_strdup("export");
+	//struc->argv[1] = ft_strdup("2ddd'ddd");
+	//struc->argv[2] = ft_strdup("tt");
+	//struc->argv[3] = ft_strdup("tt=58");
+	//struc->argv[4] = NULL;
+
+	struc->argv[0] = ft_strdup("unset");
+	struc->argv[1] = ft_strdup("4USER");
+	struc->argv[2] = ft_strdup("tt=58");
+	struc->argv[3] = ft_strdup("Apple_PubSub_Socket_Render");
+	struc->argv[4] = NULL;
+
+
 
 }
 
@@ -34,15 +62,12 @@ void	init_data(char **env, t_data *data)
 	i = 0;
 	while (env[i] != NULL)
 		i++;
-	data->envp = (char **)malloc(sizeof(char *) * (i));
-	data->index = (int *)malloc(sizeof(int) * (i - 1));
+	data->envp = (char **)malloc(sizeof(char *) * (i + 1));
+	data->index = (int *)malloc(sizeof(int) * (i));
 	data->size = i;
 	i = -1;
 	while (env[++i] != NULL)
-	{
 		data->envp[i] = ft_strdup(env[i]);
-		//data->index[i] = i;
-	}
 	data->envp[i] = NULL;
 
 	create_index(&(*data));
@@ -86,6 +111,8 @@ int		ft_choice_command_aam(t_data *data)
 	{
 		if (!ft_strcmp(data->curr_pars->argv[0], "export"))
 			ft_export(data, *data->curr_pars);
+		else if (!ft_strcmp(data->curr_pars->argv[0], "unset"))
+			ft_unset(data, *data->curr_pars);
 	}
 	return (0);
 }
@@ -99,34 +126,32 @@ int		aam_main(t_data *data)
 	data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
 
 	temp_init_pars(data->curr_pars); //! временное
-	//init_data(env, &data);
-
-	//i = -1;
-	//printf("..\n..\n");
-	//while (++i < data->size)
-	//{
-	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
-	//	i++;
-	//}
-
-	printf("\nsize = %d\n\n", data->size);
-
-	sort_mass(data->envp, &data->index, data->size);
-	ft_choice_command_aam(data);
-	sort_mass(data->envp, &data->index, data->size);
-	data->curr_pars->argv[1] = NULL;
-	printf("\n%s\n", data->curr_pars->argv[1]);
-	ft_choice_command_aam(data);
 
 	i = -1;
+	printf("..\n..\n");
+	//printf("\nsize = %d\n\n", data->size);
+	//while (++i < data->size)
+	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
+
+	//printf("\nsize = %d\n\n", data->size);
+
+	sort_mass(data->envp, &data->index, data->size);
+	ft_choice_command_aam(data);
+	//data->curr_pars->argv[1] = NULL;
+	//printf("\n%s\n", data->curr_pars->argv[1]);
+	//ft_choice_command_aam(data);
+
+	//i = -1;
 	//while (++i < data->size)
 	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
 
 	printf("\nsize = %d\n\n", data->size);
-	while (++i < data->size)
-		printf("%s\n", data->envp[i]);
 
-	//while (1);
+	i = -1;
+	while (++i < data->size)
+		printf("%d - %s\n",i, data->envp[i]);
+
+	while (1);
 
 	return (0);
 

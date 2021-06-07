@@ -26,7 +26,9 @@ FLS			= \
 			../ft_export_aam \
 			../ft_minishell_aam \
 			../ft_str_utils_aam \
-			../ft_export_main_aam
+			../ft_export_main_aam \
+			../ft_unset_main_aam \
+			../ft_unset_aam
 
 SRC			= $(FLS)
 

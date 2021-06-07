@@ -112,5 +112,8 @@ void	            sort_mass(char **mas, int *id[], int size);
 int		            ft_char_in_str(char *str, char c);
 char	            **ft_env_add(t_data *data, char *str);
 void	            ft_export_output_err(char *str);
+int		            ft_unset(t_data *data, t_pars pars);
+char	**ft_env_del(t_data *data, char *str);
+char	**ft_free_mas(char **mas);
 
 #endif
