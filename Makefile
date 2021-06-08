@@ -23,12 +23,17 @@ FLS			= \
 			tools \
 			history \
 			errors \
-			../ft_export_aam \
 			../ft_minishell_aam \
 			../ft_str_utils_aam \
 			../ft_export_main_aam \
+			../ft_export_aam \
 			../ft_unset_main_aam \
-			../ft_unset_aam
+			../ft_unset_aam \
+			../ft_env_main_aam \
+			../ft_env_aam \
+			../ft_exit_main_aam \
+			../ft_pwd_main_aam \
+			../ft_cd_main_aam
 
 SRC			= $(FLS)
 

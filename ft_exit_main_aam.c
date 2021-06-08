@@ -1,0 +1,69 @@
+#include "my_shell.h"
+
+void	ft_exit_output_err(char *str1, char *str2)
+{
+	write(1, "my_shell: exit", 14);
+	if (str1 != NULL)
+	{
+		write(1, " ", 1);
+		write(1, str1, ft_strlen(str1));
+	}
+	write(1, str2, ft_strlen(str2));
+	write(1, "\n", 1);
+}
+
+int	ft_isnum_aam(char *str)
+{
+	int	i;
+
+	i = 0;
+	while(str[i] != '\0')
+	{
+		if ((str[i] == '-' || str[i] == '+'))
+		{
+			if (i > 0)
+				return (0);
+			else
+				i++;
+		}
+		if (ft_isdigit(str[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+
+int	ft_exit(t_pars par)
+{
+	int		num;
+
+	if (par.argv[1] != NULL && par.argv[2] != NULL)
+	{
+		write(1, "\nexit\n", 6);
+		if (ft_isnum_aam(par.argv[1]) == 1)
+			ft_exit_output_err(NULL, ": too many arguments");
+		else
+		{
+			ft_exit_output_err(par.argv[1], ": numeric argument required");
+			exit(-1);
+		}
+
+	}
+	else
+	{
+		if (ft_isnum_aam(par.argv[1]) == 1)
+		{
+			write(1, "\nexit\n", 6);
+			num = ft_atoi(par.argv[1]);
+			exit(num);
+		}
+		else
+		{
+			write(1, "\nexit\n", 6);
+			ft_exit_output_err(par.argv[1], ": numeric argument required");
+			exit(-1);
+		}
+	}
+	return (0);
+}

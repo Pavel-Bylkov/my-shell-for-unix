@@ -48,12 +48,8 @@ char	**ft_env_del(t_data *data, char *str)
 
 void	ft_unset_output_err(char *str)
 {
-	char	*err;
-
-	err = ft_strdup("my_shell: unset: ");
-	err = ft_strcpy_fr(err, "`");
-	err = ft_strcpy_fr(err, str);
-	err = ft_strcpy_fr(err, ": not a valid identifier\n");
-	write(1, err, ft_strlen(err));
-	free(err);
+	write(1, "my_shell: unset: ", 17);
+	write(1, "`", 1);
+	write(1, str, ft_strlen(str));
+	write(1, "': not a valid identifier\n", 26);
 }

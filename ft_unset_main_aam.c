@@ -12,7 +12,7 @@ int	ft_unset(t_data *data, t_pars pars)
 			if ((ft_char_in_str(pars.argv[i], '=')
 					!= (int)ft_strlen(pars.argv[i]))
 				|| (pars.argv[i][0] >=48 && pars.argv[i][0] <=57))
-				ft_export_output_err(pars.argv[i]);
+				ft_unset_output_err(pars.argv[i]);
 			else
 				data->envp = ft_env_del(data, pars.argv[i]);
 			i++;
