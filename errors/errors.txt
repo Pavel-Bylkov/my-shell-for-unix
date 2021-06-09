@@ -133,3 +133,5 @@
 152 : syntax error near unexpected token `|'
 153 : syntax error near unexpected token `;'
 154 : command not found
+155 : parse error near `>' // >>>
+156 : parse error near `<' // <<<<

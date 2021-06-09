@@ -58,23 +58,23 @@ int	    chr_in_str(char c, char *s)
 	return (-1);
 }
 
-static char		*ft_strdupn(char *s, size_t	n)
-{
-	char	*res;
-    size_t	i;
+// static char		*ft_strdupn(char *s, size_t	n)
+// {
+// 	char	*res;
+//     size_t	i;
 
-	res = (char *)malloc(n);
-	if (res == NULL)
-		return (NULL);
-	i = 0;
-	while (i != n && s[i])
-	{
-		res[i] = s[i];
-		i++;
-	}
-	res[i] = '\0';
-	return (res);
-}
+// 	res = (char *)malloc(n + 1);
+// 	if (res == NULL)
+// 		return (NULL);
+// 	i = 0;
+// 	while (i != n && s[i])
+// 	{
+// 		res[i] = s[i];
+// 		i++;
+// 	}
+// 	res[i] = '\0';
+// 	return (res);
+// }
 
 static size_t	get_nstrs(char *str)
 {
@@ -160,9 +160,9 @@ static int		get_len_command(char *str)
 		return (ft_strlen(str));
 }
 
-static size_t	get_ncommand(t_data *data)
+static int	get_ncommand(t_data *data)
 {
-	size_t	n_strs;
+	int		n_strs;
 	int     i;
 	int		len;
 	char	*str;
@@ -185,7 +185,7 @@ static size_t	get_ncommand(t_data *data)
 	return (n_strs);
 }
 
-static void		*commandscpy(char **res, size_t n, char *str)
+static int		commandscpy(char **res, size_t n, char *str)
 {
 	size_t	i;
     int     j;
@@ -196,34 +196,37 @@ static void		*commandscpy(char **res, size_t n, char *str)
 	while (str[j] && i < n)
 	{
         len = get_len_command(&str[j]);
-		res[i] = ft_strdupn(&str[j], len + 1);
+		res[i] = ft_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{
 			free_array((void **)res);
-			return (NULL);
+			return (0);
 		}
-		j += len + 1;
+		j += len;
 	}
 	res[i] = NULL;
+	return (1);
 }
 
 char	**get_commands(t_data *data)
 {
-	int i;
-	char **commands;
-	size_t	nstrs;
+	char	**commands;
+	int		nstrs;
 
 	// сделать по аналогии разложение на команды, с оставлением окончания.
 	if (data->history->line == NULL)
 		return (NULL);
 	nstrs = get_ncommand(data);
-	if (nstrs > -1)
+	commands = NULL;
+	if (nstrs != -1)
 	{
 		commands = (char **)malloc(sizeof(char *) * (nstrs + 1));
 		if (commands == NULL)
 			return (NULL);
-		if (commandscpy(commands, nstrs, data->history->line) != NULL)
+		if (commandscpy(commands, nstrs, data->history->line))
 			return (commands);
-	}
+	}	
+	if (commands != NULL)
+		free_array((void **)commands);
 	return (NULL);
 }

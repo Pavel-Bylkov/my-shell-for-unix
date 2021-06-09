@@ -27,14 +27,14 @@ char	*ft_del_symbol(char *str, int i) //? Удаление i-го символа
 	return (s);
 }
 
-char	*ft_add_symbol_str(char *str, char c, int i, int flag) //? Вставка символа c в строку str после i-го символа
+char	*ft_add_symbol_str(char *str, char c, int i) //? Вставка символа c в строку str после i-го символа
 {
 	char	*s;
 	int		len;
 	int		k;
 
 	len = ft_strlen(str);
-	s = (char *)malloc(sizeof(char) * len + 2 - flag);
+	s = (char *)malloc(sizeof(char) * len + 2);
 	k = 0;
 	while (k < i)
 	{
@@ -42,9 +42,9 @@ char	*ft_add_symbol_str(char *str, char c, int i, int flag) //? Вставка �
 		k++;
 	}
 	s[k] = c;
-	while (str[k + flag] != 0)
+	while (str[k] != 0)
 	{
-		s[k + 1] = str[k + flag];
+		s[k + 1] = str[k];
 		k++;
 	}
 	s[k + 1] = '\0';
@@ -80,7 +80,7 @@ void	ft_key_symbol(t_data *data, char **line, char *str, int *pos)
 	tputs(tgetstr("im", 0), 1, ft_putchar);
 	write(1, str, 1);
 	tputs(tgetstr("ei", 0), 1, ft_putchar);
-	*line = ft_add_symbol_str(*line, *str, *pos, data->insert_flag);
+	*line = ft_add_symbol_str(*line, *str, *pos);
 	ft_change_struct(&(data->history), *line);
 	(*pos)++;
 }
@@ -99,8 +99,8 @@ void	choise_keys(char *str, t_data *data, char **line, int *pos)
 		ft_key_backspace(&(data->history), line, pos);
 	else if (!ft_strncmp(str, "\e[3", 3))		//* стрелка delete
 		ft_key_delete(&(data->history), line, pos);
-	else if (!ft_strncmp(str, "\e[2", 3))		//! клавиша insert проверить
-		data->insert_flag = (data->insert_flag == 0);
+	// else if (!ft_strncmp(str, "\e[2", 3))		//! клавиша insert проверить
+	// 	data->insert_flag = (data->insert_flag == 0);
 	else
 		ft_key_symbol(data, line, str, pos);
 }

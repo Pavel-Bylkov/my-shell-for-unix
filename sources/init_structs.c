@@ -4,13 +4,11 @@ void        init_struct(t_data *data, char **envp)
 {
     data->curr_pars = NULL;
 	init_data(envp, data);
-	ft_putendl_fd("init_envp done", 1);
     data->history = NULL;
     data->fd_hist = -1;
     data->errors = NULL; //errors_create();
     load_history(data);
-	ft_putendl_fd("load history done", 1);
-	data->insert_flag = 0;
+	data->insert_flag = 1;
 }
 
 void		load_history(t_data *data)
