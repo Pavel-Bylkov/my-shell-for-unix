@@ -27,7 +27,7 @@ void	temp_init_pars(t_pars *struc)  //! Временная функция
 	//struc->argv[1] = NULL;
 
 	//struc->argv[0] = ft_strdup("exit");
-	//struc->argv[1] = ft_strdup("--4");
+	//struc->argv[1] = ft_strdup("4");
 	//struc->argv[2] = ft_strdup("58");
 	//struc->argv[2] = NULL;
 
@@ -41,6 +41,11 @@ void	temp_init_pars(t_pars *struc)  //! Временная функция
 	//struc->argv[1] = ft_strdup("/Users/aamarei/IRR");
 	struc->argv[2] = NULL;
 
+	//struc->argv[0] = ft_strdup("echo");
+	//struc->argv[1] = ft_strdup("-n");
+	//struc->argv[2] = ft_strdup("/Users/aamarei/IRR");
+	//struc->argv[3] = ft_strdup("+++++++++\naamarei/IRR");
+	//struc->argv[4] = NULL;
 
 
 }
@@ -57,6 +62,17 @@ void	create_index(t_data *data)
 		data->index[i] = i;
 }
 
+void	init_pwd_aam(t_data *data)
+{
+	int		i;
+
+
+	i = 0;
+	while (data->envp[i] && (ft_strncmp(data->envp[i], "PWD=",4)))
+		i++;
+	data->pwd_oldp->oldpwd_p = NULL;
+	data->pwd_oldp->pwd_p = ft_strdup(&data->envp[i][4]);
+}
 
 void	init_data(char **env, t_data *data)
 {
@@ -135,6 +151,10 @@ int		aam_main(t_data *data)
 	int			i;
 
 	data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
+
+	data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
+
+	init_pwd_aam(data);
 
 	temp_init_pars(data->curr_pars); //! временное
 

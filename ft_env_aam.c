@@ -7,7 +7,8 @@ void	ft_env_output(t_data *data)
 	i = -1;
 	while (++i < data->size)
 	{
-		if (!(ft_char_in_str(data->envp[i], '=') == (int)ft_strlen(data->envp[i])))
+		if (!(ft_char_in_str(data->envp[i], '=')
+				== (int)ft_strlen(data->envp[i])))
 		{
 			write(1, data->envp[i], ft_strlen(data->envp[i]));
 			write(1, "\n", 1);

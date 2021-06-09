@@ -42,6 +42,13 @@ typedef struct	    s_redir
     struct s_history	*next;
 }				    t_redir;
 
+typedef struct          s_pwdpath
+{
+    char                *pwd_p;
+    char                *oldpwd_p;
+}                       t_pwdpath;
+
+
 typedef struct	    s_pars
 {
     int                 error;
@@ -58,6 +65,7 @@ typedef struct      s_data
     t_history           *history;
     char                insert_flag;
     t_pars              *curr_pars;
+    t_pwdpath           *pwd_oldp;
     char                **envp;
     int                 *index;  //* массив индексов (строк) массива envp
     int                 size;   //* размер массива
@@ -120,7 +128,16 @@ int	ft_env(t_data *data, t_pars pars);
 void	ft_env_output(t_data *data);
 void	ft_env_output_err(char *str);
 int	ft_exit(t_pars par);
-int	ft_pwd();
+int	ft_pwd(void);
 int	ft_cd(t_data *data, t_pars *pars);
+char *ft_path_back(t_data *data);
+char	*ft_path_home(t_data *data);
+void	ft_cd_output_err(char *str1, char *str2);
+int	ft_pos_env_aam(t_data *data, char *str);
+void	ft_replace_oldpwd(t_data *data, char *path);
+int	ft_pos_env_aam(t_data *data, char *str);
+void	ft_replace_oldpwd(t_data *data, char *path);
+int	ft_echo(t_pars pars);
+
 
 #endif

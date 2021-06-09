@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-int	ft_pwd()
+int	ft_pwd(void)
 {
 	char	*dir;
 

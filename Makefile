@@ -33,7 +33,9 @@ FLS			= \
 			../ft_env_aam \
 			../ft_exit_main_aam \
 			../ft_pwd_main_aam \
-			../ft_cd_main_aam
+			../ft_cd_main_aam \
+			../ft_cd_aam \
+			../ft_echo_main_aam
 
 SRC			= $(FLS)
 

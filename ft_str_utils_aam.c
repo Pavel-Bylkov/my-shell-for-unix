@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-char		*ft_strcpy_fr(char *str1, char *str2)
+char	*ft_strcpy_fr(char *str1, char *str2)
 {
 	int		i;
 	int		len;
@@ -28,10 +28,11 @@ char		*ft_strcpy_fr(char *str1, char *str2)
 	return (line);
 }
 
-int		ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
 	unsigned char	str1;
 	unsigned char	str2;
+
 	if (s1 == NULL && s2 != NULL)
 		return (-1);
 	else if (s1 != NULL && s2 == NULL)
@@ -53,7 +54,7 @@ int		ft_strcmp(const char *s1, const char *s2)
 	}
 }
 
-int		ft_char_in_str(char *str, char c) //* проверяет входит ли символ в строку и возвращает номер ее позиции, длину str если не входит
+int	ft_char_in_str(char *str, char c)
 {
 	int		i;
 

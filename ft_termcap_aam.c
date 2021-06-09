@@ -204,7 +204,8 @@ void	ft_strcopy_fr(char **line, char *str)
 {
 	int k;
 
-	free(*line);
+	if (*line)
+		free(*line);
 	k = ft_strlen(str);
 	*line = (char *)malloc(sizeof(char) * k);
 	k = 0;
