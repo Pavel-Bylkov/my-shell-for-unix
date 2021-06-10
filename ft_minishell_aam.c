@@ -150,16 +150,16 @@ int		aam_main(t_data *data)
 	//t_data		data;
 	int			i;
 
-	data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
+	//data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
 
 	data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
 
 	init_pwd_aam(data);
 
-	temp_init_pars(data->curr_pars); //! временное
+	//temp_init_pars(data->curr_pars); //! временное
 
 	i = -1;
-	printf("..\n..\n");
+	//printf("..\n..\n");
 	//printf("\nsize = %d\n\n", data->size);
 	//while (++i < data->size)
 	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
@@ -185,13 +185,13 @@ int		aam_main(t_data *data)
 	//while (++i < data->size)
 	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
 
-	printf("\nsize = %d\n\n", data->size);
+	//printf("\nsize = %d\n\n", data->size);
 
 	i = -1;
 	//while (++i < data->size)
 	//	printf("%d - %s\n",i, data->envp[i]);
 
-	while (1);
+	//while (1);
 
 	return (0);
 

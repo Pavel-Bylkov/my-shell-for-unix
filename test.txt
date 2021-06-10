@@ -1,4 +1,0 @@
-3
-./test_noenv
-sdf	
-sdf
