@@ -80,7 +80,7 @@ norma:
 	norminette $(SRCDIR) $(LIBDIR)srcs/*.c $(LIBDIR)includes/*.h ./includes/
 
 clean:
-	rm -rf		$(OBJDIR)
+	rm -rf		$(OBJDIR) *.o *.d
 
 fclean:			clean
 	rm -f		$(NAME)
