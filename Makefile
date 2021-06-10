@@ -2,7 +2,7 @@ NAME		= minishell
 
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
-LIBFLAGS	= -L libft -lft -ltermcap
+LIBFLAGS	= -L libft -lft #-ltermcap
 
 CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g

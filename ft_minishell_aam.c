@@ -148,7 +148,7 @@ int		aam_main(t_data *data)
 {
 	//t_pars		pars;
 	//t_data		data;
-	int			i;
+	// int			i;
 
 	//data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
 
@@ -158,7 +158,7 @@ int		aam_main(t_data *data)
 
 	//temp_init_pars(data->curr_pars); //! временное
 
-	i = -1;
+	// i = -1;
 	//printf("..\n..\n");
 	//printf("\nsize = %d\n\n", data->size);
 	//while (++i < data->size)
@@ -187,7 +187,7 @@ int		aam_main(t_data *data)
 
 	//printf("\nsize = %d\n\n", data->size);
 
-	i = -1;
+	// i = -1;
 	//while (++i < data->size)
 	//	printf("%d - %s\n",i, data->envp[i]);
 

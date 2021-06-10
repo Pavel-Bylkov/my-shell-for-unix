@@ -5,6 +5,8 @@
 # include <curses.h>
 # include <term.h>
 # include <termios.h>
+# include <readline/readline.h> // для маков возможно нужно убрать папку
+# include <readline/history.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/types.h>

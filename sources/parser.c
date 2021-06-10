@@ -175,10 +175,10 @@ int			str_is_fd(char *str, int n)
 	i = 0;
 	while (str[i] && i < n)
 	{
-	    if (str[i] == ' ')
-	        i++;
+		if (str[i] == ' ')
+			i++;
 		if (ft_isdigit(str[i]))
-		    i++;
+			i++;
 		else
             return (0);
 	}
@@ -299,6 +299,7 @@ void	quaotes_clean(t_data *data)
 		}
 		tmp = tmp->next;
 	}
+	(void)b;
 }
 // проверить наличие файлов, добавить ошибки
 void	check_open_files(t_data *data)
