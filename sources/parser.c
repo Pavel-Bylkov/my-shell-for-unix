@@ -238,17 +238,70 @@ t_pars		*pars_command(char *str)
 	return (new);
 }
 
+void	get_var(char *str, char **var)
+{
+	(void)str;
+	(void **)var;
+}
+
 void	insert_var_from_env(t_data *data)
 {
 	char	var[1024];
 	int		i;
+	t_pars *tmp;
 
-	i = 0;
-	while (1)
+	tmp = data->curr_pars;
+	while (tmp)
 	{
-		(void)data;
-		(void)var;
+		i = -1;
+		while (tmp->argv[++i])
+		{
+			get_var(tmp->argv[i], &var);
+		}
 	}
+}
+
+// заменить на имена файлов, а абс пути для не builtin комманд перенести в path
+void	find_path(t_data *data)
+{
+	int	len;
+
+	if (chr_in_str('/', data->curr_pars->argv[0]) > -1)
+	{
+		data->curr_pars->path = data->curr_pars->argv[0];
+		len = ft_strlen(data->curr_pars->path);
+		while (data->curr_pars->path[len - 1] != '/')
+			len--;
+		data->curr_pars->argv[0] = ft_strdup(&(data->curr_pars->path[len]));
+	}
+}
+// убрать кавычки вокруг цитат
+void	quaotes_clean(t_data *data)
+{
+	t_pars *tmp;
+	int		i[2];
+	int		f[3];
+	char	b[1024];
+
+	tmp = data->curr_pars;
+	while (tmp)
+	{
+		i[0] = -1;
+		while (tmp->argv[++i[0]])
+		{
+			i[1] = -1;
+			ft_memset(f, 0, sizeof(f));
+			while (tmp->argv[i[0]][++i[1]] != '\0')
+			{
+				b[i[1]] = tmp->argv[i[0]][i[1]];
+			}
+		}
+	}
+}
+// проверить наличие файлов, добавить ошибки
+void	check_open_files(t_data *data)
+{
+	(void)data;
 }
 
 int 	parse_line(t_data *data, int error)
@@ -258,7 +311,7 @@ int 	parse_line(t_data *data, int error)
 
 	if (error != 0)
 		return (error);
-	commands = get_commands(data); // последний символ | или ;
+	commands = get_commands(data); // последний символ | или ; , || или &&
 	if (commands != NULL)
 	{
 		i = -1;
@@ -266,9 +319,12 @@ int 	parse_line(t_data *data, int error)
 		{
 			ft_parsadd_back(&(data->curr_pars), pars_command(commands[i]));
 			insert_var_from_env(data);
-			// заменить на имена файлов, а абс пути для не builtin комманд перенести в path
 			// убрать кавычки вокруг цитат
+			//quaotes_clean(data);
+			// заменить на имена файлов, а абс пути для не builtin комманд перенести в path
+			find_path(data);
 			// проверить наличие файлов, добавить ошибки
+			check_open_files(data);
 		}
 		free_array((void **)commands);
 		return (0);

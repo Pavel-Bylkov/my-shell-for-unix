@@ -40,7 +40,7 @@ int			quaote_is_open(char *str, int n)
 		else if (str[i[0]] == '"' && f[2] == 0)
 			f[1] = (f[0] == 0 && f[1] == 0);
 	}
-	return (f[0] + f[1]);
+	return (f[0] + f[1] * 2);
 }
 
 int	    chr_in_str(char c, char *s)
@@ -144,12 +144,24 @@ char			**argv_split(char *s)
 
 static int		get_len_command(char *str)
 {
-	int		len[3];
+	int		len[5];
 
 	len[0] = chr_in_str('|', str);
 	len[0] += (len[0] > -1) * (str[len[0] + 1] == '|');
 	len[1] = chr_in_str(';', str);
 	len[2] = chr_in_str('&', str);
+	len[3] = 0;
+	while (len[2] > -1)
+	{
+		len[3] += len[2];
+		if (str[len[3] + 1] == '&')
+		{
+			len[3] += 1;
+			break ;
+		}
+		len[2] = chr_in_str('&', &str[len[3]]);
+	}
+	// определить кто из них победил ))
 	if (len[0] > -1 && len[1] > -1 && len[0] < len[1])
 		return (len[0] + 1);
 	else if (len[0] > -1 && len[1] > -1 && len[0] > len[1])

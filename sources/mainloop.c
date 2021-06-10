@@ -18,7 +18,8 @@ int main_loop(t_data *data)
         error = read_line(data);
         error = parse_line(data, error);
         run_comands(data, error);
-        free_tmp_data(data);
+        print_pars(data);
+	    ft_parsclear(&(data->curr_pars));
     }
 }
 

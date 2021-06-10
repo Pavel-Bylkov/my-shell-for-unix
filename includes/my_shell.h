@@ -90,7 +90,6 @@ int                 read_line(t_data *data);
 int                 parse_line(t_data *data, int error);
 char			    **argv_split(char *s);
 int                 run_comands(t_data *data, int error);
-int                 free_tmp_data(t_data *data);
 void                free_struct(t_data *data);
 int                 ft_putchar(int c);
 t_error             *errors_create(void);

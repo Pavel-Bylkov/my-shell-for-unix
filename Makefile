@@ -37,7 +37,7 @@ all: $(LIBFT) | $(NAME)
 
 $(NAME):		$(LIBFT) $(OBJ)
 	@echo '----Making minishell ------'
-	@make		-C libft/
+	#@make		-C libft/
 	$(CC)		$(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFLAGS) -o $(NAME)
 	@echo "Ready"
 
@@ -45,6 +45,8 @@ $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p	$(OBJDIR)
 	@$(CC)		$(CFLAGS) $(INCLUDES) -c $< -o $@ -MMD
 	@echo "Compiled $@"
+
+bonus: all
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
 
@@ -76,4 +78,4 @@ fclean:			clean
 
 re:				fclean all
 
-.PHONY: all debug clean fclean re
+.PHONY: all debug clean fclean re bonus

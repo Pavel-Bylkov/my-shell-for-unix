@@ -74,13 +74,6 @@ int run_comands(t_data *data, int error)  //! Функция aamarei (моя)
     return (0);
 }
 
-int free_tmp_data(t_data *data)
-{
-    print_pars(data);
-	ft_parsclear(&(data->curr_pars));
-    return (0);
-}
-
 void free_struct(t_data *data)
 {
 	ft_parsclear(&(data->curr_pars));
