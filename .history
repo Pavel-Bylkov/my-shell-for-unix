@@ -74,3 +74,12 @@ echo dsdf sfdsf>text3.txt 2>>test5.txt;ls sdfsdf > text2.txt sdfsdf <sdfsdf |cat
 echo dsdf sfdsf>text3.txt 2>>test5.txt;ls sdfsdf > text2.txt sdfsdf <sdfsdf |cat -e >>test3.txt
 dfgdfg
 echo dsdf sfdsf>text3.txt 2>>test5.txt;ls sdfsdf > text2.txt sdfsdf <sdfsdf |cat -e >>test3.txt
+echo text
+dgdfgdf
+fhfhf
+dfgdfg
+fdgdfg
+dsfsdf
+dgdfgg
+./hello fdgdf sdfsf
+./hello fdgdf sdfsf|echo dfdf; ls | cat -e

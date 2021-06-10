@@ -238,10 +238,10 @@ t_pars		*pars_command(char *str)
 	return (new);
 }
 
-void	get_var(char *str, char **var)
+void	get_var(char *str, char *var)
 {
 	(void)str;
-	(void **)var;
+	(void)var;
 }
 
 void	insert_var_from_env(t_data *data)
@@ -256,8 +256,9 @@ void	insert_var_from_env(t_data *data)
 		i = -1;
 		while (tmp->argv[++i])
 		{
-			get_var(tmp->argv[i], &var);
+			get_var(tmp->argv[i], var);
 		}
+		tmp = tmp->next;
 	}
 }
 
@@ -296,6 +297,7 @@ void	quaotes_clean(t_data *data)
 				b[i[1]] = tmp->argv[i[0]][i[1]];
 			}
 		}
+		tmp = tmp->next;
 	}
 }
 // проверить наличие файлов, добавить ошибки

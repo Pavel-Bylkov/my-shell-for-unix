@@ -8,7 +8,7 @@ void        init_struct(t_data *data, char **envp)
     data->fd_hist = -1;
     data->errors = NULL; //errors_create();
     load_history(data);
-	data->insert_flag = 1;
+	data->insert_flag = 0;
 }
 
 void		load_history(t_data *data)
