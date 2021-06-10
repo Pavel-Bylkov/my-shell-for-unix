@@ -83,3 +83,4 @@ dsfsdf
 dgdfgg
 ./hello fdgdf sdfsf
 ./hello fdgdf sdfsf|echo dfdf; ls | cat -e
+echo done

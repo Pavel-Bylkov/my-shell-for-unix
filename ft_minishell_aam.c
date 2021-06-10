@@ -96,9 +96,9 @@ int		aam_main(t_data *data)
 	//t_data		data;
 	int			i;
 
-	data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
+	//data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
 
-	temp_init_pars(data->curr_pars); //! временное
+	//temp_init_pars(data->curr_pars); //! временное
 	//init_data(env, &data);
 
 	//i = -1;
@@ -109,22 +109,22 @@ int		aam_main(t_data *data)
 	//	i++;
 	//}
 
-	printf("\nsize = %d\n\n", data->size);
+	//printf("\nsize = %d\n\n", data->size);
 
 	sort_mass(data->envp, &data->index, data->size);
 	ft_choice_command_aam(data);
-	sort_mass(data->envp, &data->index, data->size);
-	data->curr_pars->argv[1] = NULL;
-	printf("\n%s\n", data->curr_pars->argv[1]);
-	ft_choice_command_aam(data);
+	//sort_mass(data->envp, &data->index, data->size);
+	//data->curr_pars->argv[1] = NULL;
+	//printf("\n%s\n", data->curr_pars->argv[1]);
+	//ft_choice_command_aam(data);
 
 	i = -1;
 	//while (++i < data->size)
 	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
 
-	printf("\nsize = %d\n\n", data->size);
-	while (++i < data->size)
-		printf("%s\n", data->envp[i]);
+	//printf("\nsize = %d\n\n", data->size);
+	//while (++i < data->size)
+	//	printf("%s\n", data->envp[i]);
 
 	//while (1);
 
