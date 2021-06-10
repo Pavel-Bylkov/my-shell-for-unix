@@ -232,13 +232,26 @@ t_pars		*pars_command(char *str)
     get_fspec_commands(&str, f_spec);
 	get_argv(str, &argv);
 	new = ft_parsnew(0, NULL, argv_split(argv), f_spec);
-	new->redirect = get_redirects(str); // если нашли редиректы добавляем в список
-	// отработать сброс при ошибках >>> или <<<<
 	free(argv);
+	new->redirect = get_redirects(str);
+	// отработать сброс при ошибках >>> или <<<<
 	return (new);
 }
 
-int parse_line(t_data *data, int error)
+void	insert_var_from_env(t_data *data)
+{
+	char	var[1024];
+	int		i;
+
+	i = 0;
+	while (1)
+	{
+		(void)data;
+		(void)var;
+	}
+}
+
+int 	parse_line(t_data *data, int error)
 {
 	int i;
 	char **commands;
@@ -252,7 +265,7 @@ int parse_line(t_data *data, int error)
 		while (commands[++i] != NULL)
 		{
 			ft_parsadd_back(&(data->curr_pars), pars_command(commands[i]));
-			// подставить переменные из env
+			insert_var_from_env(data);
 			// заменить на имена файлов, а абс пути для не builtin комманд перенести в path
 			// убрать кавычки вокруг цитат
 			// проверить наличие файлов, добавить ошибки

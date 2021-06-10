@@ -144,10 +144,12 @@ char			**argv_split(char *s)
 
 static int		get_len_command(char *str)
 {
-	int		len[2];
+	int		len[3];
 
 	len[0] = chr_in_str('|', str);
+	len[0] += (len[0] > -1) * (str[len[0] + 1] == '|');
 	len[1] = chr_in_str(';', str);
+	len[2] = chr_in_str('&', str);
 	if (len[0] > -1 && len[1] > -1 && len[0] < len[1])
 		return (len[0] + 1);
 	else if (len[0] > -1 && len[1] > -1 && len[0] > len[1])
