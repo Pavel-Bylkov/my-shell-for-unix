@@ -27,7 +27,7 @@ void	ft_add_error(t_error **list, char *str)
 	j = 0;
 	while (str[j] && (ft_isdigit(str[j]) || str[j] == ' ' || str[j] == ':'))
 		j++;
-	temp->text = (char *)malloc(sizeof(char) * (ft_strlen(str) - j));
+	temp->text = (char *)malloc(sizeof(char) * (ft_strlen(str) - j + 2));
 	while (str[j] != '\0')
 	{
 		temp->text[j] = str[j];
@@ -50,16 +50,18 @@ t_error 	*errors_create(void)
     if (fd < 0)
         ft_putendl_fd("Error\nCannot open file with errors.", 2);
     line = NULL;
+	ft_putendl_fd("start  errors.", 1);
     while (get_next_line(fd, &line) > 0)
     {
 		if (line != NULL)
-		{		
+		{
 			ft_add_error(&errors, line);
+			ft_putendl_fd(line, 1);
 			free(line);
-			line = NULL;
 		}
 	}
-    if (line)
+	ft_putendl_fd("lines create", 1);
+    if (line != NULL)
     {
 		ft_add_error(&errors, line);
 		free(line);
