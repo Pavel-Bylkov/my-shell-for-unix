@@ -10,8 +10,8 @@ int	ft_pos_env_aam(t_data *data, char *str)
 	while (data->envp[++i] && pos == -1)
 	{
 		if (!ft_strncmp(data->envp[i], str, ft_strlen(str))
-			&& (data->envp[i][(int)ft_strlen + 1] == '='
-			|| data->envp[i][(int)ft_strlen + 1] == '\0'))
+			&& (data->envp[i][(int)ft_strlen(str) + 1] == '='
+			|| data->envp[i][(int)ft_strlen(str) + 1] == '\0'))
 			pos = i;
 	}
 	return (pos);

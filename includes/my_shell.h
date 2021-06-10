@@ -29,17 +29,15 @@ typedef struct	    s_error
 typedef struct	    s_history
 {
     char                *line;
-    char                *quaotes;
-    char                quaote_open;
     struct s_history    *prev;
     struct s_history	*next;
 }				    t_history;
 
 typedef struct	    s_redir
 {
-    char                f_spec[2];
+    char                f_spec[10];
     char                *out;
-    struct s_history	*next;
+    struct s_redir  	*next;
 }				    t_redir;
 
 typedef struct          s_pwdpath
@@ -54,7 +52,7 @@ typedef struct	    s_pars     //! Нужно ввести переменную �
     int                 error;
     char                *path;
     char                **argv;
-    char                f_spec[2];
+    char                f_spec[10];
     t_redir             *redirect;
     struct s_pars       *next;
 }				    t_pars;
@@ -74,7 +72,7 @@ typedef struct      s_data
 
 t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
-// void				ft_parsclear(t_pars **lst, void (*del)(void*));
+void				ft_parsclear(t_pars **lst);
 
 t_history		    *new_history(char *str);
 void	            history_add_front(t_history **lst, t_history *new);
@@ -97,17 +95,23 @@ int                 main_loop(t_data *data);
 void		        free_array(void **s);
 //char                **copy_str_array(char **s);
 int                 read_line(t_data *data);
-int                 parse_line(t_data *data);
-char			    **str_split(char *s);
-int                 run_comands(t_data *data);
-int                 free_tmp_data(t_data *data);
+int                 parse_line(t_data *data, int error);
+char			    **argv_split(char *s);
+int                 run_comands(t_data *data, int error);
+void	            print_pars(t_data *data);
 void                free_struct(t_data *data);
 int                 ft_putchar(int c);
 t_error             *errors_create(void);
 void				ft_errorsclear(t_error **lst);
 void		        ft_exit_errcode(int errcode, t_data *data);
-void		        print_err(int errcode, t_data *data);
-
+int		            print_err(int errcode, t_data *data);
+int	                chr_in_str(char c, char *s);
+int			        quaote_is_open(char *str, int n);
+int                 backslash_is_active(char *str, int n);
+t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
+void		        ft_parsadd_back(t_pars **lst, t_pars *new);
+void				ft_parsclear(t_pars **lst);
+char	            **get_commands(t_data *data);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);
