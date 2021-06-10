@@ -6,7 +6,7 @@ void	ft_out_export(t_data data)
 	int		j;
 
 	i = -1;
-	printf("data.size = %d\n\n", data.size);
+printf("data.size = %d\n\n", data.size); //! УБРАТЬ
 	while (++i < data.size)
 	{
 		j = 0;
@@ -56,7 +56,9 @@ char	**ft_env_add(t_data *data, char *str)
 	char	**new_env;
 	int		i;
 	int		pos;
+	int		flag;
 
+	flag = 0;
 	new_env = (char **)malloc(sizeof(char *) * (data->size + 2));
 	if (new_env == NULL)
 		return (NULL);
@@ -68,12 +70,13 @@ char	**ft_env_add(t_data *data, char *str)
 		if (ft_strncmp(data->envp[i], str, pos) == 0)
 		{
 			new_env[i] = ft_env_work_add(data->envp[i], str, pos);
-			break ;
+			flag = 1;
 		}
-		new_env[i] = ft_strdup(data->envp[i]);
+		else
+			new_env[i] = ft_strdup(data->envp[i]);
 		i++;
 	}
-	if (i == data->size)
+	if (flag == 0)
 		new_env[data->size++] = ft_strdup(str);
 	new_env[data->size] = NULL;
 	ft_free_mas(data->envp);

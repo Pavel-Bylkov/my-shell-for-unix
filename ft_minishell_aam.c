@@ -140,59 +140,21 @@ int		ft_choice_command_aam(t_data *data)
 			ft_pwd();
 		else if(!ft_strcmp(data->curr_pars->argv[0], "cd"))
 			ft_cd(data, data->curr_pars);
+		else if(!ft_strcmp(data->curr_pars->argv[0], "echo"))
+			ft_echo(*data->curr_pars);
 	}
 	return (0);
 }
 
 int		aam_main(t_data *data)
 {
-	//t_pars		pars;
-	//t_data		data;
-	int			i;
-
-	//data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
-
+	//! ДАЕТ УТЕЧКУ - НАДО УБРАТЬ В ИНИЦИАЛИЗАЦИЮ!!!!
 	data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
-
 	init_pwd_aam(data);
-
-	//temp_init_pars(data->curr_pars); //! временное
-
-	i = -1;
-	//printf("..\n..\n");
-	//printf("\nsize = %d\n\n", data->size);
-	//while (++i < data->size)
-	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
-
-	//printf("\nsize = %d\n\n", data->size);
-
 	sort_mass(data->envp, &data->index, data->size);
+	//! ДО ЭТОГО МЕСТА
+
 	ft_choice_command_aam(data);
-
-//! это дает утечку, но это временный фрагмент кода
-	//data->curr_pars->argv[0] = "env";
-	//data->curr_pars->argv[1] = "env";
-	//data->curr_pars->argv[2] = NULL;
-	//ft_choice_command_aam(data);
-
-
-
-	//data->curr_pars->argv[1] = NULL;
-	//printf("\n%s\n", data->curr_pars->argv[1]);
-	//ft_choice_command_aam(data);
-
-	//i = -1;
-	//while (++i < data->size)
-	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
-
-	//printf("\nsize = %d\n\n", data->size);
-
-	i = -1;
-	//while (++i < data->size)
-	//	printf("%d - %s\n",i, data->envp[i]);
-
-	//while (1);
-
 	return (0);
 
 }

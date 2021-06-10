@@ -57,6 +57,33 @@ char	*ft_path_back(t_data *data)
 	return (str);
 }
 
+char	*ft_path_oneleft(t_data *data, char *path)
+{
+	int		len;
+	char	*str;
+
+	str = NULL;
+	if ((ft_strlen(path) == 2 && path[1] == '.')
+		|| (ft_strlen(path) == 3 && path[1] == '.' && path[2] == '/'))
+	{
+		len = (int)ft_strlen(data->pwd_oldp->pwd_p);
+		if (len > 1)
+		{
+			while (data->pwd_oldp->pwd_p[len] != '/')
+				len--;
+			if (len > 1)
+			{
+				str = ft_strdup(data->pwd_oldp->pwd_p);
+				str[len] = '\0';
+			}
+		}
+	}
+	else if (ft_strlen(path) == 2 && path[1] == '/')
+		str = ft_strdup(data->pwd_oldp->pwd_p);
+	free(path);
+	return (str);
+}
+
 int	ft_cd(t_data *data, t_pars *pars)
 {
 	int		er;
@@ -73,6 +100,12 @@ int	ft_cd(t_data *data, t_pars *pars)
 		er = chdir(path);
 		if (er == -1)
 			ft_cd_output_err(path, ": No such file or directory\n");
+		else
+		{
+			if (path[0] == '.')
+				path = ft_path_oneleft(data, path);
+			ft_replace_oldpwd(data, path);
+		}
 		if (path != NULL)
 			free(path);
 	}

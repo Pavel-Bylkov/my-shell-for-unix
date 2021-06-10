@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-int	ft_del_position(t_data data, char *str)
+int	ft_str_position(t_data data, char *str)
 {
 	int	i;
 	int	len;
@@ -25,7 +25,7 @@ char	**ft_env_del(t_data *data, char *str)
 	int		i;
 	int		pos_del;
 
-	pos_del = ft_del_position(*data, str);
+	pos_del = ft_str_position(*data, str);
 	if (pos_del != -1)
 	{
 		new_env = (char **)malloc(sizeof(char *) * data->size);
