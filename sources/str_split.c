@@ -183,7 +183,7 @@ static int	get_ncommand(t_data *data)
 
 	n_strs = 0;
 	i = 0;
-	str = data->history->line;
+	str = data->line;
 	while (str[i])
 	{
 		if (str[i])
@@ -228,7 +228,7 @@ char	**get_commands(t_data *data)
 	int		nstrs;
 
 	// сделать по аналогии разложение на команды, с оставлением окончания.
-	if (data->history->line == NULL)
+	if (data->line == NULL)
 		return (NULL);
 	nstrs = get_ncommand(data);
 	commands = NULL;
@@ -237,7 +237,7 @@ char	**get_commands(t_data *data)
 		commands = (char **)malloc(sizeof(char *) * (nstrs + 1));
 		if (commands == NULL)
 			return (NULL);
-		if (commandscpy(commands, nstrs, data->history->line))
+		if (commandscpy(commands, nstrs, data->line))
 			return (commands);
 	}	
 	if (commands != NULL)

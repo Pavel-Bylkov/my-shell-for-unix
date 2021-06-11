@@ -307,13 +307,11 @@ void	check_open_files(t_data *data)
 	(void)data;
 }
 
-int 	parse_line(t_data *data, int error)
+int 	parse_line(t_data *data)
 {
 	int i;
 	char **commands;
 
-	if (error != 0)
-		return (error);
 	commands = get_commands(data); // последний символ | или ; , || или &&
 	if (commands != NULL)
 	{

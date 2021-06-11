@@ -77,7 +77,8 @@ void free_struct(t_data *data)
 {
 	ft_parsclear(&(data->curr_pars));
 	free_array((void **)data->envp);
-	ft_historyclear(&(data->history));
+	if (data->line)
+		free(data->line);
 	ft_errorsclear(&(data->errors));
 	free_array((void **)data->index);
 }

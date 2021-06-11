@@ -1,46 +1,39 @@
 #include "my_shell.h"
 
+//обработчик SIGINT
+static void     int_handler(int status)
+{
+    if (status == SIGINT)
+    {
+        //rl_display_prompt = SHELL_PROMT;
+        printf("\n"); // Move to a new line
+        rl_on_new_line(); // Regenerate the prompt on a newline
+        rl_replace_line("", 0); // Clear the previous text
+        rl_redisplay();
+    }
+}
+
 int main_loop(t_data *data)
 {
     int error;
-    // struct termios term;
-	// char	*term_name;
 
-	// term_name = "xterm-256color";
-	// tcgetattr(0, &term);
-	// term.c_lflag &= ~(ECHO);
-	// term.c_lflag &=~(ICANON);
-	// tcsetattr(0, TCSANOW, &term);
-	// tgetent(0, term_name);
+    //read_history(HISTORY_FILE); // переписать на свою?
+    //rl_prompt = ;
+    (void)int_handler;
     while (1)
     {
-        // ft_putstr_fd("my_shell>$ ", 1);
-        error = read_line(data);
-        error = parse_line(data, error);
+        data->line = readline(SHELL_PROMT);
+        add_history(data->line);
+        //write_history(HISTORY_FILE); // переписать на свою?
+        error = parse_line(data);
         run_comands(data, error);
         print_pars(data);
+        if (data->line)
+		    free(data->line);
 	    ft_parsclear(&(data->curr_pars));
     }
 }
 
-int read_line(t_data *data)
-{
-    char *line;
-    // int pos;
-
-    // line = (char *)malloc(sizeof(char) + 1);
-	// line[0] = '\0';
-    // tputs(save_cursor, 1, ft_putchar);
-    // ft_press_key(data, &line, 0);
-    line = readline("my_shell>$ ");
-    ft_last_in_struct(&(data->history), line);
-	// ft_strcopy_fr(&line, data->history->line);
-	// tputs(restore_cursor, 1, ft_putchar);
-    free(line);
-	// pos = ft_strlen(data->history->line);
-	// write(0, data->history->line, pos);
-    // write(1, "\n", 1);
-    // Сохранение истории в файл .history / очистка памяти.
-    save_history(data);
-    return (0);
-}
+// len = ft_strlen(data->history->line);
+// endl_ignor = (backslash_is_active(data->line, len) ||
+// 						quaote_is_open(data->line, len) != 0);

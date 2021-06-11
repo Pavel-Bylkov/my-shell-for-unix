@@ -2,7 +2,7 @@ NAME		= minishell
 
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
-LIBFLAGS	= -L libft -lft #-ltermcap
+LIBFLAGS	= -L libft -lft -lreadline #-ltermcap
 
 CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g
@@ -19,9 +19,7 @@ FLS			= \
 			parser \
 			str_split \
 			termcap \
-			termcap_keys \
 			tools \
-			history \
 			errors \
 			../ft_minishell_aam \
 			../ft_str_utils_aam \
