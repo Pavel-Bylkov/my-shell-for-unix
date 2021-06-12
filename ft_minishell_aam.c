@@ -65,13 +65,25 @@ void	create_index(t_data *data)
 void	init_pwd_aam(t_data *data)
 {
 	int		i;
+	int		pos;
 
-
-	i = 0;
-	while (data->envp[i] && (ft_strncmp(data->envp[i], "PWD=",4)))
-		i++;
+	i = -1;
+	pos = -1;
+	data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
 	data->pwd_oldp->oldpwd_p = NULL;
-	data->pwd_oldp->pwd_p = ft_strdup(&data->envp[i][4]);
+	data->pwd_oldp->pwd_p = NULL;
+	while (data->envp[++i] && pos == -1)
+		if (!ft_strncmp(data->envp[i], "PWD=", 3))
+			pos = i;
+	if (pos != -1)
+		data->pwd_oldp->pwd_p = ft_strdup(&data->envp[pos][4]);
+	i = -1;
+	pos = -1;
+	while (data->envp[++i] && pos == -1)
+		if (!ft_strncmp(data->envp[i], "OLDPWD=", 6))
+			pos = i;
+	if (pos != -1)
+		data->pwd_oldp->oldpwd_p = ft_strdup(&data->envp[pos][7]);
 }
 
 void	init_data(char **env, t_data *data)
@@ -82,7 +94,7 @@ void	init_data(char **env, t_data *data)
 	while (env[i] != NULL)
 		i++;
 	data->envp = (char **)malloc(sizeof(char *) * (i + 1));
-	data->index = (int *)malloc(sizeof(int) * (i));
+	data->index = NULL;
 	data->size = i;
 	i = -1;
 	while (env[++i] != NULL)
@@ -90,10 +102,7 @@ void	init_data(char **env, t_data *data)
 	data->envp[i] = NULL;
 
 	create_index(&(*data));
-
-
-	//data->index = (int *)malloc(sizeof(int) * data->size);
-
+	sort_mass(data->envp, &data->index, data->size);
 }
 
 void	swap(int *a, int *b)
@@ -149,9 +158,9 @@ int		ft_choice_command_aam(t_data *data)
 int		aam_main(t_data *data)
 {
 	//! ДАЕТ УТЕЧКУ - НАДО УБРАТЬ В ИНИЦИАЛИЗАЦИЮ!!!!
-	data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
-	init_pwd_aam(data);
-	sort_mass(data->envp, &data->index, data->size);
+	//data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
+	//init_pwd_aam(data);
+	//sort_mass(data->envp, &data->index, data->size);
 	//! ДО ЭТОГО МЕСТА
 
 	ft_choice_command_aam(data);

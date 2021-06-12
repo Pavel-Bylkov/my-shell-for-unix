@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-int	ft_str_position(t_data data, char *str)
+int	ft_del_position(t_data data, char *str)
 {
 	int	i;
 	int	len;
@@ -11,7 +11,8 @@ int	ft_str_position(t_data data, char *str)
 	len = ft_strlen(str);
 	while (data.envp[i] != NULL && pos == -1)
 	{
-		if (ft_strncmp(data.envp[i], str, len) == 0)
+		if (ft_strncmp(data.envp[i], str, len) == 0
+			&& (data.envp[i][len] == '=' || data.envp[i][len] == '\0'))
 			pos = i;
 		else
 			i++;
@@ -25,7 +26,7 @@ char	**ft_env_del(t_data *data, char *str)
 	int		i;
 	int		pos_del;
 
-	pos_del = ft_str_position(*data, str);
+	pos_del = ft_del_position(*data, str);
 	if (pos_del != -1)
 	{
 		new_env = (char **)malloc(sizeof(char *) * data->size);

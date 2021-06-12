@@ -142,7 +142,8 @@ void	ft_replace_oldpwd(t_data *data, char *path);
 int	ft_pos_env_aam(t_data *data, char *str);
 void	ft_replace_oldpwd(t_data *data, char *path);
 int	ft_echo(t_pars pars);
-int	ft_str_position(t_data data, char *str);
+int	ft_del_position(t_data data, char *str);
+void	init_pwd_aam(t_data *data);
 
 
 #endif

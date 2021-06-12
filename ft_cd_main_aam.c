@@ -32,25 +32,24 @@ char	*ft_path_home(t_data *data)
 
 char	*ft_path_back(t_data *data)
 {
-	int		i;
 	char	*str;
 	int		pos;
 
-	i = 0;
 	pos = ft_pos_env_aam(data, "OLDPWD");
 	str = NULL;
-	if (pos != -1)
+	if (data->pwd_oldp->oldpwd_p != NULL)
 	{
-		if (data->envp[i][6] == '=' && data->envp[i][7] != '\0')
-		{
-			str = ft_strdup(&data->envp[i][7]);
-			ft_replace_oldpwd(data, str);
-		}
-		else if (data->envp[i][6] == '\0')
+		if (pos == -1)
+			str = ft_strdup(data->pwd_oldp->oldpwd_p);
+		else if (data->envp[pos][6] == '=')
+			str = ft_strdup(data->pwd_oldp->oldpwd_p);
+		else if (data->envp[pos][6] == '\0')
 		{
 			ft_cd_output_err(NULL, "OLDPWD not set\n");
-			ft_replace_oldpwd(data, NULL);
+			str = ft_strdup(data->pwd_oldp->pwd_p);
 		}
+		write(1, str, ft_strlen(str));
+		write(1, "\n", 1);
 	}
 	else
 		ft_cd_output_err(NULL, "OLDPWD not set\n");
@@ -84,6 +83,24 @@ char	*ft_path_oneleft(t_data *data, char *path)
 	return (str);
 }
 
+char	*ft_strjoin_path(char *str1, char *str2)
+{
+	char	*line;
+	int		len;
+
+	len = (int)ft_strlen(str1) + 1;
+	line = ft_strjoin(str1, "/");
+	line[len] = '\0';
+	//if (str1)
+	//	free(str1);
+	len = len + (int)ft_strlen(str2);
+	str1 = ft_strjoin(line, str2);
+	if (str2)
+		free(str2);
+	free(line);
+	return (str1);
+}
+
 int	ft_cd(t_data *data, t_pars *pars)
 {
 	int		er;
@@ -94,19 +111,25 @@ int	ft_cd(t_data *data, t_pars *pars)
 	else if (pars->argv[1] != NULL && pars->argv[1][0] == '-')
 		path = ft_path_back(data);
 	else
+	{
 		path = ft_strdup(pars->argv[1]);
+		if (path)
+		{
+			if (path[0] == '.')
+				path = ft_path_oneleft(data, path);
+			else
+				path = ft_strjoin_path(data->pwd_oldp->pwd_p, path);
+		}
+
+	}
 	if (path)
 	{
 		er = chdir(path);
 		if (er == -1)
 			ft_cd_output_err(path, ": No such file or directory\n");
 		else
-		{
-			if (path[0] == '.')
-				path = ft_path_oneleft(data, path);
 			ft_replace_oldpwd(data, path);
-		}
-		if (path != NULL)
+		if (path)
 			free(path);
 	}
 	return (0);
