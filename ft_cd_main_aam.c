@@ -100,6 +100,7 @@ int	ft_cd(t_data *data, t_pars *pars)
 			ft_cd_output_err(pars->argv[1], ": No such file or directory\n");
 		else
 		{
+			free(path);
 			path = getcwd(NULL, 0);
 			ft_replace_oldpwd(data, path);
 		}

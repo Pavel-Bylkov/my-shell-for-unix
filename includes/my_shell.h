@@ -79,7 +79,7 @@ t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
 
-void rl_replace_line(char *s, int k);
+//void rl_replace_line(char *s, int k);
 void	            ft_strcopy_fr(char **line, char *str);
 void                init_struct(t_data *data, char **envp);
 void                main_loop(t_data *data);
