@@ -5,17 +5,11 @@ t_pars		*ft_parsnew(int error, char *path, char **argv, char *f_spec)
 	t_pars	*rez;
 	int		j;
 
-	rez = (t_pars *)malloc(sizeof(*rez));
+	rez = (t_pars *)g_malloc(sizeof(*rez));
 	if (rez == NULL)
 		return (NULL);
 	if (path)
-	{
-		j = -1;
-		rez->path = (char *)malloc(sizeof(char) * ft_strlen(path) + 1);
-		while (path[++j] != '\0')
-			rez->path[j] = path[j];
-		rez->path[j] = '\0';
-	}
+		rez->path = g_strdup(path);
 	else
 		rez->path = NULL;
 	rez->argv = argv;
@@ -64,14 +58,14 @@ t_redir		*ft_redirnew(char *f_spec, int l1, char *out, int l2)
 	t_redir	*rez;
 	int		j;
 
-	rez = (t_redir *)malloc(sizeof(*rez));
+	rez = (t_redir *)g_malloc(sizeof(*rez));
 	if (rez == NULL)
 		return (NULL);
 	j = -1;
 	while (++j != l1)
 		rez->f_spec[j] = f_spec[j];
 	rez->f_spec[j] = '\0';
-	rez->out = ft_strdupn(out, l2);
+	rez->out = g_strdupn(out, l2);
 	return (rez);
 }
 
@@ -83,8 +77,8 @@ void				ft_redirclear(t_redir **redir)
 	{
 		tmp = (*redir)->next;
 		if ((*redir)->out)
-			free((*redir)->out);
-		free((*redir));
+			g_free((*redir)->out);
+		g_free((*redir));
 		*redir = tmp;
 	}	
 }
@@ -97,12 +91,12 @@ void				ft_parsclear(t_pars **lst)
 	{
 		tmp = (*lst)->next;
 		if ((*lst)->path)
-			free((*lst)->path);
+			g_free((*lst)->path);
 		if ((*lst)->argv)
 			free_array((void **)((*lst)->argv));
 		if ((*lst)->redirect)
 			ft_redirclear(&((*lst)->redirect));
-		free((*lst));
+		g_free((*lst));
 		*lst = tmp;
 	}
 }
@@ -227,14 +221,13 @@ t_pars		*pars_command(char *str)
 	char 		f_spec[10];
 	char		*argv;
 
-	argv = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
+	argv = (char *)g_malloc(sizeof(char) * (ft_strlen(str) + 1));
 	ft_memset(argv, 0, sizeof(argv));
     get_fspec_commands(&str, f_spec);
 	get_argv(str, &argv);
 	new = ft_parsnew(0, NULL, argv_split(argv), f_spec);
-	free(argv);
+	g_free(argv);
 	new->redirect = get_redirects(str);
-	// отработать сброс при ошибках >>> или <<<<
 	return (new);
 }
 
@@ -273,7 +266,7 @@ void	find_path(t_data *data)
 		len = ft_strlen(data->curr_pars->path);
 		while (data->curr_pars->path[len - 1] != '/')
 			len--;
-		data->curr_pars->argv[0] = ft_strdup(&(data->curr_pars->path[len]));
+		data->curr_pars->argv[0] = g_strdup(&(data->curr_pars->path[len]));
 	}
 }
 // убрать кавычки вокруг цитат
@@ -307,11 +300,13 @@ void	check_open_files(t_data *data)
 	(void)data;
 }
 
-int 	parse_line(t_data *data)
+int 	parse_line(t_data *data, int error)
 {
 	int i;
 	char **commands;
 
+	if (error != 0)
+		return (error);
 	commands = get_commands(data); // последний символ | или ; , || или &&
 	if (commands != NULL)
 	{

@@ -15,10 +15,13 @@
 # include "libft.h"
 # include "get_next_line.h"
 
-# define RL_BUFSIZE 128
 # define ERRORS_FILE "./errors/errors.txt"
 # define HISTORY_FILE "./.history"
 # define SHELL_PROMT "my_shell>$ "
+# define QUAOTE_PROMT "> "
+# ifndef DEBUG
+#  define DEBUG	0
+# endif
 
 typedef struct	    s_error
 {
@@ -54,16 +57,22 @@ typedef struct	    s_pars
 
 typedef struct      s_data
 {
-    int			        fd_hist;
     char				*line;
-    char                insert_flag;
     t_pars              *curr_pars;
     t_pwdpath           *pwd_oldp;
     char                **envp;
     int                 *index;  //* массив индексов (строк) массива envp
     int                 size;   //* размер массива
     t_error             *errors;
+	int					code_exit;
+	int					count_malloc;
 }                   t_data;
+
+#ifdef  MAIN_FILE
+t_data						*g_data;
+#else
+extern t_data				*g_data;
+#endif
 
 t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
@@ -72,10 +81,9 @@ void				ft_parsclear(t_pars **lst);
 
 void	            ft_strcopy_fr(char **line, char *str);
 void                init_struct(t_data *data, char **envp);
-int                 main_loop(t_data *data);
+void                main_loop(t_data *data);
 void		        free_array(void **s);
-int                 read_line(t_data *data);
-int                 parse_line(t_data *data);
+int                 parse_line(t_data *data, int error);
 char			    **argv_split(char *s);
 int                 run_comands(t_data *data, int error);
 void	            print_pars(t_data *data);
@@ -92,6 +100,11 @@ t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
 char	            **get_commands(t_data *data);
+void				g_free(void *content);
+void				*g_malloc(size_t size);
+char	*g_strdup(char *str);
+char	*g_strdupn(const char *str, size_t len);
+char	*g_strjoin(char *str1, int n, int k, char *str2);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);

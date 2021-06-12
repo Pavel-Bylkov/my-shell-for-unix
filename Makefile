@@ -4,7 +4,7 @@ LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
 LIBFLAGS	= -L libft -lft -lreadline #-ltermcap
 
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -D DEBUG=1
 CC			= gcc -g
 
 INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/.
@@ -53,6 +53,7 @@ $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c
 	@$(CC)		$(CFLAGS) $(INCLUDES) -c $< -o $@ -MMD
 	@echo "Compiled $@"
 
+
 bonus: all
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
@@ -82,6 +83,7 @@ clean:
 
 fclean:			clean
 	rm -f		$(NAME)
+	rm -rf		*.tmp
 
 re:				fclean all
 

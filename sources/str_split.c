@@ -114,7 +114,7 @@ static void		ft_strscpy(char **res, size_t n, char *str)
         len = chr_in_str(' ', &str[j]);
 		if (len == -1)
 			len = ft_strlen(&str[j]);
-		res[i] = ft_strdupn(&str[j], len);
+		res[i] = g_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{
 			free_array((void **)res);
@@ -135,7 +135,7 @@ char			**argv_split(char *s)
 		return (NULL);
 	str = (char *)s;
 	nstrs = get_nstrs(str);
-	res = (char **)malloc(sizeof(char *) * (nstrs + 1));
+	res = (char **)g_malloc(sizeof(char *) * (nstrs + 1));
 	if (res == NULL)
 		return (NULL);
 	ft_strscpy(res, nstrs, str);
@@ -210,7 +210,7 @@ static int		commandscpy(char **res, size_t n, char *str)
 	while (str[j] && i < n)
 	{
         len = get_len_command(&str[j]);
-		res[i] = ft_strdupn(&str[j], len);
+		res[i] = g_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{
 			free_array((void **)res);
@@ -234,7 +234,7 @@ char	**get_commands(t_data *data)
 	commands = NULL;
 	if (nstrs != -1)
 	{
-		commands = (char **)malloc(sizeof(char *) * (nstrs + 1));
+		commands = (char **)g_malloc(sizeof(char *) * (nstrs + 1));
 		if (commands == NULL)
 			return (NULL);
 		if (commandscpy(commands, nstrs, data->line))

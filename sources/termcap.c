@@ -4,9 +4,9 @@ void	ft_strcopy_fr(char **line, char *str)
 {
 	int k;
 
-	free(*line);
+	g_free(*line);
 	k = ft_strlen(str);
-	*line = (char *)malloc(sizeof(char) * k);
+	*line = (char *)g_malloc(sizeof(char) * k);
 	k = 0;
 	while (str[k] != '\0')
 	{

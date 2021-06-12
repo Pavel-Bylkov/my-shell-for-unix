@@ -7,6 +7,7 @@ void        init_struct(t_data *data, char **envp)
     data->line = NULL;
     data->errors = NULL; //errors_create();
     //load_history(data);
-	data->insert_flag = 0;
+	data->code_exit = 0;
+    data->count_malloc = 0;
 }
 

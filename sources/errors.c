@@ -57,14 +57,14 @@ t_error 	*errors_create(void)
 		{
 			ft_add_error(&errors, line);
 			ft_putendl_fd(line, 1);
-			free(line);
+			g_free(line);
 		}
 	}
 	ft_putendl_fd("lines create", 1);
     if (line != NULL)
     {
 		ft_add_error(&errors, line);
-		free(line);
+		g_free(line);
 	}
     if (close(fd) != 0)
 		ft_putendl_fd("Error\nCannot close file with errors.", 2);		
@@ -86,8 +86,8 @@ void				ft_errorsclear(t_error **lst)
 	{
 		tmp = (*lst)->next;
 		if ((*lst)->text)
-			free((*lst)->text);
-		free((*lst));
+			g_free((*lst)->text);
+		g_free((*lst));
 		*lst = tmp;
 	}
 }

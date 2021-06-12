@@ -8,12 +8,8 @@ void		free_array(void **s)
 	{
 		i = 0;
 		while (s[i] != NULL)
-		{
-			free(s[i]);
-			s[i++] = NULL;
-		}
-		free(s);
-		s = NULL;
+			g_free(s[i++]);
+		g_free(s);
 	}
 }
 
@@ -31,38 +27,25 @@ void	print_pars(t_data *data)
 	tmp = data->curr_pars;
 	while (tmp != NULL)
 	{
-		ft_putendl_fd("------------------------------------", 1);
-		ft_putstr_fd("error : ", 1);
-		ft_putnbr_fd(tmp->error, 1);
-		ft_putendl_fd("", 1);
-		ft_putstr_fd("path : ", 1);
-		if (tmp->path != NULL)
-			ft_putendl_fd(tmp->path, 1);
-		else
-			ft_putendl_fd("NULL", 1);
-		ft_putendl_fd("argv : ", 1);
+		printf("------------------------------------\n");
+		printf("error : %d\n", tmp->error);
+		printf("path : %s\n", tmp->path);
+		printf("argv :\n");
 		i = -1;
 		while (tmp->argv[++i] != NULL)
-		{
-			ft_putstr_fd("   ", 1);
-			ft_putnbr_fd(i, 1);
-			ft_putstr_fd(" : ", 1);
-			ft_putendl_fd(tmp->argv[i], 1);
-		}
-		ft_putstr_fd("f_spec : ", 1);
-		ft_putendl_fd(tmp->f_spec, 1);
-		ft_putendl_fd("redirects :", 1);
+			printf("   %d : %s\n", i, tmp->argv[i]);
+		printf("f_spec : %s\n", tmp->f_spec);
+		printf("redirects :\n");
 		last = tmp->redirect;
 		while (last != NULL)
 		{
-			ft_putstr_fd("   -f_spec : ", 1);
-			ft_putendl_fd(last->f_spec, 1);
-			ft_putstr_fd("   -out : ", 1);
-			ft_putendl_fd(last->out, 1);
+			printf("   -f_spec : %s\n", last->f_spec);
+			printf("   -out : %s\n", last->out);
 			last = last->next;
 		}
 		tmp = tmp->next;
 	}
+	printf("count malloc = %d\n", data->count_malloc);
 }
 
 int run_comands(t_data *data, int error)  //! Функция aamarei (моя)
@@ -77,8 +60,73 @@ void free_struct(t_data *data)
 {
 	ft_parsclear(&(data->curr_pars));
 	free_array((void **)data->envp);
-	if (data->line)
-		free(data->line);
+	g_free(data->line);
 	ft_errorsclear(&(data->errors));
 	free_array((void **)data->index);
+	if (DEBUG)
+		printf("count malloc = %d\n", data->count_malloc);
+}
+
+void	g_free(void *content)
+{
+	if (content != NULL)
+	{
+		free(content);
+		g_data->count_malloc -= 1 * DEBUG;
+		content = NULL;
+	}
+}
+
+void	*g_malloc(size_t size)
+{
+	void	*ptr;
+
+	ptr = malloc(size);
+	if (NULL != ptr)
+		g_data->count_malloc += 1 * DEBUG;
+	return (ptr);
+}
+
+char	*g_strdup(char *str)
+{
+	char	*res;
+
+	res = ft_strdup(str);
+	if (res != NULL)
+		g_data->count_malloc += 1 * DEBUG;
+	return (res);
+}
+
+char	*g_strdupn(const char *str, size_t len)
+{
+	char	*dst;
+
+	dst = ft_strdupn(str, len);
+	if (NULL != dst)
+		g_data->count_malloc += 1 * DEBUG;
+	return (dst);
+}
+
+char	*g_strjoin(char *str1, int n, int k, char *str2)
+{
+	char	*res;
+	char	*tmp;
+
+	
+	if (n == -1)
+		str1[ft_strlen(str1) - 1] = '\0';
+	if (k == 1)
+	{
+		tmp = str1;
+		str1 = ft_strjoin(str1, "\n");
+		if (NULL != str1)
+			g_data->count_malloc += 1 * DEBUG;
+		g_free(tmp);
+	}
+	res = ft_strjoin(str1, str2);
+	if (NULL != res)
+		g_data->count_malloc += 1 * DEBUG;
+	g_free(str1);
+	g_free(str2);
+	return (res);
 }
