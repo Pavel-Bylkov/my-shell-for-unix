@@ -2,8 +2,8 @@
 # define MY_SHELL_H
 
 # include <stdio.h>
-# include <curses.h>
-# include <readline/readline.h> // для маков возможно нужно убрать папку
+//# include <curses.h>
+# include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
 # include <fcntl.h>
@@ -83,7 +83,9 @@ void				ft_parsclear(t_pars **lst);
 //void rl_replace_line(char *s, int k);
 void	            ft_strcopy_fr(char **line, char *str);
 void                init_struct(t_data *data, char **envp);
+int                 one_run(t_data *data, char *str);
 void                main_loop(t_data *data);
+int		            check_unexpected_token(char *str);
 void		        free_array(void **s);
 int                 parse_line(t_data *data, int error);
 char			    **argv_split(char *s);
