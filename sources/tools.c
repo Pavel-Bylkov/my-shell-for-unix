@@ -52,8 +52,7 @@ int run_comands(t_data *data, int error)  //! Функция aamarei (моя)
 {
 	if (error != 0)
 		return (error);
-    aam_main(data);
-    return (0);
+    return (aam_main(data));
 }
 
 void free_struct(t_data *data)
