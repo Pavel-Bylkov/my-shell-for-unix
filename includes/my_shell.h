@@ -18,6 +18,7 @@
 # define ERRORS_FILE "./errors/errors.txt"
 # define HISTORY_FILE "./.history"
 # define SHELL_PROMT "my_shell>$ "
+# define ERROR_PREFIX "my_shell: "
 # define QUAOTE_PROMT "> "
 # ifndef DEBUG
 #  define DEBUG	0
@@ -102,10 +103,11 @@ void				ft_parsclear(t_pars **lst);
 char	            **get_commands(t_data *data);
 void				g_free(void *content);
 void				*g_malloc(size_t size);
-char	*g_strdup(char *str);
-char	*g_strdupn(const char *str, size_t len);
-char	*g_strjoin(char *str1, int n, int k, char *str2);
-char	*g_newpath(char *dir, int n, char *name);
+char				*g_strdup(char *str);
+char				*g_strdupn(const char *str, size_t len);
+char				*g_strjoin(char *str1, int n, int k, char *str2);
+char				*g_newpath(char *dir, int n, char *name);
+int					ft_perr(char *com, int code, char *str1, char *str2);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);

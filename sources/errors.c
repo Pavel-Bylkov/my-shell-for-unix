@@ -1,5 +1,16 @@
 #include "my_shell.h"
 
+int	ft_perr(char *com, int code, char *str1, char *str2)
+{
+	ft_putstr_fd(ERROR_PREFIX, 2);
+	if (com)
+		ft_putstr_fd(com, 2);
+	if (str1)
+		ft_putstr_fd(str1, 2);
+	ft_putendl_fd(str2, 2);
+	return (code);
+}
+
 int		print_err(int errcode, t_data *data)
 {
 	t_error *tmp;
