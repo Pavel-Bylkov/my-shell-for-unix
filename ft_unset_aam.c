@@ -11,7 +11,8 @@ int	ft_del_position(t_data data, char *str)
 	len = ft_strlen(str);
 	while (data.envp[i] != NULL && pos == -1)
 	{
-		if (ft_strncmp(data.envp[i], str, len) == 0)
+		if (ft_strncmp(data.envp[i], str, len) == 0
+			&& (data.envp[i][len] == '=' || data.envp[i][len] == '\0'))
 			pos = i;
 		else
 			i++;

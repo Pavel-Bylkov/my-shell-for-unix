@@ -9,5 +9,6 @@ void        init_struct(t_data *data, char **envp)
     //load_history(data);
 	data->code_exit = 0;
     data->count_malloc = 0;
+	init_pwd_aam(data);
 }
 

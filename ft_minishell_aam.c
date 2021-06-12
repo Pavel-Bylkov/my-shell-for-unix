@@ -65,13 +65,25 @@ void	create_index(t_data *data)
 void	init_pwd_aam(t_data *data)
 {
 	int		i;
+	int		pos;
 
-
-	i = 0;
-	while (data->envp[i] && (ft_strncmp(data->envp[i], "PWD=",4)))
-		i++;
+	i = -1;
+	pos = -1;
+	data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
 	data->pwd_oldp->oldpwd_p = NULL;
-	data->pwd_oldp->pwd_p = ft_strdup(&data->envp[i][4]);
+	data->pwd_oldp->pwd_p = NULL;
+	while (data->envp[++i] && pos == -1)
+		if (!ft_strncmp(data->envp[i], "PWD=", 3))
+			pos = i;
+	if (pos != -1)
+		data->pwd_oldp->pwd_p = ft_strdup(&data->envp[pos][4]);
+	i = -1;
+	pos = -1;
+	while (data->envp[++i] && pos == -1)
+		if (!ft_strncmp(data->envp[i], "OLDPWD=", 6))
+			pos = i;
+	if (pos != -1)
+		data->pwd_oldp->oldpwd_p = ft_strdup(&data->envp[pos][7]);
 }
 
 void	init_data(char **env, t_data *data)
@@ -82,7 +94,7 @@ void	init_data(char **env, t_data *data)
 	while (env[i] != NULL)
 		i++;
 	data->envp = (char **)malloc(sizeof(char *) * (i + 1));
-	data->index = (int *)malloc(sizeof(int) * (i));
+	data->index = NULL;
 	data->size = i;
 	i = -1;
 	while (env[++i] != NULL)
@@ -90,10 +102,7 @@ void	init_data(char **env, t_data *data)
 	data->envp[i] = NULL;
 
 	create_index(&(*data));
-
-
-	//data->index = (int *)malloc(sizeof(int) * data->size);
-
+	sort_mass(data->envp, &data->index, data->size);
 }
 
 void	swap(int *a, int *b)
@@ -140,59 +149,13 @@ int		ft_choice_command_aam(t_data *data)
 			ft_pwd();
 		else if(!ft_strcmp(data->curr_pars->argv[0], "cd"))
 			ft_cd(data, data->curr_pars);
+		else if(!ft_strcmp(data->curr_pars->argv[0], "echo"))
+			ft_echo(*data->curr_pars);
 	}
 	return (0);
 }
 
 int		aam_main(t_data *data)
 {
-	//t_pars		pars;
-	//t_data		data;
-	// int			i;
-
-	//data->curr_pars = (t_pars *)malloc(sizeof(t_pars)); //! временное
-
-	data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
-
-	init_pwd_aam(data);
-
-	//temp_init_pars(data->curr_pars); //! временное
-
-	// i = -1;
-	//printf("..\n..\n");
-	//printf("\nsize = %d\n\n", data->size);
-	//while (++i < data->size)
-	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
-
-	//printf("\nsize = %d\n\n", data->size);
-
-	sort_mass(data->envp, &data->index, data->size);
-	ft_choice_command_aam(data);
-
-//! это дает утечку, но это временный фрагмент кода
-	//data->curr_pars->argv[0] = "env";
-	//data->curr_pars->argv[1] = "env";
-	//data->curr_pars->argv[2] = NULL;
-	//ft_choice_command_aam(data);
-
-
-
-	//data->curr_pars->argv[1] = NULL;
-	//printf("\n%s\n", data->curr_pars->argv[1]);
-	//ft_choice_command_aam(data);
-
-	//i = -1;
-	//while (++i < data->size)
-	//	printf("%d - %s\n", data->index[i], data->envp[data->index[i]]);
-
-	//printf("\nsize = %d\n\n", data->size);
-
-	// i = -1;
-	//while (++i < data->size)
-	//	printf("%d - %s\n",i, data->envp[i]);
-
-	//while (1);
-
-	return (0);
-
+	return (ft_choice_command_aam(data));
 }

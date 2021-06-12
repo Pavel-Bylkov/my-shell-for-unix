@@ -45,7 +45,7 @@ typedef struct          s_pwdpath
 }                       t_pwdpath;
 
 
-typedef struct	    s_pars
+typedef struct	    s_pars     //! Нужно ввести переменную указывающую на количество запускаемых программ (выполняемых команд)
 {
     int                 error;
     char                *path;
@@ -125,7 +125,7 @@ int	ft_env(t_data *data, t_pars pars);
 void	ft_env_output(t_data *data);
 void	ft_env_output_err(char *str);
 int	ft_exit(t_pars par);
-int	ft_pwd(void);
+int	ft_pwd(void );
 int	ft_cd(t_data *data, t_pars *pars);
 char *ft_path_back(t_data *data);
 char	*ft_path_home(t_data *data);
@@ -135,6 +135,8 @@ void	ft_replace_oldpwd(t_data *data, char *path);
 int	ft_pos_env_aam(t_data *data, char *str);
 void	ft_replace_oldpwd(t_data *data, char *path);
 int	ft_echo(t_pars pars);
+int	ft_del_position(t_data data, char *str);
+void	init_pwd_aam(t_data *data);
 
 
 #endif

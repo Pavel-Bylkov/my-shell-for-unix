@@ -10,8 +10,8 @@ int	ft_pos_env_aam(t_data *data, char *str)
 	while (data->envp[++i] && pos == -1)
 	{
 		if (!ft_strncmp(data->envp[i], str, ft_strlen(str))
-			&& (data->envp[i][(int)ft_strlen(str) + 1] == '='
-			|| data->envp[i][(int)ft_strlen(str) + 1] == '\0'))
+			&& (data->envp[i][(int)ft_strlen(str)] == '='
+			|| data->envp[i][(int)ft_strlen(str)] == '\0'))
 			pos = i;
 	}
 	return (pos);
@@ -21,20 +21,26 @@ void	ft_replace_one(t_data *data, int pos)
 {
 	char	*str;
 
-	str = ft_strjoin("OLDPWD=", data->pwd_oldp->oldpwd_p);
-	free(data->envp[pos]);
-	data->envp[pos] = ft_strdup(data->pwd_oldp->oldpwd_p);
-	free(str);
+	if (data->envp[pos][6] == '\0' || data->envp[pos][6] == '=')
+	{
+		str = ft_strjoin("OLDPWD=", data->pwd_oldp->oldpwd_p);
+		free(data->envp[pos]);
+		data->envp[pos] = ft_strdup(str);
+		free(str);
+	}
 }
 
 void	ft_replace_two(t_data *data, int pos)
 {
 	char	*str;
 
-	str = ft_strjoin("PWD=", data->pwd_oldp->pwd_p);
-	free(data->envp[pos]);
-	data->envp[pos] = ft_strdup(data->pwd_oldp->pwd_p);
-	free(str);
+	if (data->envp[pos][3] == '\0' || data->envp[pos][3] == '=')
+	{
+		str = ft_strjoin("PWD=", data->pwd_oldp->pwd_p);
+		free(data->envp[pos]);
+		data->envp[pos] = ft_strdup(str);
+		free(str);
+	}
 }
 
 void	ft_replace_oldpwd(t_data *data, char *path)
