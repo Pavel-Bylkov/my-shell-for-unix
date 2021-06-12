@@ -1,6 +1,7 @@
 .history
 .*.tmp
 *.tmp
+minishell
 
 # Prerequisites
 *.d
