@@ -8,14 +8,10 @@
 
 int main(int ac, char **av, char **envp)
 {
-	pid_t	pid[2];
+	pid_t	pid[3];
 	pid_t	pid2;
-	char	c;
-	int		n;
-	int		i;
-	int		j;
 	int		status;
-	char **arg;
+	char	**arg;
 	int		fd[5][2];
 	int stat;
 
@@ -27,51 +23,68 @@ int main(int ac, char **av, char **envp)
 	arg[0] = "echo";
 	arg[1] = "Attempt at writing";
 
-	//execve("/bin/echo", arg, envp);
 
 	pipe(fd[0]);
 
 	pid[0] = fork();
-	//pipe(fd[1]);
-	//pid2 = fork();
 	if (pid[0] == 0)
 	{
 		dup2(fd[0][1], 1);
 		close(fd[0][0]);
 		close(fd[0][1]);
-		execve("/bin/ech", arg, envp);
+		execve("/bin/echo", arg, envp);
 			exit(10);
 	}
-	//else
-	//{
-		pid[1] = fork();
-		if (pid[1] == 0)
-		{
-			char *cmd[] = {"cat", "-e", NULL};
 
-			arg[0] = "cat";
-			arg[1] = "-e";
+	pipe(fd[1]);
+	pid[1] = fork();
+	if (pid[1] == 0)
+	{
+		char *cmd[] = {"cat", "-e", NULL};
 
-			dup2(fd[0][0], 0);
+		arg[0] = "cat";
+		arg[1] = "-e";
 
-			close(fd[0][0]);
-			close(fd[0][1]);
-			execve("/bin/ca", cmd, envp);
-			exit(-10);
-		}
+		dup2(fd[0][0], 0);
+		dup2(fd[1][1],1);
+
 		close(fd[0][0]);
 		close(fd[0][1]);
-			//wait(&stat);
-	//}
+		close(fd[1][0]);
+		close(fd[1][1]);
+		execve("/bin/ca", cmd, envp);
+		write(2, "qwertgyh\n", 9);
+		exit(-10);
+	}
+
+	close(fd[0][0]);
+	close(fd[0][1]);
+	pid[2] = fork();
+	if (pid[2] == 0)
+	{
+		char *cmd[] = {"cat", "-e", NULL};
+		arg[0] = "cat";
+		arg[1] = "-e";
+
+		dup2(fd[1][0], 0);
+		close(fd[1][0]);
+		close(fd[1][1]);
+		execve("/bin/cat", arg, envp);
+		>
+		exit(12);
+
+	}
+
+	close(fd[1][0]);
+	close(fd[1][1]);
 	int h = -1;
 	stat = 0;
-	while (stat == 0 && ++h < 2)
+	while (stat == 0 && ++h < 3)
 	{
 		waitpid(pid[h], &stat, 0);
 		stat = WEXITSTATUS(stat);
 		printf("h = %d\n", h);
 	}
-	//wait(&pid1);
 	printf("stats %d\n", stat);
 	printf("Ok\n");
 	//while (1);
