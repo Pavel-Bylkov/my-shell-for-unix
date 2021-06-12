@@ -237,73 +237,129 @@ void	get_var(char *str, char *var)
 	(void)var;
 }
 
-void	insert_var_from_env(t_data *data)
+void	insert_var_from_env(t_pars *tmp)
 {
 	char	var[1024];
 	int		i;
-	t_pars *tmp;
 
-	tmp = data->curr_pars;
-	while (tmp)
+	i = -1;
+	while (tmp->argv[++i])
+	{
+		get_var(tmp->argv[i], var);
+	}
+}
+
+int		is_builtin(char *str)
+{
+	return (ft_strncmp(str, "echo", 5) == 0 || ft_strncmp(str, "cd", 3) == 0 ||
+		ft_strncmp(str, "env", 4) == 0 || ft_strncmp(str, "pwd", 4) == 0 ||
+		ft_strncmp(str, "export", 7) == 0 || ft_strncmp(str, "unset", 6) == 0
+		|| ft_strncmp(str, "exit", 5) == 0);
+}
+
+char	*search_in_path(t_data *data, char *name)
+{
+	char	*path;
+	int		i;
+	int		j;
+	int		fd;
+	char	*abs_path;
+	int		flag;
+
+	path = NULL;
+	if (data->envp)
 	{
 		i = -1;
-		while (tmp->argv[++i])
-		{
-			get_var(tmp->argv[i], var);
-		}
-		tmp = tmp->next;
+		while (data->envp[++i] != NULL)
+			if (ft_strncmp(data->envp[i], "PATH=", 5) == 0)
+				path = data->envp[i];
 	}
+	if (path)
+	{
+		i = 5;
+		flag = 0;
+		while (path[i] && flag == 0)
+		{
+			j = i;
+			while (path[j] != '\0' && path[j] != ':')
+				j++;
+			abs_path = g_newpath(&path[i], j - i, name);
+			fd = open(abs_path, O_RDONLY);
+			if (fd > 0)
+			{
+				flag = 1;
+				close(fd);
+			}
+			i = j + (path[j] == ':') * 1;
+		}
+		if (flag)
+		{
+			g_free(name);
+			return (abs_path);
+		}
+	}
+	return (name);
 }
 
 // заменить на имена файлов, а абс пути для не builtin комманд перенести в path
-void	find_path(t_data *data)
+void	find_path(t_data *data, t_pars *tmp)
 {
-	int	len;
+	int		len;
+	char	*name;
 
-	if (chr_in_str('/', data->curr_pars->argv[0]) > -1)
+	name = tmp->argv[0];
+	if (!name)
+		return ;
+	if (!is_builtin(name) && chr_in_str('/', name) == -1)
+		tmp->argv[0] = search_in_path(data, name);
+	if (chr_in_str('/', tmp->argv[0]) > -1)
 	{
-		data->curr_pars->path = data->curr_pars->argv[0];
-		len = ft_strlen(data->curr_pars->path);
-		while (data->curr_pars->path[len - 1] != '/')
+		tmp->path = tmp->argv[0];
+		len = ft_strlen(tmp->path);
+		while (tmp->path[len - 1] != '/')
 			len--;
-		data->curr_pars->argv[0] = g_strdup(&(data->curr_pars->path[len]));
+		tmp->argv[0] = g_strdup(&(tmp->path[len]));
 	}
 }
 // убрать кавычки вокруг цитат
-void	quaotes_clean(t_data *data)
+void	quaotes_clean(t_pars *tmp)
 {
-	t_pars *tmp;
 	int		i[2];
 	int		f[3];
 	char	b[1024];
 
-	tmp = data->curr_pars;
-	while (tmp)
+	i[0] = -1;
+	while (tmp->argv[++i[0]])
 	{
-		i[0] = -1;
-		while (tmp->argv[++i[0]])
+		i[1] = -1;
+		ft_memset(f, 0, sizeof(f));
+		while (tmp->argv[i[0]][++i[1]] != '\0')
 		{
-			i[1] = -1;
-			ft_memset(f, 0, sizeof(f));
-			while (tmp->argv[i[0]][++i[1]] != '\0')
-			{
-				b[i[1]] = tmp->argv[i[0]][i[1]];
-			}
+			b[i[1]] = tmp->argv[i[0]][i[1]];
 		}
-		tmp = tmp->next;
 	}
 	(void)b;
 }
 // проверить наличие файлов, добавить ошибки
-void	check_open_files(t_data *data)
+void	check_open_files(t_pars *tmp)
 {
-	(void)data;
+	int		fd;
+
+	if (tmp->path && tmp->error == 0)
+	{
+		fd = open(tmp->path, O_RDONLY);
+		if (fd > 0)
+			close(fd);
+		else
+			tmp->error = errno;
+	}
 }
 
 int 	parse_line(t_data *data, int error)
 {
 	int i;
 	char **commands;
+	t_pars *new;
 
 	if (error != 0)
 		return (error);
@@ -313,14 +369,15 @@ int 	parse_line(t_data *data, int error)
 		i = -1;
 		while (commands[++i] != NULL)
 		{
-			ft_parsadd_back(&(data->curr_pars), pars_command(commands[i]));
-			insert_var_from_env(data);
+			new = pars_command(commands[i]);
+			ft_parsadd_back(&(data->curr_pars), new);
+			insert_var_from_env(new);
 			// убрать кавычки вокруг цитат
-			//quaotes_clean(data);
+			//quaotes_clean(new);
 			// заменить на имена файлов, а абс пути для не builtin комманд перенести в path
-			find_path(data);
+			find_path(data, new);
 			// проверить наличие файлов, добавить ошибки
-			check_open_files(data);
+			check_open_files(new);
 		}
 		free_array((void **)commands);
 		return (0);

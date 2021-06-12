@@ -83,7 +83,7 @@ clean:
 
 fclean:			clean
 	rm -f		$(NAME)
-	rm -rf		.*.tmp
+	rm -rf		.*.tmp *.tmp
 
 re:				fclean all
 

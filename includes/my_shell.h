@@ -105,6 +105,7 @@ void				*g_malloc(size_t size);
 char	*g_strdup(char *str);
 char	*g_strdupn(const char *str, size_t len);
 char	*g_strjoin(char *str1, int n, int k, char *str2);
+char	*g_newpath(char *dir, int n, char *name);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);

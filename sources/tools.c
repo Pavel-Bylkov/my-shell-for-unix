@@ -33,14 +33,14 @@ void	print_pars(t_data *data)
 		printf("argv :\n");
 		i = -1;
 		while (tmp->argv[++i] != NULL)
-			printf("   %d : %s\n", i, tmp->argv[i]);
+			printf("   %d : |%s|\n", i, tmp->argv[i]);
 		printf("f_spec : %s\n", tmp->f_spec);
 		printf("redirects :\n");
 		last = tmp->redirect;
 		while (last != NULL)
 		{
 			printf("   -f_spec : %s\n", last->f_spec);
-			printf("   -out : %s\n", last->out);
+			printf("   -out : |%s|\n", last->out);
 			last = last->next;
 		}
 		tmp = tmp->next;
@@ -127,5 +127,23 @@ char	*g_strjoin(char *str1, int n, int k, char *str2)
 		g_data->count_malloc += 1 * DEBUG;
 	g_free(str1);
 	g_free(str2);
+	return (res);
+}
+
+char	*g_newpath(char *dir, int n, char *name)
+{
+	char	*res;
+	char	*tmp;
+	char	*dir_tmp;
+
+	dir_tmp = g_strdupn(dir, n);
+	tmp = ft_strjoin(dir_tmp, "/");
+	if (NULL != tmp)
+		g_data->count_malloc += 1 * DEBUG;
+	res = ft_strjoin(tmp, name);
+	if (NULL != res)
+		g_data->count_malloc += 1 * DEBUG;
+	g_free(dir_tmp);
+	g_free(tmp);
 	return (res);
 }
