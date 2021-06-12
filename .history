@@ -732,3 +732,227 @@ echo \n
 exit
 echo \n
 exit
+exit
+exit (2)
+exit 2
+exit
+pwd
+cd ..
+pwd
+cd ../level_3
+pwd
+exit
+pwd
+cd /Users/aamarei
+exit
+pwd
+cd ..
+cd ..
+pwd
+cd level_4/minishell
+pwd
+exit
+pwd
+cd ..
+pwd
+cd ./minishell
+pwd
+cd ./
+pwd
+exit
+pwd
+cd len
+exit
+exit
+cd -dfd
+exit
+cd -fdf
+exit
+cd ~dvf
+pwd
+cd ~
+pwd
+cd -
+pwd
+cd IRR/level_4/minishell
+pwd
+exit
+pwd
+cd ~kj
+pwd
+cd ..
+pwd
+cd -
+pwd
+cd -
+pwd
+cd -as
+exit
+cd -
+cd -kj
+cd - 
+cd -
+pwd
+cd -
+pwd
+exit
+pwd
+cd ..
+pwd
+cd ..
+cd -
+pwd
+cd -
+pwd
+exit
+pwd
+cd -
+pwd
+cd -
+pwd
+cd -
+pwd
+cd ..
+pwd
+cd -df
+cd ~
+pwd
+cd -
+pwd
+pwd
+cd ~dfgff
+exit
+pwd
+cd ..
+pwd
+pwd
+exit
+cd ..
+pwd
+exit
+cd ..
+exit
+cd ..
+exit
+pwd
+cd ..
+pwd
+export
+cd --
+cd -
+pwd
+export
+cd ..
+pwd
+export
+cd -
+pwd
+cd -
+pwd
+cd
+pwd
+export
+cd -
+exit
+pwd
+cd ..
+cd -
+pwd
+cd ..
+pwd
+cd ./
+pwd
+exit
+pwd
+cd ..
+pwd
+cd
+pwd
+cd
+pwd
+cd ~
+pwd
+cd -
+exit
+pwd
+cd ..
+pwd
+export
+cd ~
+pwd
+export
+cd ..
+pwd
+cd ./minishell
+exit
+cd ..
+pwd
+cd ..
+pwd
+cd ~
+pwd
+cd
+cd ..
+pwd
+cd
+pwd
+cd ~
+pwd
+cd ..
+pwd
+export
+pwd
+cd  level_4
+pwd
+export
+cd ../level_3
+pwd
+export
+cd
+pwd
+export
+cd -
+pwd
+exit
+pwd
+cd ~
+pwd
+export
+cd -
+export
+cd
+pwd
+exit
+pwd
+cd
+pwd
+cd ~
+pwd
+cd -
+cd IRR
+pwd
+cd ./level_4/../level_3
+pwd
+export
+exit
+pwd
+cd
+export
+cd ~
+cd -
+exit
+cd ~
+pwd
+export
+cd -
+cd -
+cd -\
+df
+cd -/
+cd -\
+~
+cd ~
+pwd
+cd -
+pwd
+exit
