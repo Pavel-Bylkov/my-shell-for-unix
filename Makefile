@@ -2,12 +2,12 @@ NAME		= minishell
 
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
-LIBFLAGS	= -L libft -lft -ltermcap
+LIBFLAGS	= -L libft -lft -lreadline -L/Users/aamarei/.brew/opt/readline/lib #-ltermcap
 
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -D DEBUG=1
 CC			= gcc -g
 
-INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/.
+INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. -I/Users/aamarei/.brew/opt/readline/include
 
 SRCDIR		= ./sources/
 OBJDIR		= ./objs/
@@ -19,9 +19,7 @@ FLS			= \
 			parser \
 			str_split \
 			termcap \
-			termcap_keys \
 			tools \
-			history \
 			errors \
 			../ft_minishell_aam \
 			../ft_str_utils_aam \
@@ -55,6 +53,7 @@ $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c
 	@$(CC)		$(CFLAGS) $(INCLUDES) -c $< -o $@ -MMD
 	@echo "Compiled $@"
 
+
 bonus: all
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
@@ -84,6 +83,7 @@ clean:
 
 fclean:			clean
 	rm -f		$(NAME)
+	rm -rf		.*.tmp *.tmp
 
 re:				fclean all
 

@@ -1,45 +1,96 @@
 #include "my_shell.h"
 
-int main_loop(t_data *data)
+static void		int_handler(int status)
 {
-    int error;
-    struct termios term;
-	char	*term_name;
-
-	term_name = "xterm-256color";
-	tcgetattr(0, &term);
-	term.c_lflag &= ~(ECHO);
-	term.c_lflag &=~(ICANON);
-	tcsetattr(0, TCSANOW, &term);
-	tgetent(0, term_name);
-    while (1)
-    {
-        ft_putstr_fd("my_shell>$ ", 1);
-        error = read_line(data);
-        error = parse_line(data, error);
-        run_comands(data, error);
-        //print_pars(data);
-	    ft_parsclear(&(data->curr_pars));
-    }
+	if (status == SIGINT)
+	{
+		printf("\n"); // Move to a new line
+		rl_on_new_line(); // Regenerate the prompt on a newline
+		rl_replace_line("", 0); // Clear the previous text
+		rl_redisplay();
+	}
+}
+static void		eof_exit(t_data *data)
+{
+	add_history("exit");
+    write_history(HISTORY_FILE); //! не использовать в финальной версии
+	//free_struct(data);
+	printf("exit\n");
+	(void)data;
+	exit(EXIT_SUCCESS);
 }
 
-int read_line(t_data *data)
+int			is_endl_ignor(char *str)
 {
-    char *line;
-    int pos;
+	int		len;
 
-    line = (char *)malloc(sizeof(char) + 1);
-	line[0] = '\0';
-    tputs(save_cursor, 1, ft_putchar);
-    ft_press_key(data, &line, 0);
-    ft_last_in_struct(&(data->history), line);
-	ft_strcopy_fr(&line, data->history->line);
-	tputs(restore_cursor, 1, ft_putchar);
-    free(line);
-	pos = ft_strlen(data->history->line);
-	write(0, data->history->line, pos);
-    write(1, "\n", 1);
-    // Сохранение истории в файл .history / очистка памяти.
-    save_history(data);
-    return (0);
+	len = ft_strlen(str);
+		// добавить <(  с закрытием  в конце строки)
+			// сделать << "text" c закрытием  "text" в начале строки
+	return (backslash_is_active(str, len) ||
+			quaote_is_open(str, len) != 0 || str[len - 1] == '|'
+				|| ft_strncmp(&str[len - 2], "&&", 2) == 0);
+}
+
+int		check_unexpected_token(char *str)
+{
+	(void)str;
+	return (0);
+}
+
+static int		quaote_open_mode(t_data *data)
+{
+	int		len;
+	char	*tmp;
+
+	g_data->count_malloc += 1;
+	len = ft_strlen(data->line);
+	// отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
+	if (check_unexpected_token(data->line) != 0)
+		return (2);
+	while (is_endl_ignor(data->line))
+	{
+		tmp = data->line;
+		add_history(tmp); // добавить условие, что не включен режим <<
+		printf("\n"); // Move to a new line
+		data->line = readline(QUAOTE_PROMT);
+		if (backslash_is_active(tmp, len))
+		{
+			if (NULL == data->line)
+				exit(EXIT_SUCCESS);
+			data->line = g_strjoin(tmp, -1, 0, data->line);
+		}
+		else if (NULL == data->line)
+			return (print_err(2, data));
+		else if (quaote_is_open(tmp, len) != 0)
+			data->line = g_strjoin(tmp, 0, 1, data->line);
+		else
+			data->line = g_strjoin(tmp, 0, 0, data->line);
+		g_data->count_malloc += 1;
+	}
+	add_history(data->line);
+    write_history(HISTORY_FILE); //! не использовать в финальной версии
+	return (0);
+}
+
+void main_loop(t_data *data)
+{
+    int error;
+
+    error = read_history(HISTORY_FILE); //! не использовать в финальной версии (error = 0)
+    signal(SIGINT, int_handler);
+    while (1)
+    {
+        data->line = readline(SHELL_PROMT);
+        if (data->line == NULL)
+            eof_exit(data);
+        else
+            error = quaote_open_mode(data);
+        error = parse_line(data, error);
+        data->code_exit = run_comands(data, error);
+        //print_pars(data);
+        g_free(data->line);
+	    ft_parsclear(&(data->curr_pars));
+		//printf("count malloc = %d\n", data->count_malloc);
+    }
 }

@@ -157,13 +157,5 @@ int		ft_choice_command_aam(t_data *data)
 
 int		aam_main(t_data *data)
 {
-	//! ДАЕТ УТЕЧКУ - НАДО УБРАТЬ В ИНИЦИАЛИЗАЦИЮ!!!!
-	//data->pwd_oldp = (t_pwdpath *)malloc(sizeof(t_pwdpath));
-	//init_pwd_aam(data);
-	//sort_mass(data->envp, &data->index, data->size);
-	//! ДО ЭТОГО МЕСТА
-
-	ft_choice_command_aam(data);
-	return (0);
-
+	return (ft_choice_command_aam(data));
 }

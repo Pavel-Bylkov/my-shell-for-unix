@@ -114,7 +114,7 @@ static void		ft_strscpy(char **res, size_t n, char *str)
         len = chr_in_str(' ', &str[j]);
 		if (len == -1)
 			len = ft_strlen(&str[j]);
-		res[i] = ft_strdupn(&str[j], len);
+		res[i] = g_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{
 			free_array((void **)res);
@@ -135,7 +135,7 @@ char			**argv_split(char *s)
 		return (NULL);
 	str = (char *)s;
 	nstrs = get_nstrs(str);
-	res = (char **)malloc(sizeof(char *) * (nstrs + 1));
+	res = (char **)g_malloc(sizeof(char *) * (nstrs + 1));
 	if (res == NULL)
 		return (NULL);
 	ft_strscpy(res, nstrs, str);
@@ -183,7 +183,7 @@ static int	get_ncommand(t_data *data)
 
 	n_strs = 0;
 	i = 0;
-	str = data->history->line;
+	str = data->line;
 	while (str[i])
 	{
 		if (str[i])
@@ -210,7 +210,7 @@ static int		commandscpy(char **res, size_t n, char *str)
 	while (str[j] && i < n)
 	{
         len = get_len_command(&str[j]);
-		res[i] = ft_strdupn(&str[j], len);
+		res[i] = g_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{
 			free_array((void **)res);
@@ -228,16 +228,16 @@ char	**get_commands(t_data *data)
 	int		nstrs;
 
 	// сделать по аналогии разложение на команды, с оставлением окончания.
-	if (data->history->line == NULL)
+	if (data->line == NULL)
 		return (NULL);
 	nstrs = get_ncommand(data);
 	commands = NULL;
 	if (nstrs != -1)
 	{
-		commands = (char **)malloc(sizeof(char *) * (nstrs + 1));
+		commands = (char **)g_malloc(sizeof(char *) * (nstrs + 1));
 		if (commands == NULL)
 			return (NULL);
-		if (commandscpy(commands, nstrs, data->history->line))
+		if (commandscpy(commands, nstrs, data->line))
 			return (commands);
 	}	
 	if (commands != NULL)

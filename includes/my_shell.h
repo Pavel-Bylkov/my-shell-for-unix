@@ -3,8 +3,8 @@
 
 # include <stdio.h>
 # include <curses.h>
-# include <term.h>
-# include <termios.h>
+# include <readline/readline.h> // для маков возможно нужно убрать папку
+# include <readline/history.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/types.h>
@@ -15,8 +15,14 @@
 # include "libft.h"
 # include "get_next_line.h"
 
-# define RL_BUFSIZE 128
 # define ERRORS_FILE "./errors/errors.txt"
+# define HISTORY_FILE "./.history"
+# define SHELL_PROMT "my_shell>$ "
+# define ERROR_PREFIX "my_shell: "
+# define QUAOTE_PROMT "> "
+# ifndef DEBUG
+#  define DEBUG	0
+# endif
 
 typedef struct	    s_error
 {
@@ -25,13 +31,6 @@ typedef struct	    s_error
     struct s_error  	*next;
 }				    t_error;
 
-
-typedef struct	    s_history
-{
-    char                *line;
-    struct s_history    *prev;
-    struct s_history	*next;
-}				    t_history;
 
 typedef struct	    s_redir
 {
@@ -59,42 +58,32 @@ typedef struct	    s_pars     //! Нужно ввести переменную �
 
 typedef struct      s_data
 {
-    int			        fd_hist;
-    t_history           *history;
-    char                insert_flag;
+    char				*line;
     t_pars              *curr_pars;
     t_pwdpath           *pwd_oldp;
     char                **envp;
     int                 *index;  //* массив индексов (строк) массива envp
     int                 size;   //* размер массива
     t_error             *errors;
+	int					code_exit;
+	int					count_malloc;
 }                   t_data;
+
+#ifdef  MAIN_FILE
+t_data						*g_data;
+#else
+extern t_data				*g_data;
+#endif
 
 t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
 
-t_history		    *new_history(char *str);
-void	            history_add_front(t_history **lst, t_history *new);
-void				ft_historyclear(t_history **lst);
-t_history	        *ft_hist_create(t_history *hist, int fd_hist);
-void	            ft_change_struct(t_history **list, char *s);
-void	            ft_last_in_struct(t_history **list, char *str);
-void	            ft_key_backspace(t_history **hist, char **line, int *pos);
-void	            ft_key_right(char *line, int *pos);
-void	            ft_key_left(int *pos);
-void	            ft_key_down(t_history **hist, char **line, int *pos);
-void	            ft_key_up(t_history **hist, char **line, int *pos);
+void rl_replace_line(char *s, int k);
 void	            ft_strcopy_fr(char **line, char *str);
-void                ft_press_key(t_data *data, char **line, int pos);
-char	            *ft_del_symbol(char *str, int i);
 void                init_struct(t_data *data, char **envp);
-void                load_history(t_data *data);
-void                save_history(t_data *data);
-int                 main_loop(t_data *data);
+void                main_loop(t_data *data);
 void		        free_array(void **s);
-//char                **copy_str_array(char **s);
-int                 read_line(t_data *data);
 int                 parse_line(t_data *data, int error);
 char			    **argv_split(char *s);
 int                 run_comands(t_data *data, int error);
@@ -112,6 +101,13 @@ t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
 char	            **get_commands(t_data *data);
+void				g_free(void *content);
+void				*g_malloc(size_t size);
+char				*g_strdup(char *str);
+char				*g_strdupn(const char *str, size_t len);
+char				*g_strjoin(char *str1, int n, int k, char *str2);
+char				*g_newpath(char *dir, int n, char *name);
+int					ft_perr(char *com, int code, char *str1, char *str2);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);
