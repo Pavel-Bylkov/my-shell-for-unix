@@ -8,13 +8,14 @@ int	main(int argc, char **argv, char **envp)
 	int     error;
 
     g_data = &data;
+	error = 0;
     init_struct(&data, envp);
 	if (argc > 2 && ft_strcmp(argv[1], "-c") == 0)
-	    return (one_run(&data, argv[2]));
+		return (one_run(&data, argv[2]));
 	else if (argc == 2)
-	    error = read_from_file(&data, argv[1]);
+		error = read_from_file(&data, argv[1]);
 	else
-	    main_loop(&data);
+		main_loop(&data);
     //free_struct(&data);
 	return (error);
 }
@@ -80,8 +81,8 @@ int        read_from_file(t_data *data, char *filename)
     int         error;
 
     fd = open(filename, O_RDONLY);
-    if (fd < 0)
-        return (ft_perr(NULL, errno, filename, strerror(errno)));
+    //if (fd < 0)
+    //    return (ft_perr(NULL, errno, filename, strerror(errno)));
     ret = 1;
     error = 0;
     while (ret > 0)
