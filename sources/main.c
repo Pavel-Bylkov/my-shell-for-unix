@@ -49,7 +49,7 @@ static int		quaote_open_mode2(t_data *data, int fd, int *ret)
     // отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
     if (check_unexpected_token(data->line) != 0)
         return (2);
-    while (*ret > 0 && is_endl_ignor(data->line))
+    while (*ret > 0 && is_endl_ignor(data->line, data))
     {
         tmp = data->line;
         *ret = get_next_line(fd, &(data->line));

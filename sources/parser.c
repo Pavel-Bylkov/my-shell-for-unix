@@ -85,6 +85,7 @@ t_redir		*ft_redirnew(char *f_spec, int l1, char *out, int l2)
 		rez->f_spec[j] = f_spec[j];
 	rez->f_spec[j] = '\0';
 	rez->out = g_strdupn(out, l2);
+	rez->next = NULL;
 	return (rez);
 }
 
@@ -408,7 +409,6 @@ int 	parse_line(t_data *data, int error)
 		while (--i > -1)
 		{
 			new = pars_command(commands[i]);
-			//ft_parsadd_back(&(data->curr_pars), new);
 			ft_parsadd_front(&(data->curr_pars), new);
 			//insert_var_from_env(data, new);
 			// убрать кавычки вокруг цитат

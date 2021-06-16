@@ -20,7 +20,7 @@ static void		eof_exit(t_data *data)
 	exit(EXIT_SUCCESS);
 }
 
-int			is_endl_ignor(char *str)
+int			is_endl_ignor(char *str, t_data *data)
 {
 	int		len;
 
@@ -30,7 +30,7 @@ int			is_endl_ignor(char *str)
 	return (backslash_is_active(str, len) ||
 			quaote_is_open(str, len) != 0 || str[len - 1] == '|'
 				|| ft_strncmp(&str[len - 2], "&&", 2) == 0 ||
-				brackets_is_open(str, len) > 0);
+				brackets_is_open(str, len) > 0 || ft_stdin_active(str, data));
 }
 
 int		check_unexpected_token(char *str)
@@ -51,11 +51,11 @@ static int		quaote_open_mode(t_data *data)
 	// отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
 	if (check_unexpected_token(data->line) != 0)
 		return (2);
-	while (is_endl_ignor(data->line))
+	while (is_endl_ignor(data->line, data))
 	{
 		tmp = data->line;
 		add_history(tmp); // добавить условие, что не включен режим <<
-		if (ft_stdin_active(tmp))
+		if (ft_stdin_active(tmp, data))
 			(void)tmp;
 		data->line = readline(QUAOTE_PROMT);
 		if (backslash_is_active(tmp, len))
@@ -81,7 +81,7 @@ void main_loop(t_data *data)
 {
     int error;
 
-    error = read_history(HISTORY_FILE); //! не использовать в финальной версии (error = 0)
+    error = read_history(HISTORY_FILE); //! не использовать в финальной версии 	error = 0;
     signal(SIGINT, int_handler);
     while (1)
     {
