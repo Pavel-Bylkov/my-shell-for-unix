@@ -29,11 +29,14 @@ int			is_endl_ignor(char *str)
 			// сделать << "text" c закрытием  "text" в начале строки
 	return (backslash_is_active(str, len) ||
 			quaote_is_open(str, len) != 0 || str[len - 1] == '|'
-				|| ft_strncmp(&str[len - 2], "&&", 2) == 0);
+				|| ft_strncmp(&str[len - 2], "&&", 2) == 0 ||
+				brackets_is_open(str, len) > 0);
 }
 
 int		check_unexpected_token(char *str)
 {
+	// пустые команды, повторение редиректов, <( - c пробелом и не открытые скобки
+	// ( - без разделения на команды
 	(void)str;
 	return (0);
 }
@@ -52,7 +55,8 @@ static int		quaote_open_mode(t_data *data)
 	{
 		tmp = data->line;
 		add_history(tmp); // добавить условие, что не включен режим <<
-		printf("\n"); // Move to a new line
+		if (ft_stdin_active(tmp))
+			(void)tmp;
 		data->line = readline(QUAOTE_PROMT);
 		if (backslash_is_active(tmp, len))
 		{
@@ -84,13 +88,18 @@ void main_loop(t_data *data)
         data->line = readline(SHELL_PROMT);
         if (data->line == NULL)
             eof_exit(data);
+        else if (data->line[0] == '\0')
+        {
+            g_free(data->line);
+            continue ;
+        }
         else
             error = quaote_open_mode(data);
         error = parse_line(data, error);
         data->code_exit = run_comands(data, error);
-        //print_pars(data);
+        print_pars(data);
         g_free(data->line);
 	    ft_parsclear(&(data->curr_pars));
-		//printf("count malloc = %d\n", data->count_malloc);
+		printf("count malloc = %d\n", data->count_malloc);
     }
 }

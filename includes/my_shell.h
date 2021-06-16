@@ -48,6 +48,7 @@ typedef struct          s_pwdpath
 
 typedef struct	    s_pars     //! Нужно ввести переменную указывающую на количество запускаемых программ (выполняемых команд)
 {
+    int                 count;
     int                 error;
     char                *path;
     char                **argv;
@@ -77,6 +78,7 @@ extern t_data				*g_data;
 
 t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
+void		        ft_parsadd_front(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
 
 
@@ -85,6 +87,8 @@ void	            ft_strcopy_fr(char **line, char *str);
 void                init_struct(t_data *data, char **envp);
 int                 one_run(t_data *data, char *str);
 void                main_loop(t_data *data);
+int			        is_endl_ignor(char *str);
+int                 read_from_file(t_data *data, char *filename);
 int		            check_unexpected_token(char *str);
 void		        free_array(void **s);
 int                 parse_line(t_data *data, int error);
@@ -111,6 +115,8 @@ char				*g_strdupn(const char *str, size_t len);
 char				*g_strjoin(char *str1, int n, int k, char *str2);
 char				*g_newpath(char *dir, int n, char *name);
 int					ft_perr(char *com, int code, char *str1, char *str2);
+int			        brackets_is_open(char *str, int n);
+int			        ft_stdin_active(char *str);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);

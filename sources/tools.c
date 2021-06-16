@@ -1,5 +1,29 @@
 #include "my_shell.h"
 
+int			ft_stdin_active(char *str)
+{
+	(void)str;
+	return (0);
+}
+
+int			brackets_is_open(char *str, int n)
+{
+	int		i[2];
+
+	i[0] = -1;
+    i[1] = 0;
+	while (str[++i[0]] != '\0' && i[0] < n)
+	{
+        if (str[i[0]] == '(' && backslash_is_active(str, i[0]) == 0 
+				&& quaote_is_open(str, i[0]) == 0)
+			++i[1];
+        else if (str[i[0]] == ')' && backslash_is_active(str, i[0]) == 0 
+				&& quaote_is_open(str, i[0]) == 0)
+			--i[1];
+	}
+	return (i[1]);
+}
+
 void		free_array(void **s)
 {
 	size_t	i;
@@ -28,6 +52,7 @@ void	print_pars(t_data *data)
 	while (tmp != NULL)
 	{
 		printf("------------------------------------\n");
+		printf("count : %d\n", tmp->count);
 		printf("error : %d\n", tmp->error);
 		printf("path : %s\n", tmp->path);
 		printf("argv :\n");

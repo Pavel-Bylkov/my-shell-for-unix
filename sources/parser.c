@@ -16,6 +16,7 @@ t_pars		*ft_parsnew(int error, char *path, char **argv, char *f_spec)
 	rez->next = NULL;
 	rez->redirect = NULL;
 	rez->error = error;
+	rez->count = 0;
 	j = -1;
 	while (f_spec[++j] != '\0')
 		rez->f_spec[j] = f_spec[j];
@@ -35,6 +36,24 @@ void		ft_parsadd_back(t_pars **lst, t_pars *new)
 		while (last->next != NULL)
 			last = last->next;
 		last->next = new;
+	}
+}
+
+void		ft_parsadd_front(t_pars **lst, t_pars *new)
+{
+	t_pars	*last;
+
+	if (*lst == NULL)
+	{
+		*lst = new;
+		new->count = 1;
+	}
+	else
+	{
+		last = *lst;
+		new->next = last;
+		new->count = last->count + 1;
+		*lst = new;
 	}
 }
 
@@ -237,15 +256,30 @@ void	get_var(char *str, char *var)
 	(void)var;
 }
 
-void	insert_var_from_env(t_pars *tmp)
+void	insert_var_from_env(t_data *data, t_pars *tmp)
 {
 	char	var[1024];
 	int		i;
+	int     j;
+	int     k;
+	char    *value;
 
 	i = -1;
 	while (tmp->argv[++i])
 	{
-		get_var(tmp->argv[i], var);
+	    k = 0;
+        while (tmp->argv[i][k] && tmp->argv[i][k] != '$')
+            k++;
+        get_var(&tmp->argv[i][k], var);
+		value = NULL;
+		if (data->envp)
+		{
+			j = -1;
+			while (data->envp[++j] != NULL)
+				if (ft_strncmp(data->envp[j], var, ft_strlen(var)) == 0)
+					value = data->envp[j];
+		}
+		(void)value;
 	}
 }
 
@@ -290,6 +324,8 @@ char	*search_in_path(t_data *data, char *name)
 				flag = 1;
 				close(fd);
 			}
+			else
+				g_free(abs_path);
 			i = j + (path[j] == ':') * 1;
 		}
 		if (flag)
@@ -366,12 +402,15 @@ int 	parse_line(t_data *data, int error)
 	commands = get_commands(data); // последний символ | или ; , || или &&
 	if (commands != NULL)
 	{
-		i = -1;
-		while (commands[++i] != NULL)
+		i = 0;
+		while (commands[i] != NULL)
+			i++;
+		while (--i > -1)
 		{
 			new = pars_command(commands[i]);
-			ft_parsadd_back(&(data->curr_pars), new);
-			insert_var_from_env(new);
+			//ft_parsadd_back(&(data->curr_pars), new);
+			ft_parsadd_front(&(data->curr_pars), new);
+			//insert_var_from_env(data, new);
 			// убрать кавычки вокруг цитат
 			//quaotes_clean(new);
 			// заменить на имена файлов, а абс пути для не builtin комманд перенести в path
