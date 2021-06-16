@@ -118,6 +118,9 @@ char				*g_newpath(char *dir, int n, char *name);
 int					ft_perr(char *com, int code, char *str1, char *str2);
 int			        brackets_is_open(char *str, int n);
 int			        ft_stdin_active(char *str, t_data *data);
+char	            *quaote_backslash_clean(char *str);
+void	            g_lstclear(t_list **lst);
+void		        read_tmp_stdin(t_data *data, char *str);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);

@@ -3,20 +3,117 @@
 int			ft_stdin_active(char *str, t_data *data)
 {
 	int		i[2];
+	t_list	*tmp;
 
 	i[0] = -1;
     i[1] = 0;
-	(void)data;
 	while (str[++i[0]] != '\0')
 	{
-        if (str[i[0]] == '(' && backslash_is_active(str, i[0]) == 0 
+        if (ft_strncmp(&str[i[0]], "<<", 2) == 0 && backslash_is_active(str, i[0]) == 0 
 				&& quaote_is_open(str, i[0]) == 0)
-			++i[1];
-        else if (str[i[0]] == ')' && backslash_is_active(str, i[0]) == 0 
-				&& quaote_is_open(str, i[0]) == 0)
-			--i[1];
+			i[1]++;
+	}
+	tmp = data->tmp_files;
+	while (tmp)
+	{
+		i[1]--;
+		tmp = tmp->next;
 	}
 	return (i[1]);
+}
+
+char		*get_end_input(char *str, t_data *data)
+{
+	char	*end_input;
+	int		n_files;
+	t_list	*tmp;
+	int		i[2];
+
+	tmp = data->tmp_files;
+	n_files = 0;
+	while (tmp)
+	{
+		n_files++;
+		tmp = tmp->next;
+	}
+	i[0] = -1;
+    i[1] = -1;
+	while (str[++i[0]] != '\0' && i[1] < n_files)
+	{
+        if (ft_strncmp(&str[i[0]], "<<", 2) == 0 && backslash_is_active(str, i[0]) == 0 
+				&& quaote_is_open(str, i[0]) == 0)
+			i[1]++;
+		while (i[1] == n_files && str[i[0]] == ' ')
+			i[0]++;
+	}
+	i[1] = i[0];
+	while (str[i[1]] && (str[i[1]] != ' ' || (quaote_is_open(str, i[1]) != 0
+			|| backslash_is_active(str, i[1]) != 0)))
+		i[1]++;
+	end_input = g_strdupn(&str[i[0]], i[1] - i[0]);
+	return (quaote_backslash_clean(end_input));
+}
+
+char		*get_filename(t_data *data)
+{
+	int		n_files;
+	t_list	*tmp;
+	char	*nbr;
+	char	*fname;
+
+	tmp = data->tmp_files;
+	n_files = 1;
+	while (tmp)
+	{
+		n_files++;
+		tmp = tmp->next;
+	}
+	nbr = ft_itoa(n_files);
+	if (nbr != NULL)
+		g_data->count_malloc += 1;
+	nbr = g_strjoin(g_strdup("."), 0, 0, nbr);
+	fname = g_strjoin(nbr, 0, 0, g_strdup("_tmp_redir.tmp"));
+	return (fname);
+}
+
+void		read_tmp_stdin(t_data *data, char *str)
+{
+	t_list	*new;
+	char	*line;
+	char	*end_input;
+	char	*rez;
+	char	*fname;
+	int		fd;
+
+	line = readline(QUAOTE_PROMT);
+	if (line != NULL)
+		g_data->count_malloc += 1;
+	rez = NULL;
+	end_input = get_end_input(str, data);
+	while (line && end_input && ft_strcmp(line, end_input) == 0) // проверить на ^D ^C
+	{
+		rez = g_strjoin(rez, 0, 1, line);
+		line = readline(QUAOTE_PROMT);
+		if (line != NULL)
+			g_data->count_malloc += 1;
+	}
+	g_free(line);
+	g_free(end_input);
+	fname = get_filename(data);
+	fd = open(fname, O_CREAT, 0666);
+	if (fd > 0)
+	{
+		write(fd, rez, ft_strlen(rez));
+		write(fd, "\n", 1);
+		new = ft_lstnew(fname);
+		if (new != NULL)
+			g_data->count_malloc += 1;
+		ft_lstadd_back(&(data->tmp_files), new);
+		close(fd);
+	}
+	else
+		g_free(fname);
+	g_free(rez);
 }
 
 int			brackets_is_open(char *str, int n)
@@ -184,4 +281,28 @@ char	*g_newpath(char *dir, int n, char *name)
 	g_free(dir_tmp);
 	g_free(tmp);
 	return (res);
+}
+
+void	g_lstclear(t_list **lst)
+{
+	t_list	*head;
+	t_list	*tmp;
+
+	if (*lst != NULL)
+	{
+		head = *lst;
+		unlink(head->content);
+		g_free(head->content);
+		head = head->next;
+		g_free(*lst);
+		while (head != NULL)
+		{
+			tmp = head->next;
+			unlink(head->content);
+			g_free(head->content);
+			g_free(head);
+			head = tmp;
+		}
+		*lst = NULL;
+	}
 }

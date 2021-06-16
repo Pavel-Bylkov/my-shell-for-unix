@@ -358,6 +358,11 @@ void	find_path(t_data *data, t_pars *tmp)
 		tmp->argv[0] = g_strdup(&(tmp->path[len]));
 	}
 }
+
+char	*quaote_backslash_clean(char *str)
+{
+	return (str); // временно
+}
 // убрать кавычки вокруг цитат
 void	quaotes_clean(t_pars *tmp)
 {

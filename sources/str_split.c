@@ -22,13 +22,13 @@ int			quaote_is_open(char *str, int n)
 	int		f[3]; // 0 - open' 1 - open" 2 - activ '\'
 
 	i[0] = -1;
-    i[1] = 0;
+	i[1] = 0;
 	ft_memset(f, 0, sizeof(f));
 	while (str[++i[0]] != '\0' && i[0] < n)
 	{
-        if (str[i[0]] == '\\' && f[0] == 0)
+		if (str[i[0]] == '\\' && f[0] == 0)
 			++i[1];
-        else if (str[i[0]] == '\'' ||  str[i[0]] == '"')
+		else if (str[i[0]] == '\'' ||  str[i[0]] == '"')
 		{
 			f[2] = (i[1] > 0 && i[1] % 2 == 1);
 			i[1] = 0;

@@ -37,6 +37,7 @@ int		check_unexpected_token(char *str)
 {
 	// пустые команды, повторение редиректов, <( - c пробелом и не открытые скобки
 	// ( - без разделения на команды
+	// <<\n - unexpected token `newline'
 	(void)str;
 	return (0);
 }
@@ -51,28 +52,37 @@ static int		quaote_open_mode(t_data *data)
 	// отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
 	if (check_unexpected_token(data->line) != 0)
 		return (2);
+	add_history(data->line);
 	while (is_endl_ignor(data->line, data))
 	{
 		tmp = data->line;
-		add_history(tmp); // добавить условие, что не включен режим <<
-		if (ft_stdin_active(tmp, data))
-			(void)tmp;
-		data->line = readline(QUAOTE_PROMT);
 		if (backslash_is_active(tmp, len))
 		{
+			data->line = readline(QUAOTE_PROMT);
 			if (NULL == data->line)
 				exit(EXIT_SUCCESS);
 			data->line = g_strjoin(tmp, -1, 0, data->line);
+			g_data->count_malloc += 1;
+			add_history(data->line);
 		}
-		else if (NULL == data->line)
-			return (print_err(2, data));
-		else if (quaote_is_open(tmp, len) != 0)
-			data->line = g_strjoin(tmp, 0, 1, data->line);
+		 // добавить условие, что не включен режим <<
+		else if (ft_stdin_active(tmp, data))
+			read_tmp_stdin(data, tmp);
+		// если скобка - подставить ; и убрать \n
 		else
-			data->line = g_strjoin(tmp, 0, 0, data->line);
-		g_data->count_malloc += 1;
+		{
+			data->line = readline(QUAOTE_PROMT);
+			if (NULL == data->line)
+				return (print_err(2, data));
+			else if (quaote_is_open(tmp, len) != 0)
+				data->line = g_strjoin(tmp, 0, 1, data->line);
+			else
+				data->line = g_strjoin(tmp, 0, 0, data->line);
+			g_data->count_malloc += 1;
+			add_history(data->line);
+		}
+		len = ft_strlen(data->line);
 	}
-	add_history(data->line);
     write_history(HISTORY_FILE); //! не использовать в финальной версии
 	return (0);
 }
@@ -100,6 +110,7 @@ void main_loop(t_data *data)
         print_pars(data);
         g_free(data->line);
 	    ft_parsclear(&(data->curr_pars));
+		g_lstclear(&(data->tmp_files));
 		printf("count malloc = %d\n", data->count_malloc);
     }
 }
