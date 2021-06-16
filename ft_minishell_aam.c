@@ -133,6 +133,77 @@ void	sort_mass(char **mas, int *id[], int size)
 	}
 }
 
+int		ft_redirect_aam(t_redir *red)
+{
+	int		fd_r;
+	//int		fd_w;
+
+	while (red)
+	{
+		if (red->f_spec[0] == '>' && red->f_spec[1] =='\0')
+		{
+			fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	printf("fd = %d", fd_r);
+		}
+		red = red->next;
+	}
+	return (fd_r);
+}
+
+int		ft_binar_command_aam(t_data *data, t_pars *pars)
+{
+	pid_t		pid;
+	int			status;
+	int			fd_r;
+	int			fd_w;
+	t_redir		*red;
+
+	//fd[0] = 0;
+	//fd[1] = 0;
+printf("++++++++++++++ BINAR +++++++++++++++\n");
+	fd_r = 0;
+	fd_w = 0;
+	red = pars->redirect;
+	while (red)
+	{
+		if (red->f_spec[0] == '>' && red->f_spec[1] =='\0'){
+			fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	printf("------------\n");
+		}
+		if (red->f_spec[0] == '<' && red->f_spec[1] =='\0')
+		{
+			fd_w = open(red->out, O_RDONLY);
+	printf("==============\n");
+		}
+		red = red->next;
+	}
+	//	if (pars->redirect != NULL)
+	//	{
+	//		fd = ft_redirect_aam(pars->redirect);
+	//printf("fd = %d\n", fd);
+	//	}
+	pid = fork();
+	if (pid == 0)
+	{
+
+		if (fd_r > 2)
+			dup2(fd_r, 1);
+		if (fd_w > 2)
+			dup2(fd_w, 0);
+		execve(pars->path, pars->argv, data->envp);
+		exit (-1);
+	}
+	waitpid(0, &status, 0);
+	status = WEXITSTATUS(status);
+	printf("status = %d\n", status);
+	if (fd_r > 2)
+		close(fd_r);
+	if (fd_w > 2)
+		close(fd_w);
+printf("+++++++++ %d\n", fd_r);
+	return (status);
+}
+
 int		ft_choice_command_aam(t_data *data)
 {
 	if (data->curr_pars->path == NULL)
@@ -152,6 +223,8 @@ int		ft_choice_command_aam(t_data *data)
 		else if(!ft_strcmp(data->curr_pars->argv[0], "echo"))
 			ft_echo(*data->curr_pars);
 	}
+	else
+		return (ft_binar_command_aam(data, data->curr_pars));
 	return (0);
 }
 
