@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-static void		int_handler(int status)
+void		int_handler(int status)
 {
 	if (status == SIGINT)
 	{
@@ -8,6 +8,20 @@ static void		int_handler(int status)
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
 		rl_redisplay();
+		g_data->code_exit = 130;
+	}
+}
+
+void		int_handler2(int status)
+{
+	if (status == SIGINT)
+	{
+		printf("\n"); // Move to a new line
+		rl_on_new_line(); // Regenerate the prompt on a newline
+		rl_replace_line("", 0); // Clear the previous text
+		rl_redisplay();
+		// придумать как прервать readline
+		g_data->code_exit = 130;
 	}
 }
 static void		eof_exit(t_data *data)
@@ -18,6 +32,17 @@ static void		eof_exit(t_data *data)
 	printf("exit\n");
 	(void)data;
 	exit(EXIT_SUCCESS);
+}
+
+char 		*rl_gets_with_add_hist(char *promt)
+{
+	char	*line;
+
+	signal(SIGINT, int_handler);
+	line = readline(promt);
+	if (line && *line)
+    	add_history(line);
+	return (line);
 }
 
 int			is_endl_ignor(char *str, t_data *data)
@@ -53,6 +78,7 @@ static int		quaote_open_mode(t_data *data)
 	if (check_unexpected_token(data->line) != 0)
 		return (2);
 	add_history(data->line);
+	signal(SIGINT, int_handler2);
 	while (is_endl_ignor(data->line, data))
 	{
 		tmp = data->line;
@@ -87,15 +113,16 @@ static int		quaote_open_mode(t_data *data)
 	return (0);
 }
 
+
+
 void main_loop(t_data *data)
 {
     int error;
 
     error = read_history(HISTORY_FILE); //! не использовать в финальной версии 	error = 0;
-    signal(SIGINT, int_handler);
     while (1)
     {
-        data->line = readline(SHELL_PROMT);
+        data->line = rl_gets_with_add_hist(SHELL_PROMT);
         if (data->line == NULL)
             eof_exit(data);
         else if (data->line[0] == '\0')
@@ -106,11 +133,13 @@ void main_loop(t_data *data)
         else
             error = quaote_open_mode(data);
         error = parse_line(data, error);
+		print_pars(data);
         data->code_exit = run_comands(data, error);
-        print_pars(data);
+        //print_pars(data);
         g_free(data->line);
 	    ft_parsclear(&(data->curr_pars));
-		g_lstclear(&(data->tmp_files));
+		g_tmp_files_clear(&(data->tmp_files));
+		data->count_files = 0;
 		printf("count malloc = %d\n", data->count_malloc);
     }
 }

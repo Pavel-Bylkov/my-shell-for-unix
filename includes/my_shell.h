@@ -32,6 +32,13 @@ typedef struct	    s_error
 }				    t_error;
 
 
+typedef struct		s_tmp_files
+{
+	int					index;
+	char				*fname;
+	struct s_tmp_files	*next;
+}					t_tmp_files;
+
 typedef struct	    s_redir
 {
     char                f_spec[10];
@@ -59,14 +66,15 @@ typedef struct	    s_pars     //! Нужно ввести переменную �
 
 typedef struct      s_data
 {
-    char				*line;
-    t_list              *tmp_files;
-    t_pars              *curr_pars;
-    t_pwdpath           *pwd_oldp;
-    char                **envp;
-    int                 *index;  //* массив индексов (строк) массива envp
-    int                 size;   //* размер массива
-    t_error             *errors;
+	char				*line;
+	t_tmp_files			*tmp_files;
+	int					count_files;
+	t_pars				*curr_pars;
+	t_pwdpath			*pwd_oldp;
+	char                **envp;
+	int                 *index;  //* массив индексов (строк) массива envp
+	int                 size;   //* размер массива
+	t_error             *errors;
 	int					code_exit;
 	int					count_malloc;
 }                   t_data;
@@ -88,6 +96,7 @@ void	            ft_strcopy_fr(char **line, char *str);
 void                init_struct(t_data *data, char **envp);
 int                 one_run(t_data *data, char *str);
 void                main_loop(t_data *data);
+void		        int_handler2(int status);
 int			        is_endl_ignor(char *str, t_data *data);
 int                 read_from_file(t_data *data, char *filename);
 int		            check_unexpected_token(char *str);
@@ -119,8 +128,12 @@ int					ft_perr(char *com, int code, char *str1, char *str2);
 int			        brackets_is_open(char *str, int n);
 int			        ft_stdin_active(char *str, t_data *data);
 char	            *quaote_backslash_clean(char *str);
-void	            g_lstclear(t_list **lst);
+void				g_tmp_files_clear(t_tmp_files **lst);
 void		        read_tmp_stdin(t_data *data, char *str);
+t_tmp_files			*tmp_files_new(int index, char *fname);
+int					tmp_files_size(t_tmp_files *lst);
+void				tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new);
+char				*get_filename_by_index(t_tmp_files *head, int index);
 
 int		            ft_export(t_data *data, t_pars pars);
 void	            ft_out_export(t_data data);

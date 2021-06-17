@@ -80,11 +80,22 @@ t_redir		*ft_redirnew(char *f_spec, int l1, char *out, int l2)
 	rez = (t_redir *)g_malloc(sizeof(*rez));
 	if (rez == NULL)
 		return (NULL);
-	j = -1;
-	while (++j != l1)
-		rez->f_spec[j] = f_spec[j];
-	rez->f_spec[j] = '\0';
-	rez->out = g_strdupn(out, l2);
+	if (ft_strncmp(f_spec, "<<", 2) != 0)
+	{
+		j = -1;
+		while (++j != l1)
+			rez->f_spec[j] = f_spec[j];
+		rez->f_spec[j] = '\0';
+		rez->out = g_strdupn(out, l2);
+	}
+	else
+	{
+		rez->f_spec[0] = '<';
+		rez->f_spec[1] = '\0';
+		rez->out = g_strdup(
+			get_filename_by_index(g_data->tmp_files, g_data->count_files));
+		g_data->count_files -= 1;
+	}
 	rez->next = NULL;
 	return (rez);
 }
