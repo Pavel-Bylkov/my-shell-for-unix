@@ -2,54 +2,6 @@
 #include "includes/my_shell.h"
 #include <string.h>
 
-
-void	temp_init_pars(t_pars *struc)  //! Временная функция
-{
-	struc->path = NULL;
-	struc->argv = (char **)malloc(sizeof(char *) * 5);
-
-	//struc->argv[0] = ft_strdup("export");
-	//struc->argv[1] = ft_strdup("ddd'ddd");
-	//struc->argv[2] = ft_strdup("tt");
-	//struc->argv[3] = ft_strdup("tt=58");
-	//struc->argv[4] = NULL;
-
-	//struc->argv[0] = ft_strdup("unset");
-	//struc->argv[1] = ft_strdup("4USER");
-	//struc->argv[2] = ft_strdup("tt=58");
-	//struc->argv[3] = ft_strdup("Apple_PubSub_Socket_Render");
-	//struc->argv[4] = NULL;
-
-	//struc->argv[0] = ft_strdup("env");
-	//struc->argv[1] = ft_strdup("4USER");
-	//struc->argv[2] = ft_strdup("tt=58");
-	//struc->argv[3] = ft_strdup("Apple_PubSub_Socket_Render");
-	//struc->argv[1] = NULL;
-
-	//struc->argv[0] = ft_strdup("exit");
-	//struc->argv[1] = ft_strdup("4");
-	//struc->argv[2] = ft_strdup("58");
-	//struc->argv[2] = NULL;
-
-	//struc->argv[0] = ft_strdup("pwd");
-	//struc->argv[1] = ft_strdup("--4");
-	//struc->argv[2] = ft_strdup("58");
-	//struc->argv[2] = NULL;
-
-	struc->argv[0] = ft_strdup("cd");
-	struc->argv[1] = ft_strdup("-");
-	//struc->argv[1] = ft_strdup("/Users/aamarei/IRR");
-	struc->argv[2] = NULL;
-
-	//struc->argv[0] = ft_strdup("echo");
-	//struc->argv[1] = ft_strdup("-n");
-	//struc->argv[2] = ft_strdup("/Users/aamarei/IRR");
-	//struc->argv[3] = ft_strdup("+++++++++\naamarei/IRR");
-	//struc->argv[4] = NULL;
-
-
-}
-
 void	create_index(t_data *data)
 {
 	int		i;
@@ -133,102 +85,217 @@ void	sort_mass(char **mas, int *id[], int size)
 	}
 }
 
-int		ft_redirect_aam(t_redir *red)
+int		ft_redirect_aam(t_pars *pars, t_fdesk *fd)
 {
-	int		fd_r;
-	//int		fd_w;
+	t_redir		*red;
 
+	red = pars->redirect;
 	while (red)
 	{
 		if (red->f_spec[0] == '>' && red->f_spec[1] =='\0')
-		{
-			fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	printf("fd = %d", fd_r);
-		}
+			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		if (red->f_spec[0] == '<' && red->f_spec[1] =='\0')
+			fd->fd_w = open(red->out, O_RDONLY);
 		red = red->next;
 	}
-	return (fd_r);
+	return (0);
+}
+
+void	ft_pipe_open_aam(t_pars *pars, t_fdesk *fd)
+{
+	if (fd->fd[pars->count])
+		dup2(fd->fd[pars->count][0], 0);
+	if (pars->count > 1)
+		dup2(fd->fd[pars->count - 1][1], 1);
+	if (fd->fd[pars->count])
+	{
+		close(fd->fd[pars->count][0]);
+		close(fd->fd[pars->count][1]);
+	}
+	if (pars->count > 1)
+	{
+		close(fd->fd[pars->count - 1][0]);
+		close(fd->fd[pars->count - 1][1]);
+	}
+}
+
+void	ft_pipe_close_aam(t_pars *pars, t_fdesk *fd)
+{
+	if (pars->count > 0 && fd->fd[pars->count])
+	{
+		close(fd->fd[pars->count][0]);
+		close(fd->fd[pars->count][1]);
+	}
 }
 
 int		ft_binar_command_aam(t_data *data, t_pars *pars)
 {
 	pid_t		pid;
-	int			status;
-	int			fd_r;
-	int			fd_w;
-	t_redir		*red;
 
-	//fd[0] = 0;
-	//fd[1] = 0;
-printf("++++++++++++++ BINAR +++++++++++++++\n");
-	fd_r = 0;
-	fd_w = 0;
-	red = pars->redirect;
-	while (red)
-	{
-		if (red->f_spec[0] == '>' && red->f_spec[1] =='\0'){
-			fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	printf("------------\n");
-		}
-		if (red->f_spec[0] == '<' && red->f_spec[1] =='\0')
-		{
-			fd_w = open(red->out, O_RDONLY);
-	printf("==============\n");
-		}
-		red = red->next;
-	}
-	//	if (pars->redirect != NULL)
-	//	{
-	//		fd = ft_redirect_aam(pars->redirect);
-	//printf("fd = %d\n", fd);
-	//	}
+	ft_redirect_aam(pars, data->fdesk);
+	if (pars->count > 1)
+		pipe(data->fdesk->fd[pars->count - 1]);
 	pid = fork();
 	if (pid == 0)
 	{
+		ft_pipe_open_aam(pars, data->fdesk);
 
-		if (fd_r > 2)
-			dup2(fd_r, 1);
-		if (fd_w > 2)
-			dup2(fd_w, 0);
+		if (data->fdesk->fd_r > 2)
+			dup2(data->fdesk->fd_r, 1);
+		if (data->fdesk->fd_w > 2)
+			dup2(data->fdesk->fd_w, 0);
+
 		execve(pars->path, pars->argv, data->envp);
 		exit (-1);
 	}
-	waitpid(0, &status, 0);
+
+	if (data->fdesk->fd_r > 2)
+		close(data->fdesk->fd_r);
+	if (data->fdesk->fd_w > 2)
+		close(data->fdesk->fd_w);
+	ft_pipe_close_aam(pars, data->fdesk);
+	return (0);
+}
+
+int	ft_build_in_aam(t_data *data, t_pars *pars)
+{
+		if (!ft_strcmp(pars->argv[0], "export"))
+			return (ft_export(data, pars));
+		else if (!ft_strcmp(pars->argv[0], "unset"))
+			return (ft_unset(data, *pars));
+		else if (!ft_strcmp(pars->argv[0], "env"))
+			return (ft_env(data, *pars));
+		else if (!ft_strcmp(pars->argv[0], "exit"))
+			return (ft_exit(*pars));
+		else if(!ft_strcmp(pars->argv[0], "pwd"))
+			return (ft_pwd());
+		else if(!ft_strcmp(pars->argv[0], "cd"))
+			return (ft_cd(data, pars));
+		else if(!ft_strcmp(pars->argv[0], "echo"))
+			return (ft_echo(*pars));
+	return (1);
+}
+
+void	ft_build_open_aam(t_fdesk *fd, int *fd_st0, int *fd_st1)
+{
+	if (fd->fd_r > 2)
+	{
+		*fd_st1 = dup(1);
+		dup2(fd->fd_r, 1);
+	}
+	if (fd->fd_w > 2)
+	{
+		*fd_st0 = dup(0);
+		dup2(fd->fd_w, 0);
+	}
+}
+
+void	ft_build_close_aam(t_fdesk *fd, int *fd_st0, int *fd_st1)
+{
+	if (fd->fd_r > 2)
+	{
+		dup2(*fd_st1, 1);
+		close(*fd_st1);
+		close(fd->fd_r);
+	}
+	if (fd->fd_w > 2)
+	{
+		dup2(*fd_st0, 0);
+		close(*fd_st0);
+		close(fd->fd_w);
+	}
+}
+
+int	ft_choice_command_aam(t_data *data)
+{
+	int			fd_st[2];
+	int			i;
+	int			j;
+	int			status;
+	t_pars		*pars;
+	pid_t		pid;
+
+	pars = data->curr_pars;
+	i = data->curr_pars->count;
+	j = i;
+	while (i-- > 0)
+	{
+		if (pars->path == NULL)
+		{
+			ft_redirect_aam(pars, data->fdesk);
+			if (pars->count > 1)
+			{
+				pipe(data->fdesk->fd[pars->count - 1]);
+				pid = fork();
+				if (pid == 0)
+				{
+					ft_pipe_open_aam(pars, data->fdesk);
+					ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+					ft_build_in_aam(data, pars);
+					exit(0);
+				}
+				ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+				ft_pipe_close_aam(pars, data->fdesk);
+			}
+			else
+			{
+				ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+				ft_build_in_aam(data, pars);
+				ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+			}
+		}
+		else
+			ft_binar_command_aam(data, pars);
+		pars = pars->next;
+	}
+	while (j-- > 0)
+		waitpid(0, &status, 0);
 	status = WEXITSTATUS(status);
-	printf("status = %d\n", status);
-	if (fd_r > 2)
-		close(fd_r);
-	if (fd_w > 2)
-		close(fd_w);
-printf("+++++++++ %d\n", fd_r);
 	return (status);
 }
 
-int		ft_choice_command_aam(t_data *data)
+void	ft_init_fd_aam(t_data *data, t_fdesk *fd)
 {
-	if (data->curr_pars->path == NULL)
+	int		i;
+
+	fd->fd = (int **)malloc(sizeof(int *) * (data->curr_pars->count + 1));
+	i = 0;
+	while (i < data->curr_pars->count)
 	{
-		if (!ft_strcmp(data->curr_pars->argv[0], "export"))
-			ft_export(data, *data->curr_pars);
-		else if (!ft_strcmp(data->curr_pars->argv[0], "unset"))
-			ft_unset(data, *data->curr_pars);
-		else if (!ft_strcmp(data->curr_pars->argv[0], "env"))
-			ft_env(data, *data->curr_pars);
-		else if (!ft_strcmp(data->curr_pars->argv[0], "exit"))
-			ft_exit(*data->curr_pars);
-		else if(!ft_strcmp(data->curr_pars->argv[0], "pwd"))
-			ft_pwd();
-		else if(!ft_strcmp(data->curr_pars->argv[0], "cd"))
-			ft_cd(data, data->curr_pars);
-		else if(!ft_strcmp(data->curr_pars->argv[0], "echo"))
-			ft_echo(*data->curr_pars);
+		fd->fd[i] = (int *)malloc(sizeof(int) * 2);
+		fd->fd[i][0] = 0;
+		fd->fd[i][1] = 0;
+		i++;
 	}
-	else
-		return (ft_binar_command_aam(data, data->curr_pars));
-	return (0);
+	fd->fd[i] = NULL;
+	fd->fd_r = 0;
+	fd->fd_w = 0;
+	data->fdesk = fd;
+}
+
+void	ft_free_fd_aam(t_fdesk *fd)
+{
+	int		i;
+
+	if (fd->fd)
+	{
+		i = 0;
+		while (fd->fd[i])
+			free(fd->fd[i++]);
+		free(fd->fd);
+	}
+	fd = NULL;
 }
 
 int		aam_main(t_data *data)
 {
-	return (ft_choice_command_aam(data));
+	int			ret;
+	t_fdesk		*fd;
+
+	fd = (t_fdesk *)malloc(sizeof(t_fdesk));
+	ft_init_fd_aam(data, fd);
+	ret = ft_choice_command_aam(data);
+	ft_free_fd_aam(fd);
+	free (fd);
+	return (ret);
 }
