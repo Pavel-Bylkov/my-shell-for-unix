@@ -92,7 +92,7 @@ void		read_tmp_stdin(t_data *data, char *str)
 	if (fd > 0)
 	{
 		write(fd, rez, ft_strlen(rez));
-		write(fd, "\n", 1);
+		write(fd, "\n\0", 2);
 		new = tmp_files_new(data->count_files + 1, fname);
 		if (new != NULL)
 			g_data->count_malloc += 1;
