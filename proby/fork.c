@@ -70,7 +70,6 @@ int main(int ac, char **av, char **envp)
 		close(fd[1][0]);
 		close(fd[1][1]);
 		execve("/bin/cat", arg, envp);
-		>
 		exit(12);
 
 	}

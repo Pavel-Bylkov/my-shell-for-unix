@@ -85,8 +85,8 @@ char	**ft_env_add(t_data *data, char *str)
 
 void	ft_export_output_err(char *str)
 {
-	write(1, "my_shell: export: ", 18);
-	write(1, "`", 1);
-	write(1, str, ft_strlen(str));
-	write(1, "': not a valid identifier\n", 26);
+	write(2, "my_shell: export: ", 18);
+	write(2, "`", 1);
+	write(2, str, ft_strlen(str));
+	write(2, "': not a valid identifier\n", 26);
 }

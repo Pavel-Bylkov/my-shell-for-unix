@@ -52,8 +52,14 @@ typedef struct          s_pwdpath
     char                *oldpwd_p;
 }                       t_pwdpath;
 
+typedef struct             s_fdesk
+{
+    int                 **fd;
+    int                 fd_r;
+    int                 fd_w;
+}                       t_fdesk;
 
-typedef struct	    s_pars     //! Нужно ввести переменную указывающую на количество запускаемых программ (выполняемых команд)
+typedef struct	    s_pars
 {
     int                 count;
     int                 error;
@@ -71,6 +77,7 @@ typedef struct      s_data
 	int					count_files;
 	t_pars				*curr_pars;
 	t_pwdpath			*pwd_oldp;
+	t_fdesk             *fdesk;
 	char                **envp;
 	int                 *index;  //* массив индексов (строк) массива envp
 	int                 size;   //* размер массива
@@ -135,7 +142,7 @@ int					tmp_files_size(t_tmp_files *lst);
 void				tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new);
 char				*get_filename_by_index(t_tmp_files *head, int index);
 
-int		            ft_export(t_data *data, t_pars pars);
+int		            ft_export(t_data *data, t_pars *pars);
 void	            ft_out_export(t_data data);
 void	            init_data(char **env, t_data *data);
 int		            aam_main(t_data *data);
@@ -166,6 +173,8 @@ void	ft_replace_oldpwd(t_data *data, char *path);
 int	ft_echo(t_pars pars);
 int	ft_del_position(t_data data, char *str);
 void	init_pwd_aam(t_data *data);
+int		ft_redirect_aam(t_pars *pars, t_fdesk *fd);
+
 
 
 #endif

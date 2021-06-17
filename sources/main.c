@@ -81,8 +81,8 @@ int        read_from_file(t_data *data, char *filename)
     int         error;
 
     fd = open(filename, O_RDONLY);
-    if (fd < 0)
-        return (ft_perr(NULL, errno, filename, strerror(errno)));
+    //if (fd < 0)
+    //    return (ft_perr(NULL, errno, filename, strerror(errno)));
     ret = 1;
     error = 0;
     while (ret > 0)

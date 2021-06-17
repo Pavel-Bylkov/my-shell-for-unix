@@ -133,9 +133,8 @@ void main_loop(t_data *data)
         else
             error = quaote_open_mode(data);
         error = parse_line(data, error);
-		print_pars(data);
         data->code_exit = run_comands(data, error);
-        //print_pars(data);
+        print_pars(data);
         g_free(data->line);
 	    ft_parsclear(&(data->curr_pars));
 		g_tmp_files_clear(&(data->tmp_files));
