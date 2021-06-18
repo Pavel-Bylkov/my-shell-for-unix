@@ -52,7 +52,10 @@ void		ft_parsadd_front(t_pars **lst, t_pars *new)
 	{
 		last = *lst;
 		new->next = last;
-		new->count = last->count + 1;
+		if (ft_strcmp(new->f_spec, "|") == 0)
+			new->count = last->count + 1;
+		else
+			new->count = 1;
 		*lst = new;
 	}
 }
@@ -80,11 +83,22 @@ t_redir		*ft_redirnew(char *f_spec, int l1, char *out, int l2)
 	rez = (t_redir *)g_malloc(sizeof(*rez));
 	if (rez == NULL)
 		return (NULL);
-	j = -1;
-	while (++j != l1)
-		rez->f_spec[j] = f_spec[j];
-	rez->f_spec[j] = '\0';
-	rez->out = g_strdupn(out, l2);
+	if (ft_strncmp(f_spec, "<<", 2) != 0)
+	{
+		j = -1;
+		while (++j != l1)
+			rez->f_spec[j] = f_spec[j];
+		rez->f_spec[j] = '\0';
+		rez->out = g_strdupn(out, l2);
+	}
+	else
+	{
+		rez->f_spec[0] = '<';
+		rez->f_spec[1] = '\0';
+		rez->out = g_strdup(
+			get_filename_by_index(g_data->tmp_files, g_data->count_files));
+		g_data->count_files -= 1;
+	}
 	rez->next = NULL;
 	return (rez);
 }
@@ -357,6 +371,11 @@ void	find_path(t_data *data, t_pars *tmp)
 			len--;
 		tmp->argv[0] = g_strdup(&(tmp->path[len]));
 	}
+}
+
+char	*quaote_backslash_clean(char *str)
+{
+	return (str); // временно
 }
 // убрать кавычки вокруг цитат
 void	quaotes_clean(t_pars *tmp)
