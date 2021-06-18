@@ -96,6 +96,8 @@ int		ft_redirect_aam(t_pars *pars, t_fdesk *fd)
 			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		if (red->f_spec[0] == '<' && red->f_spec[1] =='\0')
 			fd->fd_w = open(red->out, O_RDONLY);
+		if (red->f_spec[0] == '>' && red->f_spec[1] =='>')
+			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		red = red->next;
 	}
 	return (0);
@@ -206,17 +208,17 @@ void	ft_build_close_aam(t_fdesk *fd, int *fd_st0, int *fd_st1)
 	}
 }
 
-int	ft_choice_command_aam(t_data *data)
+int	ft_choice_command_aam(t_data *data, t_pars *pars)
 {
 	int			fd_st[2];
 	int			i;
 	int			j;
 	int			status;
-	t_pars		*pars;
+	//t_pars		*pars;
 	pid_t		pid;
 
-	pars = data->curr_pars;
-	i = data->curr_pars->count;
+	//pars = data->curr_pars;
+	i = pars->count;
 	j = i;
 	while (i-- > 0)
 	{
@@ -246,6 +248,7 @@ int	ft_choice_command_aam(t_data *data)
 		}
 		else
 			ft_binar_command_aam(data, pars);
+
 		pars = pars->next;
 	}
 	while (j-- > 0)
@@ -291,11 +294,26 @@ int		aam_main(t_data *data)
 {
 	int			ret;
 	t_fdesk		*fd;
+	t_pars		*pars;
+	int			i;
 
-	fd = (t_fdesk *)malloc(sizeof(t_fdesk));
-	ft_init_fd_aam(data, fd);
-	ret = ft_choice_command_aam(data);
-	ft_free_fd_aam(fd);
-	free (fd);
+	pars = data->curr_pars;
+	while (pars)
+	{
+		i = pars->count;
+		fd = (t_fdesk *)malloc(sizeof(t_fdesk));
+		ft_init_fd_aam(data, fd);
+		ret = ft_choice_command_aam(data, pars);
+		while (pars->count > 1)
+			pars = pars->next;
+		if (pars->f_spec[0] == ';')
+			pars = pars->next;
+		else
+			pars = pars->next;
+		ft_free_fd_aam(fd);
+		free (fd);
+	}
+	//ft_free_fd_aam(fd);
+	//free (fd);
 	return (ret);
 }
