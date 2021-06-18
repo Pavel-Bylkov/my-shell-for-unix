@@ -187,12 +187,16 @@ void		get_fspec_commands(char **str, char *f_spec)
 
 	len = ft_strlen(*str);
 	i = 0;
-	if (len > 0 && ((*str)[len - 1] == '|' || (*str)[len - 1] == ';'))
+	if (len > 0 && chr_in_str((*str)[len - 1], "|;&") > -1)
     {
         f_spec[i++] = (*str)[len - 1];
         (*str)[len - 1] = '\0';
+		if (len > 1 && chr_in_str((*str)[len - 2], "|&") > -1)
+		{
+			f_spec[i++] = (*str)[len - 2];
+			(*str)[len - 2] = '\0';
+		}
     }
-
 	f_spec[i] = '\0';
 }
 
@@ -427,6 +431,7 @@ int 	parse_line(t_data *data, int error)
 			i++;
 		while (--i > -1)
 		{
+			printf("%s\n", commands[i]);
 			new = pars_command(commands[i]);
 			ft_parsadd_front(&(data->curr_pars), new);
 			//insert_var_from_env(data, new);
