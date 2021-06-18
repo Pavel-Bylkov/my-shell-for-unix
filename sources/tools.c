@@ -56,7 +56,7 @@ char		*get_filename(t_data *data)
 	return (fname);
 }
 
-void		read_tmp_stdin(t_data *data, char *str)
+int		read_tmp_stdin(t_data *data, char *str)
 {
 	t_tmp_files	*new;
 	char	*line;
@@ -88,11 +88,11 @@ void		read_tmp_stdin(t_data *data, char *str)
 	g_free(line);
 	g_free(end_input);
 	fname = get_filename(data);
-	fd = open(fname, O_CREAT, 0666);
+	fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd > 0)
 	{
 		write(fd, rez, ft_strlen(rez));
-		write(fd, "\n\0", 2);
+		write(fd, "\n", 2);
 		new = tmp_files_new(data->count_files + 1, fname);
 		if (new != NULL)
 			g_data->count_malloc += 1;
@@ -103,6 +103,7 @@ void		read_tmp_stdin(t_data *data, char *str)
 	else
 		g_free(fname);
 	g_free(rez);
+	return (0);
 }
 
 int			brackets_is_open(char *str, int n)

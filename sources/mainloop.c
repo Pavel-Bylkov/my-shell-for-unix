@@ -71,29 +71,32 @@ static int		quaote_open_mode(t_data *data)
 {
 	int		len;
 	char	*tmp;
+	int		error;
 
 	g_data->count_malloc += 1;
 	len = ft_strlen(data->line);
+	error = 0;
 	// отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
 	if (check_unexpected_token(data->line) != 0)
 		return (2);
 	add_history(data->line);
 	signal(SIGINT, int_handler2);
-	while (is_endl_ignor(data->line, data))
+	while (is_endl_ignor(data->line, data) && error == 0)
 	{
 		tmp = data->line;
 		if (backslash_is_active(tmp, len))
 		{
 			data->line = readline(QUAOTE_PROMT);
 			if (NULL == data->line)
-				exit(EXIT_SUCCESS);
+				exit(ft_perr(g_strdupn(tmp, ft_strlen(tmp) - 1), 
+						127, NULL, "command not found"));
 			data->line = g_strjoin(tmp, -1, 0, data->line);
 			g_data->count_malloc += 1;
 			add_history(data->line);
 		}
 		 // добавить условие, что не включен режим <<
 		else if (ft_stdin_active(tmp, data))
-			read_tmp_stdin(data, tmp);
+			error = read_tmp_stdin(data, tmp);
 		// если скобка - подставить ; и убрать \n
 		else
 		{
@@ -110,7 +113,7 @@ static int		quaote_open_mode(t_data *data)
 		len = ft_strlen(data->line);
 	}
     write_history(HISTORY_FILE); //! не использовать в финальной версии
-	return (0);
+	return (error);
 }
 
 
@@ -134,7 +137,7 @@ void main_loop(t_data *data)
             error = quaote_open_mode(data);
         error = parse_line(data, error);
         data->code_exit = run_comands(data, error);
-        //print_pars(data);
+        print_pars(data);
         g_free(data->line);
 	    ft_parsclear(&(data->curr_pars));
 		g_tmp_files_clear(&(data->tmp_files));

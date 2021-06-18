@@ -136,7 +136,7 @@ int			        brackets_is_open(char *str, int n);
 int			        ft_stdin_active(char *str, t_data *data);
 char	            *quaote_backslash_clean(char *str);
 void				g_tmp_files_clear(t_tmp_files **lst);
-void		        read_tmp_stdin(t_data *data, char *str);
+int		        	read_tmp_stdin(t_data *data, char *str);
 t_tmp_files			*tmp_files_new(int index, char *fname);
 int					tmp_files_size(t_tmp_files *lst);
 void				tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new);
