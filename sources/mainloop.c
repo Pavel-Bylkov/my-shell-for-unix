@@ -89,7 +89,7 @@ static int		quaote_open_mode(t_data *data)
 		{
 			data->line = readline(QUAOTE_PROMT);
 			if (NULL == data->line)
-				exit(ft_perr(g_strdupn(tmp, ft_strlen(tmp) - 1), 
+				exit(ft_perr(g_strdupn(tmp, ft_strlen(tmp) - 1),
 						127, NULL, "command not found"));
 			data->line = g_strjoin(tmp, -1, 0, data->line);
 			g_data->count_malloc += 1;
@@ -138,11 +138,11 @@ void main_loop(t_data *data)
             error = quaote_open_mode(data);
         error = parse_line(data, error);
         data->code_exit = run_comands(data, error);
-        print_pars(data);
+        //print_pars(data);
         g_free(data->line);
 	    ft_parsclear(&(data->curr_pars));
 		g_tmp_files_clear(&(data->tmp_files));
 		data->count_files = 0;
-		printf("count malloc = %d\n", data->count_malloc);
+		//printf("count malloc = %d\n", data->count_malloc);
     }
 }
