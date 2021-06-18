@@ -271,6 +271,7 @@ t_pars		*pars_command(char *str)
 
 void	get_var(char *str, char *var)
 {
+	// в первую очередь отработать $?
 	(void)str;
 	(void)var;
 }
@@ -287,7 +288,9 @@ void	insert_var_from_env(t_data *data, t_pars *tmp)
 	while (tmp->argv[++i])
 	{
 	    k = 0;
-        while (tmp->argv[i][k] && tmp->argv[i][k] != '$')
+        while (tmp->argv[i][k] && (tmp->argv[i][k] != '$' || 
+			(quaote_is_open(tmp->argv[i], k) == 1
+            || backslash_is_active(tmp->argv[i], k) != 0)))
             k++;
         get_var(&tmp->argv[i][k], var);
 		value = NULL;
