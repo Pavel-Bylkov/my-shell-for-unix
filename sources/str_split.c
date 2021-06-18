@@ -142,36 +142,27 @@ char			**argv_split(char *s)
 	return (res);
 }
 
-static int		get_len_command(char *str)
+static int		get_len_command(char *str, char *chars)
 {
-	int		len[5];
+	int	j;
+	int	len[3];
+	int min;
 
-	len[0] = chr_in_str('|', str);
-	len[0] += (len[0] > -1) * (str[len[0] + 1] == '|');
-	len[1] = chr_in_str(';', str);
-	len[2] = chr_in_str('&', str);
-	len[3] = 0;
-	while (len[2] > -1)
+	j = 0;
+	while (j < 3)
 	{
-		len[3] += len[2];
-		if (str[len[3] + 1] == '&')
-		{
-			len[3] += 1;
-			break ;
-		}
-		len[2] = chr_in_str('&', &str[len[3]]);
+		len[j] = chr_in_str(chars[j], str);
+		if (len[j] > -1 && (str[len[j] + 1] == '|' || str[len[j] + 1] == '&'))
+			len[j] += 1;
+		j++;
 	}
-	// определить кто из них победил ))
-	if (len[0] > -1 && len[1] > -1 && len[0] < len[1])
-		return (len[0] + 1);
-	else if (len[0] > -1 && len[1] > -1 && len[0] > len[1])
-		return (len[1] + 1);
-	else if (len[0] > -1)
-		return (len[0] + 1);
-	else if (len[1] > -1)
-		return (len[1] + 1);
-	else
-		return (ft_strlen(str));
+	min = -1;
+	while (--j > -1)
+	{
+		if (len[j] > -1 && (min == -1 || len[j] < min))
+			min = len[j];
+	}
+	return ((min == -1) * ft_strlen(str) + (min != -1) * (min + 1));
 }
 
 static int	get_ncommand(t_data *data)
@@ -188,7 +179,7 @@ static int	get_ncommand(t_data *data)
 	{
 		if (str[i])
 			n_strs++;
-		len = get_len_command(&str[i]);
+		len = get_len_command(&str[i], "|;&");
 		i += len;
 	}
 	return (n_strs);
@@ -204,7 +195,7 @@ static int		commandscpy(char **res, size_t n, char *str)
     j = 0;
 	while (str[j] && i < n)
 	{
-        len = get_len_command(&str[j]);
+        len = get_len_command(&str[j], "|;&");
 		res[i] = g_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{

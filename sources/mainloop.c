@@ -29,7 +29,9 @@ static void		eof_exit(t_data *data)
 	add_history("exit");
     write_history(HISTORY_FILE); //! не использовать в финальной версии
 	//free_struct(data);
-	printf("exit\n");
+	rl_replace_line("exit", 0); // Clear the previous text
+	rl_redisplay();
+	printf("\n");
 	(void)data;
 	exit(EXIT_SUCCESS);
 }
@@ -61,7 +63,7 @@ int			is_endl_ignor(char *str, t_data *data)
 int		check_unexpected_token(char *str)
 {
 	// пустые команды, повторение редиректов, <( - c пробелом и не открытые скобки
-	// отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
+	// отработать сброс при ошибках >>> или <<<< ||| ;; |;& и т.п.
 	// ( - без разделения на команды
 	// <<\n - unexpected token `newline'
 	// проверить на спец символы ! - нужно ли выдавать ошибку
