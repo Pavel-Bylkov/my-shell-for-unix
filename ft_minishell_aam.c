@@ -295,12 +295,10 @@ int		aam_main(t_data *data)
 	int			ret;
 	t_fdesk		*fd;
 	t_pars		*pars;
-	int			i;
 
 	pars = data->curr_pars;
 	while (pars)
 	{
-		i = pars->count;
 		fd = (t_fdesk *)malloc(sizeof(t_fdesk));
 		ft_init_fd_aam(data, fd);
 		ret = ft_choice_command_aam(data, pars);
