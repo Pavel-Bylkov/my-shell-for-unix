@@ -315,6 +315,5 @@ int		aam_main(t_data *data)
 	}
 	//ft_free_fd_aam(fd);
 	//free (fd);
-ft_putendl_fd("+++++++++++++++++++++++++++++++", 2);
 	return (ret);
 }
