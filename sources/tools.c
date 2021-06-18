@@ -73,7 +73,7 @@ int		read_tmp_stdin(t_data *data, char *str)
 		write(1, "\n", 1);
 	rez = g_strdup("");
 	end_input = get_end_input(str, data);
-	while (line && end_input && ft_strncmp(line, end_input, ft_strlen(end_input) + 1) != 0) // проверить на ^D ^C
+	while (line && end_input && ft_strcmp(line, end_input) != 0) // проверить на ^D ^C
 	{
 		if (rez[0] == '\0')
 			rez = g_strjoin(rez, 0, 0, line);
@@ -92,7 +92,7 @@ int		read_tmp_stdin(t_data *data, char *str)
 	if (fd > 0)
 	{
 		write(fd, rez, ft_strlen(rez));
-		write(fd, "\n", 2);
+		write(fd, "\n", 1);
 		new = tmp_files_new(data->count_files + 1, fname);
 		if (new != NULL)
 			g_data->count_malloc += 1;
