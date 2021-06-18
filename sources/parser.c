@@ -52,7 +52,10 @@ void		ft_parsadd_front(t_pars **lst, t_pars *new)
 	{
 		last = *lst;
 		new->next = last;
-		new->count = last->count + 1;
+		if (ft_strcmp(new->f_spec, "|") == 0)
+			new->count = last->count + 1;
+		else
+			new->count = 1;
 		*lst = new;
 	}
 }

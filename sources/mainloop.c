@@ -61,8 +61,10 @@ int			is_endl_ignor(char *str, t_data *data)
 int		check_unexpected_token(char *str)
 {
 	// пустые команды, повторение редиректов, <( - c пробелом и не открытые скобки
+	// отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
 	// ( - без разделения на команды
 	// <<\n - unexpected token `newline'
+	// проверить на спец символы ! - нужно ли выдавать ошибку
 	(void)str;
 	return (0);
 }
@@ -76,7 +78,6 @@ static int		quaote_open_mode(t_data *data)
 	g_data->count_malloc += 1;
 	len = ft_strlen(data->line);
 	error = 0;
-	// отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
 	if (check_unexpected_token(data->line) != 0)
 		return (2);
 	add_history(data->line);

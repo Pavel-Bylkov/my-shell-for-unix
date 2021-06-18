@@ -188,12 +188,7 @@ static int	get_ncommand(t_data *data)
 	{
 		if (str[i])
 			n_strs++;
-		// проверить на пустые команды - выйти с ошибкой без парсинга
 		len = get_len_command(&str[i]);
-		if (len == 0 && str[i] == '|')
-			return (print_err(152, data));
-		else if (len == 0 && str[i] == ';')
-			return (print_err(153, data));
 		i += len;
 	}
 	return (n_strs);
