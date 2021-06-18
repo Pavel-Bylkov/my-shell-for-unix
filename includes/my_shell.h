@@ -52,7 +52,7 @@ typedef struct             s_fdesk
     int                 fd_w;
 }                       t_fdesk;
 
-typedef struct	    s_pars     //! Нужно ввести переменную указывающую на количество запускаемых программ (выполняемых команд)
+typedef struct	    s_pars
 {
     int                 count;
     int                 error;

@@ -96,6 +96,8 @@ int		ft_redirect_aam(t_pars *pars, t_fdesk *fd)
 			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		if (red->f_spec[0] == '<' && red->f_spec[1] =='\0')
 			fd->fd_w = open(red->out, O_RDONLY);
+		if (red->f_spec[0] == '>' && red->f_spec[1] =='>')
+			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		red = red->next;
 	}
 	return (0);
