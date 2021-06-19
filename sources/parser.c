@@ -261,8 +261,11 @@ t_pars		*pars_command(char *str)
 
 	argv = (char *)g_malloc(sizeof(char) * (ft_strlen(str) + 1));
 	ft_memset(argv, 0, sizeof(argv));
+	printf("до спец - %s\n", str);
     get_fspec_commands(&str, f_spec);
+	printf("до argv - %s\n", str);
 	get_argv(str, &argv);
+	printf("argv - %s\n", argv);
 	new = ft_parsnew(0, NULL, argv_split(argv), f_spec);
 	g_free(argv);
 	new->redirect = get_redirects(str);
@@ -282,7 +285,7 @@ char	*backslash_add(char *str)
 	j = -1;
 	while (str[++i])
 	{
-		if (str[i] == '\\')
+		if (str[i] == '\\' || str[i] == '\'' || str[i] == '"')
 			rez[++j] = '\\'; 
 		rez[++j] = str[i];
 	}
@@ -315,69 +318,55 @@ int		is_var_chars(char c)
 
 char	*insert_var_from_env(t_data *data, char *str)
 {
-	char	buff[32000];
+	char	*buff;
 	char	varname[1024];
-	char	*rez;
-	int		i;
-	int		j[3];
+	int		i[4];
 
 	
-	i = -1;
-	j[0] = -1;
-	while (str[++i])
+	i[0] = -1;
+	buff = g_strdup("");
+	while (str[++i[0]])
 	{
-		while (str[i] && !(str[i] == '$' && backslash_is_active(str, i) == 0 
-			&& str[i + 1] != '\'' &&  quaote_is_open(str, i) != 1 && 
-				str[i + 1] != '"' && str[i + 1] != ' '))
-			buff[++j[0]] = str[i++];
-		j[2] = -1;
-		if (ft_strncmp(&str[i], "$?", 2) == 0 || ft_strncmp(&str[i], "${?}", 4) == 0)
+		i[1] = i[0];
+		while (str[i[1]] && (str[i[1]] != '$' || backslash_is_active(str, i[1]) != 0 
+			||  quaote_is_open(str, i[1]) == 1))
+			i[1]++;
+		if (str[i[1]] == '\0')
+			buff = g_strjoin(buff, 0, 0, g_strdup(&str[i[0]]));
+		else
+			buff = g_strjoin(buff, 0, 0, g_strdupn(&str[i[0]], i[1] - i[0]));
+		i[2] = -1;
+		if (ft_strncmp(&str[i[1]], "$?", 2) == 0 || ft_strncmp(&str[i[1]], "${?}", 4) == 0)
 		{
-			rez = ft_itoa(data->code_exit);
-			j[1] = -1;
-			while (rez[++j[1]])
-				buff[++j[0]] = rez[j[1]];
-			free(rez);
-			i += ((ft_strncmp(&str[i], "$?", 2) == 0) + 
-					(ft_strncmp(&str[i], "${?}", 4) == 0) * 3);
+			buff = g_strjoin(buff, 0, 0, ft_itoa(data->code_exit));
+			i[1] += ((ft_strncmp(&str[i[1]], "$?", 2) == 0) + 
+					(ft_strncmp(&str[i[1]], "${?}", 4) == 0) * 3);
 		}
-		else if (str[i] == '$' && str[i + 1] == '{')
+		else if (str[i[1]] == '$' && str[i[1] + 1] == '{')
 		{
-			i++;
-			while (str[++i] && str[i] != '}')
-				varname[++j[2]] = str[i];
-			varname[++j[2]] = '\0';
-			rez = get_var(data->envp, varname);
-			if (rez)
-			{
-				j[1] = -1;
-				while (rez[++j[1]])
-					buff[++j[0]] = rez[j[1]];
-				g_free(rez);
-			}
+			i[1]++;
+			while (str[++i[1]] && str[i[1]] != '}')
+				varname[++i[2]] = str[i[1]];
+			varname[++i[2]] = '\0';
+			buff = g_strjoin(buff, 0, 0, get_var(data->envp, varname));
 		}
-		else if (str[i] == '$' && ft_isdigit(str[i + 1]))
-			i++;
-		else if (str[i] == '$' && is_var_chars(str[i + 1]))
+		else if (str[i[1]] == '$' && ft_isdigit(str[i[1] + 1]))
+			i[1]++;
+		else if (str[i[1]] == '$' && is_var_chars(str[i[1] + 1]))
 		{
-			while (str[++i] && is_var_chars(str[i]))
-				varname[++j[2]] = str[i];
-			varname[++j[2]] = '\0';
-			rez = get_var(data->envp, varname);
-			if (rez)
-			{
-				j[1] = -1;
-				while (rez[++j[1]])
-					buff[++j[0]] = rez[j[1]];
-				g_free(rez);
-			}
-			i--;
+			while (str[++i[1]] && is_var_chars(str[i[1]]))
+				varname[++i[2]] = str[i[1]];
+			varname[++i[2]] = '\0';
+			buff = g_strjoin(buff, 0, 0, get_var(data->envp, varname));
+			i[1]--;
 		}
+		else if (str[i[1]] == '$' && (ft_strncmp(&str[i[1]], "$ ", 2) == 0
+			||	ft_strncmp(&str[i[1]], "$\"", 2) == 0 || ft_strncmp(&str[i[1]], "$'", 2) == 0))
+			buff = g_strjoin(buff, 0, 0, g_strdupn(&str[i[1]++], 2));
+		i[0] = i[1] - (str[i[1]] == '\0');
 	}
-	buff[++j[0]] = '\0';
 	g_free(str);
-	rez = g_strdup(buff);
-	return (rez);
+	return (buff);
 }
 
 int		is_builtin(char *str)
@@ -443,7 +432,7 @@ void	find_path(t_data *data, t_pars *tmp)
 	name = tmp->argv[0];
 	if (!name)
 		return ;
-	if (!is_builtin(name) && chr_in_str('/', name) == -1)
+	if (!is_builtin(name) && chr_in_str('/', name) == -1 && ft_strcmp(name, ".") != 0)
 		tmp->argv[0] = search_in_path(data, name);
 	if (chr_in_str('/', tmp->argv[0]) > -1)
 	{
@@ -484,21 +473,21 @@ char	*quaote_backslash_clean(char *str)
 // убрать кавычки вокруг цитат
 void	quaotes_clean(t_pars *tmp)
 {
-	int		i[2];
-	int		f[3];
-	char	b[1024];
+	int			i;
+	t_redir		*redir;
 
-	i[0] = -1;
-	while (tmp->argv[++i[0]])
+	i = -1;
+	while (tmp->argv[++i])
+		tmp->argv[i] = quaote_backslash_clean(tmp->argv[i]);
+	if (tmp->redirect)
 	{
-		i[1] = -1;
-		ft_memset(f, 0, sizeof(f));
-		while (tmp->argv[i[0]][++i[1]] != '\0')
+		redir = tmp->redirect;
+		while (redir)
 		{
-			b[i[1]] = tmp->argv[i[0]][i[1]];
+			redir->out = quaote_backslash_clean(redir->out);
+			redir = redir->next;
 		}
 	}
-	(void)b;
 }
 // проверить наличие файлов, добавить ошибки
 int	check_open_files(t_pars *tmp)
@@ -532,12 +521,11 @@ int 	parse_line(t_data *data, int error)
 			i++;
 		while (--i > -1)
 		{
-			//printf("%s\n", commands[i]);
 			commands[i] = insert_var_from_env(data, commands[i]);
 			new = pars_command(commands[i]);
 			ft_parsadd_front(&(data->curr_pars), new);
 			// убрать кавычки вокруг цитат
-			//quaotes_clean(new);
+			quaotes_clean(new);
 			// заменить на имена файлов, а абс пути для не builtin комманд перенести в path
 			find_path(data, new);
 			// проверить наличие файлов, добавить ошибки
