@@ -261,11 +261,8 @@ t_pars		*pars_command(char *str)
 
 	argv = (char *)g_malloc(sizeof(char) * (ft_strlen(str) + 1));
 	ft_memset(argv, 0, sizeof(argv));
-	printf("до спец - %s\n", str);
     get_fspec_commands(&str, f_spec);
-	printf("до argv - %s\n", str);
 	get_argv(str, &argv);
-	printf("argv - %s\n", argv);
 	new = ft_parsnew(0, NULL, argv_split(argv), f_spec);
 	g_free(argv);
 	new->redirect = get_redirects(str);
