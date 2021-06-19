@@ -4,6 +4,12 @@ void		int_handler(int status)
 {
 	if (status == SIGINT)
 	{
+
+		rl_redisplay();
+		rl_on_new_line();
+		rl_redisplay();
+		rl_replace_line("  ", 0);
+		//write(1, "\x08", 1); // Clear the previous text
 		write(1, "\n", 1); // Move to a new line
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
@@ -16,6 +22,8 @@ void		int_handler2(int status)
 {
 	if (status == SIGINT)
 	{
+
+		write(1, "\b\b", 2);
 		write(1, "\n", 1); // Move to a new line
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
@@ -29,6 +37,7 @@ static void		eof_exit(t_data *data)
 	add_history("exit");
     write_history(HISTORY_FILE); //! не использовать в финальной версии
 	//free_struct(data);
+	write(1, "\b", 1);
 	rl_replace_line("exit", 0); // Clear the previous text
 	rl_redisplay();
 	write(1, "\n", 1);
@@ -47,6 +56,15 @@ char 		*rl_gets_with_add_hist(char *promt)
 	return (line);
 }
 
+char 		*rl_gets_without_hist(char *promt)
+{
+	char	*line;
+
+	signal(SIGINT, int_handler2);
+	line = readline(promt);
+	return (line);
+}
+
 int			is_endl_ignor(char *str, t_data *data)
 {
 	int		len;
@@ -59,7 +77,8 @@ int			is_endl_ignor(char *str, t_data *data)
 				|| ft_strncmp(&str[len - 2], "&&", 2) == 0 ||
 				brackets_is_open(str, len) > 0 || ft_stdin_active(str, data));
 }
-
+// add check echo ${USER HOME}
+// bash: ${USER HOME}: bad substitution
 int		check_unexpected_token(char *str)
 {
 	// пустые команды, повторение редиректов, <( - c пробелом и не открытые скобки
@@ -82,17 +101,15 @@ static int		quaote_open_mode(t_data *data)
 	error = 0;
 	if (check_unexpected_token(data->line) != 0)
 		return (2);
-	add_history(data->line);
-	signal(SIGINT, int_handler2);
 	while (is_endl_ignor(data->line, data) && error == 0)
 	{
 		tmp = data->line;
 		if (backslash_is_active(tmp, len))
 		{
-			data->line = readline(QUAOTE_PROMT);
+			data->line = rl_gets_without_hist(QUAOTE_PROMT);
 			if (NULL == data->line)
-				exit(ft_perr(g_strdupn(tmp, ft_strlen(tmp) - 1),
-						127, NULL, "command not found"));
+				exit(0); //ft_perr(g_strdupn(tmp, ft_strlen(tmp) - 1),
+						//127, NULL, "command not found")
 			data->line = g_strjoin(tmp, -1, 0, data->line);
 			g_data->count_malloc += 1;
 			add_history(data->line);
@@ -103,9 +120,9 @@ static int		quaote_open_mode(t_data *data)
 		// если скобка - подставить ; и убрать \n
 		else
 		{
-			data->line = readline(QUAOTE_PROMT);
+			data->line = rl_gets_without_hist(QUAOTE_PROMT);
 			if (NULL == data->line)
-				return (print_err(2, data));
+				return (unexpected_eof(tmp));
 			else if (quaote_is_open(tmp, len) != 0)
 				data->line = g_strjoin(tmp, 0, 1, data->line);
 			else
@@ -119,7 +136,23 @@ static int		quaote_open_mode(t_data *data)
 	return (error);
 }
 
+int		ft_readline(t_data *data)
+{
+	int error;
 
+	error = 0;
+	data->line = rl_gets_with_add_hist(SHELL_PROMT);
+	if (data->line == NULL)
+		eof_exit(data);
+	else if (data->line[0] == '\0')
+	{
+		g_free(data->line);
+		error = 555;
+	}
+	else
+		error = quaote_open_mode(data);
+	return (error);
+}
 
 void main_loop(t_data *data)
 {
@@ -128,23 +161,18 @@ void main_loop(t_data *data)
     error = read_history(HISTORY_FILE); //! не использовать в финальной версии 	error = 0;
     while (1)
     {
-        data->line = rl_gets_with_add_hist(SHELL_PROMT);
-        if (data->line == NULL)
-            eof_exit(data);
-        else if (data->line[0] == '\0')
-        {
-            g_free(data->line);
-            continue ;
-        }
-        else
-            error = quaote_open_mode(data);
+        error = ft_readline(data);
+		if (error == 555)
+			continue ;
+		else if (error == 2)
+			ft_perr("syntax error", 2, NULL, "unexpected end of file");
         error = parse_line(data, error);
         data->code_exit = run_comands(data, error);
-        //print_pars(data);
-        g_free(data->line);
+        print_pars(data);
+        g_free((void *)data->line);
 	    ft_parsclear(&(data->curr_pars));
 		g_tmp_files_clear(&(data->tmp_files));
 		data->count_files = 0;
-		//printf("count malloc = %d\n", data->count_malloc);
+		printf("count malloc = %d\n", data->count_malloc);
     }
 }

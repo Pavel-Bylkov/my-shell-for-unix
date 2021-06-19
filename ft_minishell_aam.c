@@ -347,6 +347,7 @@ int		aam_main(t_data *dt)
 
 
 
+
 	data = dt;
 	pars = data->curr_pars;
 	while (data->curr_pars)

@@ -64,7 +64,6 @@ int		read_tmp_stdin(t_data *data, char *str)
 	char	*rez;
 	char	*fname;
 	int		fd;
-	char	*strerr;
 
 	signal(SIGINT, int_handler2);
 	line = readline(QUAOTE_PROMT);
@@ -89,14 +88,7 @@ int		read_tmp_stdin(t_data *data, char *str)
 	if (line)
 		g_free(line);
 	else
-	{
-		strerr = ft_strjoin(
-			"here-document at line 1 delimited by end-of-file (wanted `",
-			end_input);
-		strerr = g_strjoin(strerr, 0, 0, g_strdup("')"));
-		ft_perr("warning", 0, NULL, strerr);
-		free(strerr);
-	}
+		unexpected_eof_infile(end_input);
 	g_free(end_input);
 	fname = get_filename(data);
 	fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0666);

@@ -269,37 +269,115 @@ t_pars		*pars_command(char *str)
 	return (new);
 }
 
-void	get_var(char *str, char *var)
+char	*backslash_add(char *str)
 {
-	(void)str;
-	(void)var;
+	char	*rez;
+	int		i;
+	int		j;
+
+	if (str == NULL)
+		return (NULL);
+	rez = (char *)g_malloc(ft_strlen(str) * 2 + 1);
+	i = -1;
+	j = -1;
+	while (str[++i])
+	{
+		if (str[i] == '\\')
+			rez[++j] = '\\'; 
+		rez[++j] = str[i];
+	}
+	rez[++j] = '\0';
+	g_free(str);
+	return (rez);
 }
 
-void	insert_var_from_env(t_data *data, t_pars *tmp)
+char	*get_var(char **envp, char *var)
 {
-	char	var[1024];
+	char 	*value;
 	int		i;
-	int     j;
-	int     k;
-	char    *value;
 
-	i = -1;
-	while (tmp->argv[++i])
+	value = NULL;
+	if (envp && var)
 	{
-	    k = 0;
-        while (tmp->argv[i][k] && tmp->argv[i][k] != '$')
-            k++;
-        get_var(&tmp->argv[i][k], var);
-		value = NULL;
-		if (data->envp)
-		{
-			j = -1;
-			while (data->envp[++j] != NULL)
-				if (ft_strncmp(data->envp[j], var, ft_strlen(var)) == 0)
-					value = data->envp[j];
-		}
-		(void)value;
+		i = -1;
+		while (envp[++i] != NULL)
+			if (ft_strncmp(envp[i], var, ft_strlen(var)) == 0)
+				value = g_strdup(&envp[i][ft_strlen(var) + 1]);
 	}
+	return (backslash_add(value));
+}
+
+int		is_var_chars(char c)
+{
+	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || 
+			(c >= '0' && c <= '9') || c == '_');
+}
+
+char	*insert_var_from_env(t_data *data, char *str)
+{
+	char	buff[32000];
+	char	varname[1024];
+	char	*rez;
+	int		i;
+	int		j[3];
+
+	
+	i = -1;
+	j[0] = -1;
+	while (str[++i])
+	{
+		while (str[i] && !(str[i] == '$' && backslash_is_active(str, i) == 0 
+			&& str[i + 1] != '\'' &&  quaote_is_open(str, i) != 1 && 
+				str[i + 1] != '"' && str[i + 1] != ' '))
+			buff[++j[0]] = str[i++];
+		j[2] = -1;
+		if (ft_strncmp(&str[i], "$?", 2) == 0 || ft_strncmp(&str[i], "${?}", 4) == 0)
+		{
+			rez = ft_itoa(data->code_exit);
+			j[1] = -1;
+			while (rez[++j[1]])
+				buff[++j[0]] = rez[j[1]];
+			free(rez);
+			i += ((ft_strncmp(&str[i], "$?", 2) == 0) + 
+					(ft_strncmp(&str[i], "${?}", 4) == 0) * 3);
+		}
+		else if (str[i] == '$' && str[i + 1] == '{')
+		{
+			i++;
+			while (str[++i] && str[i] != '}')
+				varname[++j[2]] = str[i];
+			varname[++j[2]] = '\0';
+			rez = get_var(data->envp, varname);
+			if (rez)
+			{
+				j[1] = -1;
+				while (rez[++j[1]])
+					buff[++j[0]] = rez[j[1]];
+				g_free(rez);
+			}
+		}
+		else if (str[i] == '$' && ft_isdigit(str[i + 1]))
+			i++;
+		else if (str[i] == '$' && is_var_chars(str[i + 1]))
+		{
+			while (str[++i] && is_var_chars(str[i]))
+				varname[++j[2]] = str[i];
+			varname[++j[2]] = '\0';
+			rez = get_var(data->envp, varname);
+			if (rez)
+			{
+				j[1] = -1;
+				while (rez[++j[1]])
+					buff[++j[0]] = rez[j[1]];
+				g_free(rez);
+			}
+			i--;
+		}
+	}
+	buff[++j[0]] = '\0';
+	g_free(str);
+	rez = g_strdup(buff);
+	return (rez);
 }
 
 int		is_builtin(char *str)
@@ -379,7 +457,29 @@ void	find_path(t_data *data, t_pars *tmp)
 
 char	*quaote_backslash_clean(char *str)
 {
-	return (str); // временно
+	char	*rez;
+	int		i;
+	int		j;
+
+	rez = (char *)g_malloc(ft_strlen(str) + 1);
+	i = -1;
+	j = -1;
+	while (str[++i])
+	{
+		if (str[i] == '\\' && backslash_is_active(str, i) == 0 && 
+				quaote_is_open(str, i) == 0)
+			continue ; 
+		if (str[i] == '\'' && backslash_is_active(str, i) == 0 &&
+				(quaote_is_open(str, i) == 1 || quaote_is_open(str, i) != 2))
+			continue ;
+		if (str[i] == '"' && backslash_is_active(str, i) == 0 &&
+				(quaote_is_open(str, i) == 2 || quaote_is_open(str, i) != 1))
+			continue ;
+		rez[++j] = str[i];
+	}
+	rez[++j] = '\0';
+	g_free(str);
+	return (rez);
 }
 // убрать кавычки вокруг цитат
 void	quaotes_clean(t_pars *tmp)
@@ -401,7 +501,7 @@ void	quaotes_clean(t_pars *tmp)
 	(void)b;
 }
 // проверить наличие файлов, добавить ошибки
-void	check_open_files(t_pars *tmp)
+int	check_open_files(t_pars *tmp)
 {
 	int		fd;
 
@@ -413,6 +513,7 @@ void	check_open_files(t_pars *tmp)
 		else
 			tmp->error = errno;
 	}
+	return (0);
 }
 
 int 	parse_line(t_data *data, int error)
@@ -431,19 +532,19 @@ int 	parse_line(t_data *data, int error)
 			i++;
 		while (--i > -1)
 		{
-			printf("%s\n", commands[i]);
+			//printf("%s\n", commands[i]);
+			commands[i] = insert_var_from_env(data, commands[i]);
 			new = pars_command(commands[i]);
 			ft_parsadd_front(&(data->curr_pars), new);
-			//insert_var_from_env(data, new);
 			// убрать кавычки вокруг цитат
 			//quaotes_clean(new);
 			// заменить на имена файлов, а абс пути для не builtin комманд перенести в path
 			find_path(data, new);
 			// проверить наличие файлов, добавить ошибки
-			check_open_files(new);
+			error = check_open_files(new);
 		}
 		free_array((void **)commands);
-		return (0);
+		return (error);
 	}
 	return (2);
 }
