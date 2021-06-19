@@ -188,6 +188,8 @@ int	ft_command_err_aam(char *name_f)
 	//int			code;
 	//DIR			dir_t;
 
+	if (name_f[0] == '.' && name_f[1] == '\0')
+		return (ft_output_err_aam(1, name_f, ": filename argument required\n", ".: usage: . filename [arguments]\n"));
 	if (name_f[0] == '.' && name_f[1] == '.' && name_f[2] == '\0')
 		return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
 	if (ft_char_in_str(name_f, '/') < (int)ft_strlen(name_f))
