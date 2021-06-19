@@ -432,7 +432,8 @@ void	find_path(t_data *data, t_pars *tmp)
 	name = tmp->argv[0];
 	if (!name)
 		return ;
-	if (!is_builtin(name) && chr_in_str('/', name) == -1 && ft_strcmp(name, ".") != 0)
+	if (!is_builtin(name) && chr_in_str('/', name) == -1 
+		&& ft_strcmp(name, ".") != 0 && ft_strcmp(name, "..") != 0)
 		tmp->argv[0] = search_in_path(data, name);
 	if (chr_in_str('/', tmp->argv[0]) > -1)
 	{
