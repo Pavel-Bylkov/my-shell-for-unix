@@ -6,7 +6,6 @@ void	ft_out_export(t_data data)
 	int		j;
 
 	i = -1;
-printf("data.size = %d\n\n", data.size); //! УБРАТЬ
 	while (++i < data.size)
 	{
 		j = 0;

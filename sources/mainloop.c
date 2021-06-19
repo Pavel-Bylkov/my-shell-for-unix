@@ -4,7 +4,7 @@ void		int_handler(int status)
 {
 	if (status == SIGINT)
 	{
-		printf("\n"); // Move to a new line
+		write(1, "\n", 1); // Move to a new line
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
 		rl_redisplay();
@@ -16,7 +16,7 @@ void		int_handler2(int status)
 {
 	if (status == SIGINT)
 	{
-		printf("\n"); // Move to a new line
+		write(1, "\n", 1); // Move to a new line
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
 		rl_redisplay();
@@ -31,7 +31,7 @@ static void		eof_exit(t_data *data)
 	//free_struct(data);
 	rl_replace_line("exit", 0); // Clear the previous text
 	rl_redisplay();
-	printf("\n");
+	write(1, "\n", 1);
 	(void)data;
 	exit(EXIT_SUCCESS);
 }
