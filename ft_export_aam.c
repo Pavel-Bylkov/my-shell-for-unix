@@ -18,6 +18,8 @@ printf("data.size = %d\n\n", data.size); //! УБРАТЬ
 				write(1, &(data.envp[data.index[i]][j++]), 1);
 				write(1, "\"", 1);
 			}
+			if (data.envp[data.index[i]][j] == '\\')
+				write(1, "\\", 1);
 			if (data.envp[data.index[i]][j] != '\0')
 				write(1, &(data.envp[data.index[i]][j++]), 1);
 		}

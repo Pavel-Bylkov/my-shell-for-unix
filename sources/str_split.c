@@ -92,9 +92,9 @@ static size_t	get_nstrs(char *str)
 			n_strs++;
 		len = chr_in_str(' ', &str[i]);
 		if (len > -1)
-			i += len + 1;
-		else
-			i += ft_strlen(&str[i]);
+			i += len;
+		while (str[i] && str[i] == ' ')
+			i++;
 	}
 	return (n_strs);
 }
@@ -121,6 +121,8 @@ static void		ft_strscpy(char **res, size_t n, char *str)
 			return ;
 		}
 		j += len + 1;
+		while (str[j] && str[j] == ' ')
+			j++;
 	}
 	res[i] = NULL;
 }
