@@ -141,6 +141,8 @@ t_tmp_files			*tmp_files_new(int index, char *fname);
 int					tmp_files_size(t_tmp_files *lst);
 void				tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new);
 char				*get_filename_by_index(t_tmp_files *head, int index);
+int					unexpected_eof(char *str);
+int					unexpected_eof_infile(char *str);
 
 int		            ft_export(t_data *data, t_pars *pars);
 void	            ft_out_export(t_data data);

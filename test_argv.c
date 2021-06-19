@@ -7,5 +7,6 @@ int main(int argc, char **argv)
     while (argv[i])
         printf("%s\n", argv[i++]);
     i = 0;
+    printf("%d %d %d\n", 5 || 0, 0 || -5, -5 || 5);
     return (0);
 }
