@@ -173,6 +173,6 @@ void main_loop(t_data *data)
 	    ft_parsclear(&(data->curr_pars));
 		g_tmp_files_clear(&(data->tmp_files));
 		data->count_files = 0;
-		printf("count malloc = %d\n", data->count_malloc);
+		//printf("count malloc = %d\n", data->count_malloc);
     }
 }

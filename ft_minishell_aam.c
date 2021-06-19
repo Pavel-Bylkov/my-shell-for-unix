@@ -96,7 +96,11 @@ int		ft_redirect_aam(t_pars *pars, t_fdesk *fd)
 		if (red->f_spec[0] == '>' && red->f_spec[1] =='\0')
 			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		if (red->f_spec[0] == '<' && red->f_spec[1] =='\0')
+		{
 			fd->fd_w = open(red->out, O_RDONLY);
+			if (fd->fd_w < 0)
+				return (ft_output_err_aam(1, red->out, " : No such file or directory\n", NULL));
+		}
 		if (red->f_spec[0] == '>' && red->f_spec[1] =='>')
 			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		red = red->next;
@@ -138,7 +142,10 @@ int		ft_binar_command_aam(t_data *data, t_pars *pars)
 	pid_t		pid;
 	int			code;
 
-	ft_redirect_aam(pars, data->fdesk);
+	code = 0;
+	code = ft_redirect_aam(pars, data->fdesk);
+	if (code !=0)
+		return (code);
 	if (pars->count > 1)
 		pipe(data->fdesk->fd[pars->count - 1]);
 	pid = fork();
@@ -178,24 +185,23 @@ int	ft_output_err_aam(int code, char *str1, char *str2, char *str3)
 int	ft_command_err_aam(char *name_f)
 {
 	struct stat	buff;
-	int			code;
+	//int			code;
 	//DIR			dir_t;
 
-	code = 0;
+	if (name_f[0] == '.' && name_f[1] == '.' && name_f[2] == '\0')
+		return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
 	if (ft_char_in_str(name_f, '/') < (int)ft_strlen(name_f))
 	{
 		if (opendir(name_f) != NULL)
 			return (ft_output_err_aam(126, name_f, ": is a directory\n", NULL));
 		else
+		{
+			if (stat(name_f, &buff) >= 0)
+				return (ft_output_err_aam(126, name_f, ": Permission denied\n", NULL));
 			return (ft_output_err_aam(127, name_f, ": No such file or directory\n", NULL));
+		}
 	}
-	code = stat(name_f, &buff);
-	if (code < 0)
-		return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
-	else
-		printf("OK!!!\n");
-
-	return (code);
+	return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
 }
 
 int	ft_build_in_aam(t_data *data, t_pars *pars)
@@ -291,8 +297,8 @@ int	ft_choice_command_aam(t_data *data)
 		else
 		{
 			status = ft_binar_command_aam(data, pars);
-			if (status < 0)
-				return (ft_command_err_aam(pars->path));
+			if (status != 0)
+				return (status);
 		}
 
 		pars = pars->next;
