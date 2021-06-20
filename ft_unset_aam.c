@@ -29,7 +29,6 @@ char	**ft_env_del(t_data *data, char *str, int *size)
 	pos_del = ft_del_position(*data, str);
 	if (pos_del != -1)
 	{
-printf("=========================\n");
 		new_env = (char **)malloc(sizeof(char *) * data->size);
 		if (new_env == NULL)
 			return (NULL);
@@ -41,9 +40,9 @@ printf("=========================\n");
 			else
 				new_env[i] = ft_strdup(data->envp[i + 1]);
 		}
-printf("ZZZZZZZZZZZZZZZZZZZZZ\n");
 		if (*size > 0)
 			*size = *size - 1;
+		new_env[*size] = NULL;
 		ft_free_mas(data->envp);
 		return (new_env);
 	}
