@@ -336,6 +336,7 @@ char	*insert_var_from_env(t_data *data, char *str)
 		if (ft_strncmp(&str[i[1]], "$?", 2) == 0 || ft_strncmp(&str[i[1]], "${?}", 4) == 0)
 		{
 			buff = g_strjoin(buff, 0, 0, ft_itoa(data->code_exit));
+			g_data->count_malloc += 1 * DEBUG;
 			i[1] += ((ft_strncmp(&str[i[1]], "$?", 2) == 0) + 
 					(ft_strncmp(&str[i[1]], "${?}", 4) == 0) * 3);
 		}
