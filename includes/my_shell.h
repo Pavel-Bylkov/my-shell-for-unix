@@ -155,8 +155,8 @@ int		            ft_strcmp(const char *s1, const char *s2);
 void	            create_index(t_data *data);
 void	            sort_mass(char **mas, int *id[], int size);
 int		            ft_char_in_str(char *str, char c);
-char	            **ft_env_add(t_data *data, char *str);
-void	            ft_export_output_err(char *str);
+char	            **ft_env_add(t_data *data, char *str, int *size);
+int	            ft_export_output_err(int code, char *str);
 void	ft_unset_output_err(char *str);
 int		            ft_unset(t_data *data, t_pars pars);
 char	**ft_env_del(t_data *data, char *str);
@@ -180,6 +180,7 @@ void	init_pwd_aam(t_data *data);
 int		ft_redirect_aam(t_pars *pars, t_fdesk *fd);
 int	ft_command_err_aam(char *name_f);
 int	ft_output_err_aam(int code, char *str1, char *str2, char *str3);
+int	ft_chrstr_in_set(char *str, char *set, int n);
 
 
 

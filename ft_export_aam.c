@@ -52,7 +52,7 @@ char	*ft_env_work_add(char *line, char *str, int pos)
 	return (new_line);
 }
 
-char	**ft_env_add(t_data *data, char *str)
+char	**ft_env_add(t_data *data, char *str, int *size)
 {
 	char	**new_env;
 	int		i;
@@ -78,16 +78,20 @@ char	**ft_env_add(t_data *data, char *str)
 		i++;
 	}
 	if (flag == 0)
-		new_env[data->size++] = ft_strdup(str);
-	new_env[data->size] = NULL;
+	{
+		new_env[*size] = ft_strdup(str);
+		*size = *size + 1;
+	}
+	new_env[*size] = NULL;
 	ft_free_mas(data->envp);
 	return (new_env);
 }
 
-void	ft_export_output_err(char *str)
+int	ft_export_output_err(int code, char *str)
 {
 	write(2, "my_shell: export: ", 18);
 	write(2, "`", 1);
 	write(2, str, ft_strlen(str));
 	write(2, "': not a valid identifier\n", 26);
+	return (code);
 }

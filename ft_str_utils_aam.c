@@ -1,5 +1,22 @@
 #include "my_shell.h"
 
+int	ft_chrstr_in_set(char *str, char *set, int n)
+{
+	int		i;
+	int		j;
+
+	j = 0;
+	while (set[j])
+	{
+		i = 0;
+		while (i <= n && str[i] != '\0')
+			if (str[i++] == set[j])
+				return (0);
+		j++;
+	}
+	return (-1);
+}
+
 char	*ft_strcpy_fr(char *str1, char *str2)
 {
 	int		i;
