@@ -30,14 +30,14 @@ int     one_run(t_data *data, char *str)
 		return (0);
     if (check_unexpected_token(data->line) != 0)
 		return (2);
-    error = parse_line(data, error);
-    data->code_exit = run_comands(data, error);
-    //print_pars(data);
-    g_free(data->line);
-    ft_parsclear(&(data->curr_pars));
-    //printf("count malloc = %d\n", data->count_malloc);
-    //free_struct(data);
-    return (data->code_exit);
+	error = parse_line(data, error);
+	data->code_exit = run_comands(data, error);
+	g_free((void *)data->line);
+	ft_parsclear(&(data->curr_pars));
+	g_tmp_files_clear(&(data->tmp_files));
+	data->count_files = 0;
+	//free_struct(data);
+	return (data->code_exit);
 }
 
 static int		quaote_open_mode2(t_data *data, int fd, int *ret)

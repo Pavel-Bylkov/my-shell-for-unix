@@ -4,12 +4,7 @@ void		int_handler(int status)
 {
 	if (status == SIGINT)
 	{
-
-		rl_redisplay();
-		rl_on_new_line();
-		rl_redisplay();
-		rl_replace_line("  ", 0);
-		//write(1, "\x08", 1); // Clear the previous text
+		write(1, "\e[2D  ", 6); //[nD — перемещает курсор по строке влево на п позиций.
 		write(1, "\n", 1); // Move to a new line
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
@@ -22,8 +17,7 @@ void		int_handler2(int status)
 {
 	if (status == SIGINT)
 	{
-
-		write(1, "\b\b", 2);
+		write(1, "\e[2D  ", 6);
 		write(1, "\n", 1); // Move to a new line
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
@@ -37,10 +31,10 @@ static void		eof_exit(t_data *data)
 	add_history("exit");
     write_history(HISTORY_FILE); //! не использовать в финальной версии
 	//free_struct(data);
-	write(1, "\b", 1);
-	rl_replace_line("exit", 0); // Clear the previous text
-	rl_redisplay();
-	write(1, "\n", 1);
+	//write(1, "\b", 1);
+	//rl_replace_line("", 0); // Clear the previous text
+	//rl_redisplay();
+	write(1, "exit\n", 5);
 	(void)data;
 	exit(EXIT_SUCCESS);
 }
