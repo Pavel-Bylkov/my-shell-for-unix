@@ -159,7 +159,7 @@ char	            **ft_env_add(t_data *data, char *str, int *size);
 int	            ft_export_output_err(int code, char *str);
 void	ft_unset_output_err(char *str);
 int		            ft_unset(t_data *data, t_pars pars);
-char	**ft_env_del(t_data *data, char *str);
+char	**ft_env_del(t_data *data, char *str, int *size);
 char	**ft_free_mas(char **mas);
 int	ft_env(t_data *data, t_pars pars);
 void	ft_env_output(t_data *data);

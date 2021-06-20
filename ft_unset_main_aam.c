@@ -6,6 +6,7 @@ int	ft_unset(t_data *data, t_pars pars)
 
 	if (pars.argv[1] != NULL)
 	{
+printf("++++++++++++++++ до size = %d\n", data->size);
 		i = 1;
 		while (pars.argv[i] != NULL)
 		{
@@ -17,8 +18,9 @@ int	ft_unset(t_data *data, t_pars pars)
 				return (1);
 			}
 			else
-				data->envp = ft_env_del(data, pars.argv[i]);
+				data->envp = ft_env_del(data, pars.argv[i], &(data->size));
 			i++;
+printf("++++++++++++++++ после size = %d\n", data->size);
 		}
 		create_index(&(*data));
 		sort_mass(data->envp, &data->index, data->size);
