@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "includes/my_shell.h"
+#include "my_shell.h"
 #include <string.h>
 
 void	create_index(t_data *data)
@@ -38,6 +38,34 @@ void	init_pwd_aam(t_data *data)
 		data->pwd_oldp->oldpwd_p = ft_strdup(&data->envp[pos][7]);
 }
 
+void	ft_shlvl_incr_add_aam(char **str)
+{
+	char	*new_str;
+	char	*num;
+	int		k;
+	int		i;
+
+	k = 0;
+	i = 5;
+	while ((*str)[++i] != '\0')
+		k = 10 * k + (*str)[i] - 48;
+	num = ft_itoa(k + 1);
+	new_str = (char *)malloc(sizeof(char) * (7 + ft_strlen(num)));
+	i = -1;
+	while (++i < 6)
+		new_str[i] = (*str)[i];
+	while (i < (int)ft_strlen(num) + 6)
+	{
+		new_str[i] = num[i - 6];
+		i++;
+	}
+	if (*str)
+		free (*str);
+	*str = ft_strdup(new_str);
+	free(num);
+	free(new_str);
+}
+
 void	init_data(char **env, t_data *data)
 {
 	int		i;
@@ -50,7 +78,11 @@ void	init_data(char **env, t_data *data)
 	data->size = i;
 	i = -1;
 	while (env[++i] != NULL)
+	{
 		data->envp[i] = ft_strdup(env[i]);
+		if (ft_strncmp(env[i], "SHLVL=", 6) == 0)
+			ft_shlvl_incr_add_aam(&(data->envp[i]));
+	}
 	data->envp[i] = NULL;
 
 	create_index(&(*data));
@@ -264,6 +296,8 @@ int	ft_choice_command_aam(t_data *data)
 	pars = data->curr_pars;
 	i = pars->count;
 	j = i;
+	if (pars->argv[0] == NULL)
+		return (0);
 	while (i-- > 0)
 	{
 		if (pars->path == NULL)
