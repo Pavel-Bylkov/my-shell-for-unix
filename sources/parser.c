@@ -114,7 +114,7 @@ void				ft_redirclear(t_redir **redir)
 			g_free((*redir)->out);
 		g_free((*redir));
 		*redir = tmp;
-	}	
+	}
 }
 
 void				ft_parsclear(t_pars **lst)
@@ -171,7 +171,7 @@ t_redir		*get_redirects(char *str)
 				|| (quaote_is_open(str, i[1]) != 0
             || backslash_is_active(str, i[1]) != 0)))
 				i[1]++;
-			ft_redir_add(&new, ft_redirnew(&str[i[0]], i[2] - i[0], 
+			ft_redir_add(&new, ft_redirnew(&str[i[0]], i[2] - i[0],
 					&str[i[3]], i[1] - i[3]));
 		}
 		i[0] = i[1];
@@ -283,7 +283,7 @@ char	*backslash_add(char *str)
 	while (str[++i])
 	{
 		if (str[i] == '\\' || str[i] == '\'' || str[i] == '"')
-			rez[++j] = '\\'; 
+			rez[++j] = '\\';
 		rez[++j] = str[i];
 	}
 	rez[++j] = '\0';
@@ -309,7 +309,7 @@ char	*get_var(char **envp, char *var)
 
 int		is_var_chars(char c)
 {
-	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || 
+	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
 			(c >= '0' && c <= '9') || c == '_');
 }
 
@@ -319,13 +319,13 @@ char	*insert_var_from_env(t_data *data, char *str)
 	char	varname[1024];
 	int		i[4];
 
-	
+
 	i[0] = -1;
 	buff = g_strdup("");
 	while (str[++i[0]])
 	{
 		i[1] = i[0];
-		while (str[i[1]] && (str[i[1]] != '$' || backslash_is_active(str, i[1]) != 0 
+		while (str[i[1]] && (str[i[1]] != '$' || backslash_is_active(str, i[1]) != 0
 			||  quaote_is_open(str, i[1]) == 1))
 			i[1]++;
 		if (str[i[1]] == '\0')
@@ -430,7 +430,7 @@ void	find_path(t_data *data, t_pars *tmp)
 	name = tmp->argv[0];
 	if (!name)
 		return ;
-	if (!is_builtin(name) && chr_in_str('/', name) == -1 
+	if (!is_builtin(name) && chr_in_str('/', name) == -1
 		&& ft_strcmp(name, ".") != 0 && ft_strcmp(name, "..") != 0)
 		tmp->argv[0] = search_in_path(data, name);
 	if (chr_in_str('/', tmp->argv[0]) > -1)
@@ -454,9 +454,9 @@ char	*quaote_backslash_clean(char *str)
 	j = -1;
 	while (str[++i])
 	{
-		if (str[i] == '\\' && backslash_is_active(str, i) == 0 && 
+		if (str[i] == '\\' && backslash_is_active(str, i) == 0 &&
 				quaote_is_open(str, i) == 0)
-			continue ; 
+			continue ;
 		if (str[i] == '\'' && backslash_is_active(str, i) == 0 &&
 				(quaote_is_open(str, i) == 1 || quaote_is_open(str, i) != 2))
 			continue ;

@@ -18,8 +18,6 @@ void		int_handler2(int status)
 	if (status == SIGINT)
 	{
 		write(1, "\e[2D  ", 6);
-		rl_on_new_line();
-		rl_replace_line("  ", 0); // Clear the previous text
 		write(1, "\n", 1); // Move to a new line
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
@@ -136,6 +134,7 @@ int		ft_readline(t_data *data)
 {
 	int error;
 
+	error = 0;
 	data->line = rl_gets_with_add_hist(SHELL_PROMT);
 	if (data->line == NULL)
 		eof_exit(data);
@@ -168,6 +167,6 @@ void main_loop(t_data *data)
 	    ft_parsclear(&(data->curr_pars));
 		g_tmp_files_clear(&(data->tmp_files));
 		data->count_files = 0;
-		printf("count malloc = %d\n", data->count_malloc);
+		//printf("count malloc = %d\n", data->count_malloc);
     }
 }

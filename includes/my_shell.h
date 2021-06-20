@@ -5,6 +5,8 @@
 //# include <curses.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/stat.h>
+# include <dirent.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/types.h>
@@ -176,6 +178,8 @@ int	ft_echo(t_pars pars);
 int	ft_del_position(t_data data, char *str);
 void	init_pwd_aam(t_data *data);
 int		ft_redirect_aam(t_pars *pars, t_fdesk *fd);
+int	ft_command_err_aam(char *name_f);
+int	ft_output_err_aam(int code, char *str1, char *str2, char *str3);
 
 
 

@@ -74,8 +74,9 @@ char	*ft_strjoin_path(char *str1, char *str2)
 
 int	ft_cd(t_data *data, t_pars *pars)
 {
-	int		er;
+	int		code;
 	char	*path;
+	struct stat	buff;
 
 	path = NULL;
 	if (pars->argv[1] == NULL)
@@ -84,20 +85,30 @@ int	ft_cd(t_data *data, t_pars *pars)
 	{
 		if (pars->argv[1][0] == '~' && pars->argv[1][1] == '\0')
 			path = ft_path_home(data);
-		else if (pars->argv[1][0] == '~' && pars->argv[1][1] == '\0')
-			ft_cd_output_err(pars->argv[1], ": No such file or directory\n");
+		else if (pars->argv[1][0] == '~' && pars->argv[1][1] != '\0')
+			return (ft_output_err_aam(1, pars->argv[1], ": No such file or directory\n", NULL));
 		else if (pars->argv[1] != NULL && pars->argv[1][0] == '-' && ft_strlen(pars->argv[1]) == 1)
 			path = ft_path_back(data);
 		else if (pars->argv[1][0] == '-' && pars->argv[1][1] != '\0')
-			ft_cd_output_err(pars->argv[1], ": No such file or directory\n");
+		{
+			pars->argv[1][2] = '\0';
+			return (ft_output_err_aam(1, pars->argv[1], ": invalid option\n", "cd: usage: cd [-L|-P] [dir]\n"));
+		}
 		else
 			path = ft_strdup(pars->argv[1]);
 	}
 	if (path)
 	{
-		er = chdir(path);
-		if (er == -1)
-			ft_cd_output_err(pars->argv[1], ": No such file or directory\n");
+		code = chdir(path);
+		if (code == -1)
+		{
+			if (stat(path, &buff) == 0)
+				code = ft_output_err_aam(1, path, ": Not a directory\n", NULL);
+			else
+				code = ft_output_err_aam(1, path, ": No such file or directory\n", NULL);
+			free(path);
+			return (code);
+		}
 		else
 		{
 			free(path);
