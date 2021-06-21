@@ -232,6 +232,22 @@ char	*g_strdupn(const char *str, size_t len)
 	return (dst);
 }
 
+char	*g_strdupanychr(char *str, char *end)
+{
+	char	*dst;
+	int		len;
+
+	len = 0;
+	while (str[len] && (chr_in_str(str[len], end) == -1 ||
+			quaote_is_open(str, len) != 0 
+			|| backslash_is_active(str, len) != 0))
+		len++;
+	dst = ft_strdupn(str, len);
+	if (NULL != dst)
+		g_data->count_malloc += 1 * DEBUG;
+	return (dst);
+}
+
 char	*g_strjoin(char *str1, int n, int k, char *str2)
 {
 	char	*res;

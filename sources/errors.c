@@ -46,6 +46,20 @@ int		unexpected_eof_infile(char *str)
 	return (0);
 }
 
+int		unexpected_token(char *str, int flag)
+{
+	char	*strerr;
+
+	strerr = ft_strjoin(
+			"syntax error near unexpected token `", str);
+	strerr = g_strjoin(strerr, 0, 0, g_strdup("'"));
+	ft_perr(NULL, 2, NULL, strerr);
+	free(strerr);
+	if (flag)
+		g_free(str);
+	return (2);
+}
+
 int		print_err(int errcode, t_data *data)
 {
 	t_error *tmp;

@@ -18,6 +18,7 @@ FLS			= \
 			mainloop \
 			parser \
 			str_split \
+			quaote_open \
 			termcap \
 			tools \
 			errors \

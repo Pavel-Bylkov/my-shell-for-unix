@@ -13,19 +13,6 @@ void		int_handler(int status)
 	}
 }
 
-void		int_handler2(int status)
-{
-	if (status == SIGINT)
-	{
-		write(1, "\e[2D  ", 6);
-		write(1, "\n", 1); // Move to a new line
-		rl_on_new_line(); // Regenerate the prompt on a newline
-		rl_replace_line("", 0); // Clear the previous text
-		rl_redisplay();
-		// придумать как прервать readline
-		g_data->code_exit = 130;
-	}
-}
 static void		eof_exit(t_data *data)
 {
 	add_history("exit");
@@ -50,27 +37,47 @@ char 		*rl_gets_with_add_hist(char *promt)
 	return (line);
 }
 
-char 		*rl_gets_without_hist(char *promt)
-{
-	char	*line;
 
-	signal(SIGINT, int_handler2);
-	line = readline(promt);
-	return (line);
+int			how_is_how(char *str, int i)
+{
+	if (ft_isalpha(str[i]) || ft_isdigit(str[i]) || 
+				ft_strnchr(".*_@#$~!%%^[]{}:?-=+`/,", str[i]) != -1)
+		return (5); 
+	if (quaote_is_open(str, i) == 0 
+			&& backslash_is_active(str, i) == 0)
+	{
+		if (str[i] == ' ')
+			return (6);
+		if (str[i] == ')' && brackets_is_open(str, i) < 0)
+			return (7);
+		if (str[i] == '(')
+			return (8);
+		if (str[i] == '>')
+			return (9);
+		if (str[i] == '<')
+			return (10);
+		return (ft_strnchr("|;&", str[i]));
+	}
+	return (3);
 }
 
-int			is_endl_ignor(char *str, t_data *data)
+int		count_chr(char *str, char c, int n)
 {
-	int		len;
+	int	i;
+	int count;
 
-	len = ft_strlen(str);
-		// добавить <(  с закрытием  в конце строки)
-			// сделать << "text" c закрытием  "text" в начале строки
-	return (backslash_is_active(str, len) ||
-			quaote_is_open(str, len) != 0 || str[len - 1] == '|'
-				|| ft_strncmp(&str[len - 2], "&&", 2) == 0 ||
-				brackets_is_open(str, len) > 0 || ft_stdin_active(str, data));
+	i = -1;
+	count = 0;
+	while (str[++i] && i <= n)
+	{
+		if (str[i] == c)
+			count++;
+		else
+			count = 0;
+	}
+	return (count);
 }
+
 // add check echo ${USER HOME}
 // bash: ${USER HOME}: bad substitution
 int		check_unexpected_token(char *str)
@@ -80,54 +87,67 @@ int		check_unexpected_token(char *str)
 	// ( - без разделения на команды
 	// <<\n - unexpected token `newline'
 	// проверить на спец символы ! - нужно ли выдавать ошибку
-	(void)str;
-	return (0);
-}
+	int		flag;
+	int		f[2];
+	int		i;
+	int		j;
 
-static int		quaote_open_mode(t_data *data)
-{
-	int		len;
-	char	*tmp;
-	int		error;
-
-	g_data->count_malloc += 1;
-	len = ft_strlen(data->line);
-	error = 0;
-	if (check_unexpected_token(data->line) != 0)
-		return (2);
-	while (is_endl_ignor(data->line, data) && error == 0)
+	i = -1;
+	flag = -1;
+	while (str[++i])
 	{
-		tmp = data->line;
-		if (backslash_is_active(tmp, len))
+		flag = how_is_how(str, i);
+		if (flag == 7)
+			return (unexpected_token(")", 0));
+		if (flag == 1 && str[i + 1] == ';' && str[i + 2] == '&')
+			return (unexpected_token(";;&", 0));
+		if (flag == 1 && str[i + 1] == ';')
+			return (unexpected_token(";;", 0));
+		if (flag >= 0 && flag <= 2)
 		{
-			data->line = rl_gets_without_hist(QUAOTE_PROMT);
-			if (NULL == data->line)
-				exit(0); //ft_perr(g_strdupn(tmp, ft_strlen(tmp) - 1),
-						//127, NULL, "command not found")
-			data->line = g_strjoin(tmp, -1, 0, data->line);
-			g_data->count_malloc += 1;
-			add_history(data->line);
+			j = i;
+			f[0] = 0;
+			while (--j > -1 && how_is_how(str, j) > 2)
+			{
+				if (how_is_how(str, j) == 5)
+					f[0] = 1;
+			}
+			if (f[0] == 0 && count_chr(str, str[i], i) != 2)
+				return (unexpected_token(g_strdupn(&str[i], 
+						1 + (ft_strnchr("|&", str[i + 1]) > -1)), 1));
 		}
-		 // добавить условие, что не включен режим <<
-		else if (ft_stdin_active(tmp, data))
-			error = read_tmp_stdin(data, tmp);
-		// если скобка - подставить ; и убрать \n
-		else
+		// скобки (echo)
+		if (flag == 8 && i - 1 > -1 && str[i - 1] != '<')
 		{
-			data->line = rl_gets_without_hist(QUAOTE_PROMT);
-			if (NULL == data->line)
-				return (unexpected_eof(tmp));
-			else if (quaote_is_open(tmp, len) != 0)
-				data->line = g_strjoin(tmp, 0, 1, data->line);
-			else
-				data->line = g_strjoin(tmp, 0, 0, data->line);
-			g_data->count_malloc += 1;
-			add_history(data->line);
+			j = i;
+			f[0] = 0;
+			f[1] = 0;
+			while (--j > -1 && how_is_how(str, j) > 2 && how_is_how(str, j) < 9)
+			{
+				if (how_is_how(str, j) == 5)
+					f[0] = 1;
+				else if (f[0] == 1 && how_is_how(str, j) == 6)
+					f[1] = f[0]++;
+			}
+			if (f[0] == 1 && f[1] == 1)
+				return (unexpected_token("(", 0));
+			if ((f[0] == 1 && f[1] == 0) || (f[0] == 2 && f[1] == 1))
+				return (unexpected_token(g_strdupanychr(&str[i + 1], ") "), 1));
 		}
-		len = ft_strlen(data->line);
+		// редиректы
+		if (flag > 8)
+		{
+			j = i;
+			f[0] = 1;
+			while (--j > -1 && how_is_how(str, j) > 8)
+				f[0]++;
+			if (f[0] > 2)
+				return (unexpected_token(g_strdupn(&str[i], 1), 1));
+		}
 	}
-    write_history(HISTORY_FILE); //! не использовать в финальной версии
-	return (error);
+	if (flag > 8)
+		return (unexpected_token("newline", 0));
+	return (0);
 }
 
 int		ft_readline(t_data *data)
@@ -158,8 +178,6 @@ void main_loop(t_data *data)
         error = ft_readline(data);
 		if (error == 555)
 			continue ;
-		else if (error == 2)
-			ft_perr("syntax error", 2, NULL, "unexpected end of file");
         error = parse_line(data, error);
         data->code_exit = run_comands(data, error);
         //print_pars(data);
