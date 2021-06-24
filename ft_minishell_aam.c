@@ -84,7 +84,6 @@ void	init_data(char **env, t_data *data)
 			ft_shlvl_incr_add_aam(&(data->envp[i]));
 	}
 	data->envp[i] = NULL;
-
 	create_index(&(*data));
 	sort_mass(data->envp, &data->index, data->size);
 }
@@ -117,24 +116,42 @@ void	sort_mass(char **mas, int *id[], int size)
 	}
 }
 
-int		ft_redirect_aam(t_pars *pars, t_fdesk *fd)
+void	ft_open_file(int *fd, t_redir *red, int k, int key)
+{
+	if (*fd > 2)
+	{
+		close (*fd);
+		*fd = k;
+	}
+	if (key == 1)
+		*fd = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	else if (key == 2)
+		*fd = open(red->out, O_RDONLY);
+	else if (key == 3)
+		*fd = open(red->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
+}
+
+int	ft_redirect_aam(t_pars *pars, t_fdesk *fd)
 {
 	t_redir		*red;
 
 	red = pars->redirect;
-
 	while (red)
 	{
-		if (red->f_spec[0] == '>' && red->f_spec[1] =='\0')
-			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		if (red->f_spec[0] == '<' && red->f_spec[1] =='\0')
+		if (red->f_spec[0] == '>' && red->f_spec[1] == '\0')
+			ft_open_file(&fd->fd_r, red, 1, 1);
+		if (red->f_spec[0] == '<' && red->f_spec[1] == '\0')
 		{
-			fd->fd_w = open(red->out, O_RDONLY);
+			ft_open_file(&fd->fd_w, red, 0, 2);
 			if (fd->fd_w < 0)
-				return (ft_output_err_aam(1, red->out, " : No such file or directory\n", NULL));
+			{
+				ft_open_file(&fd->fd_r, red, 1, 0);
+				return (ft_output_err_aam(1, red->out,
+						" : No such file or directory\n", NULL));
+			}
 		}
-		if (red->f_spec[0] == '>' && red->f_spec[1] =='>')
-			fd->fd_r = open(red->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
+		if (red->f_spec[0] == '>' && red->f_spec[1] == '>')
+			ft_open_file(&fd->fd_r, red, 1, 3);
 		red = red->next;
 	}
 	return (0);
@@ -149,12 +166,16 @@ void	ft_pipe_open_aam(t_pars *pars, t_fdesk *fd)
 	if (fd->fd[pars->count])
 	{
 		close(fd->fd[pars->count][0]);
+		fd->fd[pars->count][0] = 0;
 		close(fd->fd[pars->count][1]);
+		fd->fd[pars->count][1] = 1;
 	}
 	if (pars->count > 1)
 	{
 		close(fd->fd[pars->count - 1][0]);
+		fd->fd[pars->count - 1][0] = 0;
 		close(fd->fd[pars->count - 1][1]);
+		fd->fd[pars->count - 1][1] = 1;
 	}
 }
 
@@ -163,42 +184,45 @@ void	ft_pipe_close_aam(t_pars *pars, t_fdesk *fd)
 	if (pars->count > 0 && fd->fd[pars->count])
 	{
 		close(fd->fd[pars->count][0]);
+		fd->fd[pars->count][0] = 0;
 		close(fd->fd[pars->count][1]);
+		fd->fd[pars->count][1] = 1;
 	}
 }
 
-int		ft_binar_command_aam(t_data *data, t_pars *pars)
+void	ft_binar_subsidiary_aam(t_data *data, t_pars *pars)
+{
+	int		code;
+
+	ft_pipe_open_aam(pars, data->fdesk);
+	if (data->fdesk->fd_r > 2)
+		dup2(data->fdesk->fd_r, 1);
+	if (data->fdesk->fd_w > 2)
+		dup2(data->fdesk->fd_w, 0);
+	code = execve(pars->path, pars->argv, data->envp);
+	if (code < 0)
+		code = ft_command_err_aam(pars->path);
+	exit (code);
+}
+
+int	ft_binar_command_aam(t_data *data, t_pars *pars)
 {
 	pid_t		pid;
 	int			code;
 
 	code = 0;
 	code = ft_redirect_aam(pars, data->fdesk);
-	if (code !=0)
+	if (code != 0)
 		return (code);
 	if (pars->count > 1)
 		pipe(data->fdesk->fd[pars->count - 1]);
 	pid = fork();
 	if (pid == 0)
-	{
-		ft_pipe_open_aam(pars, data->fdesk);
-
-		if (data->fdesk->fd_r > 2)
-			dup2(data->fdesk->fd_r, 1);
-		if (data->fdesk->fd_w > 2)
-			dup2(data->fdesk->fd_w, 0);
-		code = execve(pars->path, pars->argv, data->envp);
-		if (code < 0)
-			code = ft_command_err_aam(pars->path);
-		exit (code);
-	}
-
-	if (data->fdesk->fd_r > 2)
-		close(data->fdesk->fd_r);
-	if (data->fdesk->fd_w > 2)
-		close(data->fdesk->fd_w);
+		ft_binar_subsidiary_aam(data, pars);
 	ft_pipe_close_aam(pars, data->fdesk);
-	return (0);
+	ft_open_file(&(data->fdesk->fd_r), pars->redirect, 1, 0);
+	ft_open_file(&(data->fdesk->fd_w), pars->redirect, 0, 0);
+	return (code);
 }
 
 int	ft_output_err_aam(int code, char *str1, char *str2, char *str3)
@@ -217,7 +241,9 @@ int	ft_command_err_aam(char *name_f)
 	struct stat	buff;
 
 	if (name_f[0] == '.' && name_f[1] == '\0')
-		return (ft_output_err_aam(1, name_f, ": filename argument required\n", ".: usage: . filename [arguments]\n"));
+		return (ft_output_err_aam(1, name_f,
+				": filename argument required\n",
+				".: usage: . filename [arguments]\n"));
 	if (name_f[0] == '.' && name_f[1] == '.' && name_f[2] == '\0')
 		return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
 	if (ft_char_in_str(name_f, '/') < (int)ft_strlen(name_f))
@@ -227,8 +253,10 @@ int	ft_command_err_aam(char *name_f)
 		else
 		{
 			if (stat(name_f, &buff) >= 0)
-				return (ft_output_err_aam(126, name_f, ": Permission denied\n", NULL));
-			return (ft_output_err_aam(127, name_f, ": No such file or directory\n", NULL));
+				return (ft_output_err_aam(126, name_f,
+						": Permission denied\n", NULL));
+			return (ft_output_err_aam(127, name_f,
+					": No such file or directory\n", NULL));
 		}
 	}
 	return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
@@ -236,26 +264,25 @@ int	ft_command_err_aam(char *name_f)
 
 int	ft_build_in_aam(t_data *data, t_pars *pars)
 {
-		if (!ft_strcmp(pars->argv[0], "export"))
-			return (ft_export(data, pars));
-		else if (!ft_strcmp(pars->argv[0], "unset"))
-			return (ft_unset(data, *pars));
-		else if (!ft_strcmp(pars->argv[0], "env"))
-			return (ft_env(data, *pars));
-		else if (!ft_strcmp(pars->argv[0], "exit"))
-			return (ft_exit(*pars));
-		else if(!ft_strcmp(pars->argv[0], "pwd"))
-			return (ft_pwd());
-		else if(!ft_strcmp(pars->argv[0], "cd"))
-			return (ft_cd(data, pars));
-		else if(!ft_strcmp(pars->argv[0], "echo"))
-			return (ft_echo(*pars));
+	if (!ft_strcmp(pars->argv[0], "export"))
+		return (ft_export(data, pars));
+	else if (!ft_strcmp(pars->argv[0], "unset"))
+		return (ft_unset(data, *pars));
+	else if (!ft_strcmp(pars->argv[0], "env"))
+		return (ft_env(data, *pars));
+	else if (!ft_strcmp(pars->argv[0], "exit"))
+		return (ft_exit(*pars));
+	else if (!ft_strcmp(pars->argv[0], "pwd"))
+		return (ft_pwd());
+	else if (!ft_strcmp(pars->argv[0], "cd"))
+		return (ft_cd(data, pars));
+	else if (!ft_strcmp(pars->argv[0], "echo"))
+		return (ft_echo(*pars));
 	return (ft_command_err_aam(pars->argv[0]));
 }
 
 void	ft_build_open_aam(t_fdesk *fd, int *fd_st0, int *fd_st1)
 {
-
 	if (fd->fd_r > 2)
 	{
 		*fd_st1 = dup(1);
@@ -275,13 +302,34 @@ void	ft_build_close_aam(t_fdesk *fd, int *fd_st0, int *fd_st1)
 		dup2(*fd_st1, 1);
 		close(*fd_st1);
 		close(fd->fd_r);
+		fd->fd_r = 1;
 	}
 	if (fd->fd_w > 2)
 	{
 		dup2(*fd_st0, 0);
 		close(*fd_st0);
 		close(fd->fd_w);
+		fd->fd_w = 0;
 	}
+}
+
+void	ft_choice_command_pipe(t_data *data, t_pars *pars)
+{
+	pid_t		pid;
+	int			fd_st[2];
+	int			status;
+
+	pipe(data->fdesk->fd[pars->count - 1]);
+	pid = fork();
+	if (pid == 0)
+	{
+		ft_pipe_open_aam(pars, data->fdesk);
+		ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+		status = ft_build_in_aam(data, pars);
+		exit(status);
+	}
+	ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+	ft_pipe_close_aam(pars, data->fdesk);
 }
 
 int	ft_choice_command_aam(t_data *data)
@@ -291,7 +339,7 @@ int	ft_choice_command_aam(t_data *data)
 	int			j;
 	int			status;
 	t_pars		*pars;
-	pid_t		pid;
+	//pid_t		pid;
 
 	pars = data->curr_pars;
 	i = pars->count;
@@ -304,19 +352,20 @@ int	ft_choice_command_aam(t_data *data)
 		{
 			ft_redirect_aam(pars, data->fdesk);
 			if (pars->count > 1)
-			{
-				pipe(data->fdesk->fd[pars->count - 1]);
-				pid = fork();
-				if (pid == 0)
-				{
-					ft_pipe_open_aam(pars, data->fdesk);
-					ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
-					status = ft_build_in_aam(data, pars);
-					exit(status);
-				}
-				ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
-				ft_pipe_close_aam(pars, data->fdesk);
-			}
+				ft_choice_command_pipe(data, pars);
+			//{
+			//	pipe(data->fdesk->fd[pars->count - 1]);
+			//	pid = fork();
+			//	if (pid == 0)
+			//	{
+			//		ft_pipe_open_aam(pars, data->fdesk);
+			//		ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+			//		status = ft_build_in_aam(data, pars);
+			//		exit(status);
+			//	}
+			//	ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+			//	ft_pipe_close_aam(pars, data->fdesk);
+			//}
 			else
 			{
 				ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
@@ -327,15 +376,10 @@ int	ft_choice_command_aam(t_data *data)
 			}
 		}
 		else
-		{
 			status = ft_binar_command_aam(data, pars);
-			if (status != 0)
-				return (status);
-		}
-
 		pars = pars->next;
 	}
-	while (j-- > 0)
+	while (j-- >= 0)
 		waitpid(0, &status, 0);
 	status = WEXITSTATUS(status);
 	return (status);
@@ -376,7 +420,7 @@ void	ft_free_fd_aam(t_fdesk **fd)
 	*fd = NULL;
 }
 
-int		aam_main(t_data *dt)
+int	aam_main(t_data *dt)
 {
 	int			ret;
 	t_fdesk		*fd;
@@ -394,27 +438,31 @@ int		aam_main(t_data *dt)
 			data->curr_pars = data->curr_pars->next;
 		if (data->curr_pars->f_spec[0] == ';')
 			data->curr_pars = data->curr_pars->next;
-		else if (data->curr_pars->f_spec[0] == '&' && data->curr_pars->f_spec[1] == '&')
+		else if (data->curr_pars->f_spec[0] == '&'
+			&& data->curr_pars->f_spec[1] == '&')
 		{
 			if (ret == 0)
 				data->curr_pars = data->curr_pars->next;
 			else
 			{
 				while (data->curr_pars->f_spec[0] != ';'
-					&& !(data->curr_pars->f_spec[0] == '|' && data->curr_pars->f_spec[1] == '|')
+					&& !(data->curr_pars->f_spec[0] == '|'
+						&& data->curr_pars->f_spec[1] == '|')
 					&& data->curr_pars->next)
 					data->curr_pars = data->curr_pars->next;
 				if (data->curr_pars)
 					data->curr_pars = data->curr_pars->next;
 			}
 		}
-		else if (data->curr_pars->f_spec[0] == '|' && data->curr_pars->f_spec[1] == '|')
+		else if (data->curr_pars->f_spec[0] == '|'
+			&& data->curr_pars->f_spec[1] == '|')
 		{
 			if (ret != 0)
 				data->curr_pars = data->curr_pars->next;
 			else
 			{
-				while (data->curr_pars->f_spec[0] != ';' && data->curr_pars->f_spec[0] != '&'
+				while (data->curr_pars->f_spec[0] != ';'
+					&& data->curr_pars->f_spec[0] != '&'
 					&& data->curr_pars->next)
 					data->curr_pars = data->curr_pars->next;
 				if (data->curr_pars)
@@ -422,7 +470,9 @@ int		aam_main(t_data *dt)
 			}
 		}
 		else
+		{
 			data->curr_pars = data->curr_pars->next;
+		}
 		ft_free_fd_aam(&fd);
 	}
 	if (fd)
