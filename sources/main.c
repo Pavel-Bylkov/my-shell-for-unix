@@ -1,4 +1,3 @@
-#define MAIN_FILE
 #include "my_shell.h"
 
 
@@ -7,7 +6,6 @@ int	main(int argc, char **argv, char **envp)
 	t_data data;
 	int     error;
 
-	g_data = &data;
 	init_struct(&data, envp);
 	error = 0;
 	if (argc > 2 && ft_strcmp(argv[1], "-c") == 0)
@@ -25,7 +23,7 @@ int     one_run(t_data *data, char *str)
     int error;
 
     error = 0;
-    data->line = g_strdup(str);
+    data->line = ft_strdup(str);
     if (data->line == NULL)
 		return (0);
     if (check_unexpected_token(data->line) != 0)
@@ -45,7 +43,6 @@ static int		quaote_open_mode2(t_data *data, int fd, int *ret)
     int		len;
     char	*tmp;
 
-    g_data->count_malloc += 1;
     len = ft_strlen(data->line);
     // отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
     if (check_unexpected_token(data->line) != 0)
@@ -64,12 +61,11 @@ static int		quaote_open_mode2(t_data *data, int fd, int *ret)
             data->line = g_strjoin(tmp, -1, 0, data->line);
         }
         else if (*ret < 0 && NULL == data->line)
-            return (print_err(2, data));
+            return (ft_perr(NULL, 2, NULL, "No such file or directory"));
         else if (quaote_is_open(tmp, len) != 0)
             data->line = g_strjoin(tmp, 0, 1, data->line);
         else
             data->line = g_strjoin(tmp, 0, 0, data->line);
-        g_data->count_malloc += 1;
     }
     return (0);
 }

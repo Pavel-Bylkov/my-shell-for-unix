@@ -2,12 +2,12 @@ NAME		= minishell
 
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
-LIBFLAGS	= -L libft -lft -lreadline #-L/Users/aamarei/.brew/opt/readline/lib #-ltermcap
+LIBFLAGS	= -L libft -lft -lreadline -L/usr/local/opt/readline/lib #-L/Users/aamarei/.brew/opt/readline/lib #-ltermcap
 
-CFLAGS		= -Wall -Wextra -Werror -D DEBUG=1
+CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g
 
-INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. #-I/Users/aamarei/.brew/opt/readline/include
+INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. -I/usr/local/opt/readline/include #-I/Users/aamarei/.brew/opt/readline/include
 
 SRCDIR		= ./sources/
 OBJDIR		= ./objs/
@@ -17,8 +17,12 @@ FLS			= \
 			init_structs \
 			mainloop \
 			parser \
-			str_split \
+			read_stdin \
+			split_argv \
+			split_command \
+			split_tools \
 			quaote_open \
+			tmp_files_tools \
 			termcap \
 			tools \
 			errors \

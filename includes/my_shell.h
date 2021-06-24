@@ -14,6 +14,7 @@
 # include <errno.h>
 # include <signal.h>
 # include <stdlib.h>
+# include <string.h>
 # include "libft.h"
 # include "get_next_line.h"
 
@@ -22,17 +23,6 @@
 # define SHELL_PROMT "my_shell>$ "
 # define ERROR_PREFIX "my_shell: "
 # define QUAOTE_PROMT "> "
-# ifndef DEBUG
-#  define DEBUG	0
-# endif
-
-typedef struct	    s_error
-{
-    int                 code;
-    char                *text;
-    struct s_error  	*next;
-}				    t_error;
-
 
 typedef struct		s_tmp_files
 {
@@ -83,16 +73,9 @@ typedef struct      s_data
 	char                **envp;
 	int                 *index;  //* массив индексов (строк) массива envp
 	int                 size;   //* размер массива
-	t_error             *errors;
 	int					code_exit;
-	int					count_malloc;
 }                   t_data;
 
-#ifdef  MAIN_FILE
-t_data						*g_data;
-#else
-extern t_data				*g_data;
-#endif
 
 t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
@@ -117,8 +100,6 @@ int                 run_comands(t_data *data, int error);
 void	            print_pars(t_data *data);
 void                free_struct(t_data *data);
 int                 ft_putchar(int c);
-t_error             *errors_create(void);
-void				ft_errorsclear(t_error **lst);
 void		        ft_exit_errcode(int errcode, t_data *data);
 int		            print_err(int errcode, t_data *data);
 int	                chr_in_str(char c, char *s);
@@ -129,9 +110,6 @@ void		        ft_parsadd_back(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
 char	            **get_commands(t_data *data);
 void				g_free(void *content);
-void				*g_malloc(size_t size);
-char				*g_strdup(char *str);
-char				*g_strdupn(const char *str, size_t len);
 char	            *g_strdupanychr(char *str, char *end);
 char				*g_strjoin(char *str1, int n, int k, char *str2);
 char				*g_newpath(char *dir, int n, char *name);
