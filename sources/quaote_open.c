@@ -4,8 +4,8 @@ void		int_handler2(int status)
 {
 	if (status == SIGINT)
 	{
-		write(1, "\b\b  ", 4);
-		write(1, "\n", 1);
+		//write(1, "\b\b  ", 4);
+		//write(1, "\n", 1);
 		exit(1);
 	}
 }
@@ -131,7 +131,7 @@ int		quaote_open_mode(t_data *data)
 		if (backslash_is_active(tmp, len))
 			data->line = get_line_slash(data->line, tmp, &error);
 		else if (ft_stdin_active(tmp, data))
-			error = read_tmp_stdin(data, tmp);
+			error = read_tmp_stdin(data, tmp, &error);
 		// если скобка - подставить ; и убрать \n
 		else
 		{

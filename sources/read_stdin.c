@@ -54,46 +54,37 @@ char		*get_filename(t_data *data)
 	return (fname);
 }
 
-int		read_tmp_stdin(t_data *data, char *str)
+int		read_tmp_stdin(t_data *data, char *str, int *error)
 {
 	t_tmp_files	*new;
 	char	*line;
 	char	*end_input;
-	char	*rez;
 	char	*fname;
 	int		fd;
 
-	// signal(SIGINT, int_handler2);
-	line = readline(QUAOTE_PROMT);
-	if (line == NULL)
-		write(1, "\n", 1);
-	rez = ft_strdup("");
 	end_input = get_end_input(str, data);
-	while (line && end_input && ft_strcmp(line, end_input) != 0) // проверить на ^D ^C
-	{
-		if (rez[0] == '\0')
-			rez = g_strjoin(rez, 0, 0, line);
-		else
-			rez = g_strjoin(rez, 0, 1, line);
-		line = readline(QUAOTE_PROMT);
-		if (line == NULL)
-			write(1, "\n", 1);
-	}
-	g_free(line); // del if (line)
-	g_free(end_input);
+	line = NULL;
 	fname = get_filename(data);
 	fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd > 0)
 	{
-		write(fd, rez, ft_strlen(rez));
-		write(fd, "\n", 1);
+		line = rl_gets_without_hist(QUAOTE_PROMT, error);
+		while (line && end_input && ft_strcmp(line, end_input) != 0 && *error == 0) // проверить на ^D ^C
+		{
+			write(fd, line, ft_strlen(line));
+			write(fd, "\n", 1);
+			line = rl_gets_without_hist(QUAOTE_PROMT, error);
+		}
+		close(fd);
+		if (line == NULL)
+			write(1, "\e[1A", 1);
 		new = tmp_files_new(data->count_files + 1, fname);
 		tmp_files_add_back(&(data->tmp_files), new);
-		close(fd);
 		data->count_files += 1;
 	}
 	else
 		g_free(fname);
-	g_free(rez);
-	return (0);
+	g_free(line); // del if (line)
+	g_free(end_input);
+	return (*error);
 }
