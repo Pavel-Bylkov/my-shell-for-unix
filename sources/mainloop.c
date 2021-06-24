@@ -112,7 +112,7 @@ int		check_unexpected_token(char *str)
 					f[0] = 1;
 			}
 			if (f[0] == 0 && count_chr(str, str[i], i) != 2)
-				return (unexpected_token(g_strdupn(&str[i], 
+				return (unexpected_token(ft_strdupn(&str[i], 
 						1 + (ft_strnchr("|&", str[i + 1]) > -1)), 1));
 		}
 		// скобки (echo)
@@ -141,7 +141,7 @@ int		check_unexpected_token(char *str)
 			while (--j > -1 && how_is_how(str, j) > 8)
 				f[0]++;
 			if (f[0] > 2)
-				return (unexpected_token(g_strdupn(&str[i], 1), 1));
+				return (unexpected_token(ft_strdupn(&str[i], 1), 1));
 		}
 	}
 	if (flag > 8)

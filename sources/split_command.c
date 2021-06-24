@@ -54,7 +54,7 @@ static int		commandscpy(char **res, size_t n, char *str)
 	while (str[j] && i < n)
 	{
         len = get_len_command(&str[j], "|;&");
-		res[i] = g_strdupn(&str[j], len);
+		res[i] = ft_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{
 			free_array((void **)res);
@@ -78,7 +78,7 @@ char	**get_commands(t_data *data)
 	commands = NULL;
 	if (nstrs != -1)
 	{
-		commands = (char **)g_malloc(sizeof(char *) * (nstrs + 1));
+		commands = (char **)malloc(sizeof(char *) * (nstrs + 1));
 		if (commands == NULL)
 			return (NULL);
 		if (commandscpy(commands, nstrs, data->line))

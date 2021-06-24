@@ -6,7 +6,7 @@ void	ft_strcopy_fr(char **line, char *str)
 
 	g_free(*line);
 	k = ft_strlen(str);
-	*line = (char *)g_malloc(sizeof(char) * k);
+	*line = (char *)malloc(sizeof(char) * k);
 	k = 0;
 	while (str[k] != '\0')
 	{

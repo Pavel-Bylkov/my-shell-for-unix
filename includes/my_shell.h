@@ -76,6 +76,11 @@ typedef struct      s_data
 	int					code_exit;
 }                   t_data;
 
+#ifdef  MAIN_FILE
+t_data						*g_data;
+#else
+extern t_data				*g_data;
+#endif
 
 t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);

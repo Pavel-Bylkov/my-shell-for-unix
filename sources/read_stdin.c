@@ -37,7 +37,7 @@ char		*get_end_input(char *str, t_data *data)
 	while (str[i[1]] && (str[i[1]] != ' ' || (quaote_is_open(str, i[1]) != 0
 			|| backslash_is_active(str, i[1]) != 0)))
 		i[1]++;
-	end_input = g_strdupn(&str[i[0] - 1], i[1] - i[0] + 1);
+	end_input = ft_strdupn(&str[i[0] - 1], i[1] - i[0] + 1);
 	return (quaote_backslash_clean(end_input));
 }
 
@@ -49,10 +49,8 @@ char		*get_filename(t_data *data)
 
 	n_files = tmp_files_size(data->tmp_files) + 1;
 	nbr = ft_itoa(n_files);
-	if (nbr != NULL)
-		g_data->count_malloc += 1;
-	nbr = g_strjoin(g_strdup("."), 0, 0, nbr);
-	fname = g_strjoin(nbr, 0, 0, g_strdup("_tmp_redir.tmp"));
+	nbr = g_strjoin(ft_strdup("."), 0, 0, nbr);
+	fname = g_strjoin(nbr, 0, 0, ft_strdup("_tmp_redir.tmp"));
 	return (fname);
 }
 
@@ -67,11 +65,9 @@ int		read_tmp_stdin(t_data *data, char *str)
 
 	// signal(SIGINT, int_handler2);
 	line = readline(QUAOTE_PROMT);
-	if (line != NULL)
-		g_data->count_malloc += 1;
-	else
+	if (line == NULL)
 		write(1, "\n", 1);
-	rez = g_strdup("");
+	rez = ft_strdup("");
 	end_input = get_end_input(str, data);
 	while (line && end_input && ft_strcmp(line, end_input) != 0) // проверить на ^D ^C
 	{
@@ -80,13 +76,10 @@ int		read_tmp_stdin(t_data *data, char *str)
 		else
 			rez = g_strjoin(rez, 0, 1, line);
 		line = readline(QUAOTE_PROMT);
-		if (line != NULL)
-			g_data->count_malloc += 1;
-		else
+		if (line == NULL)
 			write(1, "\n", 1);
 	}
-	if (line)
-		g_free(line);
+	g_free(line); // del if (line)
 	g_free(end_input);
 	fname = get_filename(data);
 	fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0666);
@@ -95,8 +88,6 @@ int		read_tmp_stdin(t_data *data, char *str)
 		write(fd, rez, ft_strlen(rez));
 		write(fd, "\n", 1);
 		new = tmp_files_new(data->count_files + 1, fname);
-		if (new != NULL)
-			g_data->count_malloc += 1;
 		tmp_files_add_back(&(data->tmp_files), new);
 		close(fd);
 		data->count_files += 1;

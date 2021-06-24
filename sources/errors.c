@@ -22,11 +22,11 @@ int		unexpected_eof(char *str)
 	str_err = ft_strdup("unexpected EOF while looking for matching `");
 	len = ft_strlen(str); // возможно нужно сделать -1
 	if (quaote_is_open(str, len) == 1)
-		str_err = g_strjoin(str_err, 0, 0, g_strdup("''"));
+		str_err = g_strjoin(str_err, 0, 0, ft_strdup("''"));
 	else if (quaote_is_open(str, len) == 2)
-		str_err = g_strjoin(str_err, 0, 0, g_strdup("\"'"));
+		str_err = g_strjoin(str_err, 0, 0, ft_strdup("\"'"));
 	else if (brackets_is_open(str, len) > 0)
-		str_err = g_strjoin(str_err, 0, 0, g_strdup(")'"));
+		str_err = g_strjoin(str_err, 0, 0, ft_strdup(")'"));
 	ft_perr(NULL, 258, NULL, str_err);
 	g_free(str_err);
 	g_free(str);

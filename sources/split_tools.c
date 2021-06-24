@@ -43,7 +43,6 @@ int			quaote_is_open(char *str, int n)
 	return (f[0] + f[1] * 2);
 }
 
-
 int	    chr_in_str(char c, char *s)
 {
 	int 	i;

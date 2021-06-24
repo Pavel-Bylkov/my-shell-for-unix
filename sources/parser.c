@@ -5,11 +5,11 @@ t_pars		*ft_parsnew(int error, char *path, char **argv, char *f_spec)
 	t_pars	*rez;
 	int		j;
 
-	rez = (t_pars *)g_malloc(sizeof(*rez));
+	rez = (t_pars *)malloc(sizeof(*rez));
 	if (rez == NULL)
 		return (NULL);
 	if (path)
-		rez->path = g_strdup(path);
+		rez->path = ft_strdup(path);
 	else
 		rez->path = NULL;
 	rez->argv = argv;
@@ -80,7 +80,7 @@ t_redir		*ft_redirnew(char *f_spec, int l1, char *out, int l2)
 	t_redir	*rez;
 	int		j;
 
-	rez = (t_redir *)g_malloc(sizeof(*rez));
+	rez = (t_redir *)malloc(sizeof(*rez));
 	if (rez == NULL)
 		return (NULL);
 	if (ft_strncmp(f_spec, "<<", 2) != 0)
@@ -89,13 +89,13 @@ t_redir		*ft_redirnew(char *f_spec, int l1, char *out, int l2)
 		while (++j != l1)
 			rez->f_spec[j] = f_spec[j];
 		rez->f_spec[j] = '\0';
-		rez->out = g_strdupn(out, l2);
+		rez->out = ft_strdupn(out, l2);
 	}
 	else
 	{
 		rez->f_spec[0] = '<';
 		rez->f_spec[1] = '\0';
-		rez->out = g_strdup(
+		rez->out = ft_strdup(
 			get_filename_by_index(g_data->tmp_files, g_data->count_files));
 		g_data->count_files -= 1;
 	}
@@ -259,7 +259,7 @@ t_pars		*pars_command(char *str)
 	char 		f_spec[10];
 	char		*argv;
 
-	argv = (char *)g_malloc(sizeof(char) * (ft_strlen(str) + 1));
+	argv = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
 	ft_memset(argv, 0, sizeof(argv));
     get_fspec_commands(&str, f_spec);
 	get_argv(str, &argv);
@@ -277,7 +277,7 @@ char	*backslash_add(char *str)
 
 	if (str == NULL)
 		return (NULL);
-	rez = (char *)g_malloc(ft_strlen(str) * 2 + 1);
+	rez = (char *)malloc(ft_strlen(str) * 2 + 1);
 	i = -1;
 	j = -1;
 	while (str[++i])
@@ -302,7 +302,7 @@ char	*get_var(char **envp, char *var)
 		i = -1;
 		while (envp[++i] != NULL)
 			if (ft_strncmp(envp[i], var, ft_strlen(var)) == 0)
-				value = g_strdup(&envp[i][ft_strlen(var) + 1]);
+				value = ft_strdup(&envp[i][ft_strlen(var) + 1]);
 	}
 	return (backslash_add(value));
 }
@@ -321,7 +321,7 @@ char	*insert_var_from_env(t_data *data, char *str)
 
 
 	i[0] = -1;
-	buff = g_strdup("");
+	buff = ft_strdup("");
 	while (str[++i[0]])
 	{
 		i[1] = i[0];
@@ -329,14 +329,13 @@ char	*insert_var_from_env(t_data *data, char *str)
 			||  quaote_is_open(str, i[1]) == 1))
 			i[1]++;
 		if (str[i[1]] == '\0')
-			buff = g_strjoin(buff, 0, 0, g_strdup(&str[i[0]]));
+			buff = g_strjoin(buff, 0, 0, ft_strdup(&str[i[0]]));
 		else
-			buff = g_strjoin(buff, 0, 0, g_strdupn(&str[i[0]], i[1] - i[0]));
+			buff = g_strjoin(buff, 0, 0, ft_strdupn(&str[i[0]], i[1] - i[0]));
 		i[2] = -1;
 		if (ft_strncmp(&str[i[1]], "$?", 2) == 0 || ft_strncmp(&str[i[1]], "${?}", 4) == 0)
 		{
 			buff = g_strjoin(buff, 0, 0, ft_itoa(data->code_exit));
-			g_data->count_malloc += 1 * DEBUG;
 			i[1] += ((ft_strncmp(&str[i[1]], "$?", 2) == 0) + 
 					(ft_strncmp(&str[i[1]], "${?}", 4) == 0) * 3);
 		}
@@ -360,7 +359,7 @@ char	*insert_var_from_env(t_data *data, char *str)
 		}
 		else if (str[i[1]] == '$' && (ft_strncmp(&str[i[1]], "$ ", 2) == 0
 			||	ft_strncmp(&str[i[1]], "$\"", 2) == 0 || ft_strncmp(&str[i[1]], "$'", 2) == 0))
-			buff = g_strjoin(buff, 0, 0, g_strdupn(&str[i[1]++], 2));
+			buff = g_strjoin(buff, 0, 0, ft_strdupn(&str[i[1]++], 2));
 		i[0] = i[1] - (str[i[1]] == '\0');
 	}
 	g_free(str);
@@ -439,7 +438,7 @@ void	find_path(t_data *data, t_pars *tmp)
 		len = ft_strlen(tmp->path);
 		while (tmp->path[len - 1] != '/')
 			len--;
-		tmp->argv[0] = g_strdup(&(tmp->path[len]));
+		tmp->argv[0] = ft_strdup(&(tmp->path[len]));
 	}
 }
 
@@ -449,7 +448,7 @@ char	*quaote_backslash_clean(char *str)
 	int		i;
 	int		j;
 
-	rez = (char *)g_malloc(ft_strlen(str) + 1);
+	rez = (char *)malloc(ft_strlen(str) + 1);
 	i = -1;
 	j = -1;
 	while (str[++i])

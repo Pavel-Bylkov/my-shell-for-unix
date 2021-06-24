@@ -1,3 +1,4 @@
+#define  MAIN_FILE
 #include "my_shell.h"
 
 
@@ -8,6 +9,7 @@ int	main(int argc, char **argv, char **envp)
 
 	init_struct(&data, envp);
 	error = 0;
+    g_data = &data;
 	if (argc > 2 && ft_strcmp(argv[1], "-c") == 0)
 		return (one_run(&data, argv[2]));
 	else if (argc == 2)

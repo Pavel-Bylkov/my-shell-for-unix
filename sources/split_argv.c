@@ -38,7 +38,7 @@ static void		ft_strscpy(char **res, size_t n, char *str)
         len = chr_in_str(' ', &str[j]);
 		if (len == -1)
 			len = ft_strlen(&str[j]);
-		res[i] = g_strdupn(&str[j], len);
+		res[i] = ft_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{
 			free_array((void **)res);
@@ -61,7 +61,7 @@ char			**argv_split(char *s)
 		return (NULL);
 	str = (char *)s;
 	nstrs = get_nstrs(str);
-	res = (char **)g_malloc(sizeof(char *) * (nstrs + 1));
+	res = (char **)malloc(sizeof(char *) * (nstrs + 1));
 	if (res == NULL)
 		return (NULL);
 	ft_strscpy(res, nstrs, str);
