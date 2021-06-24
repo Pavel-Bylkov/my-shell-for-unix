@@ -21,7 +21,7 @@ static void		eof_exit(t_data *data)
 	add_history("exit");
     write_history(HISTORY_FILE); //! не использовать в финальной версии
 	free_struct(data);
-	write(1, "exit\n", 5);
+	write(1, "exit\n", 20);
 	exit(EXIT_SUCCESS);
 }
 
@@ -34,119 +34,6 @@ char 		*rl_gets_with_add_hist(char *promt)
 	if (line && *line)
     	add_history(line);
 	return (line);
-}
-
-
-int			how_is_how(char *str, int i)
-{
-	if (ft_isalpha(str[i]) || ft_isdigit(str[i]) || 
-				ft_strnchr(".*_@#$~!%%^[]{}:?-=+`/,", str[i]) != -1)
-		return (5); 
-	if (quaote_is_open(str, i) == 0 
-			&& backslash_is_active(str, i) == 0)
-	{
-		if (str[i] == ' ')
-			return (6);
-		if (str[i] == ')' && brackets_is_open(str, i) < 0)
-			return (7);
-		if (str[i] == '(')
-			return (8);
-		if (str[i] == '>')
-			return (9);
-		if (str[i] == '<')
-			return (10);
-		return (ft_strnchr("|;&", str[i]));
-	}
-	return (3);
-}
-
-int		count_chr(char *str, char c, int n)
-{
-	int	i;
-	int count;
-
-	i = -1;
-	count = 0;
-	while (str[++i] && i <= n)
-	{
-		if (str[i] == c)
-			count++;
-		else
-			count = 0;
-	}
-	return (count);
-}
-
-// add check echo ${USER HOME}
-// bash: ${USER HOME}: bad substitution
-int		check_unexpected_token(char *str)
-{
-	// пустые команды, повторение редиректов, <( - c пробелом и не открытые скобки
-	// отработать сброс при ошибках >>> или <<<< ||| ;; |;& и т.п.
-	// ( - без разделения на команды
-	// <<\n - unexpected token `newline'
-	// проверить на спец символы ! - нужно ли выдавать ошибку
-	int		flag;
-	int		f[2];
-	int		i;
-	int		j;
-
-	i = -1;
-	flag = -1;
-	while (str[++i])
-	{
-		flag = how_is_how(str, i);
-		if (flag == 7)
-			return (unexpected_token(")", 0));
-		if (flag == 1 && str[i + 1] == ';' && str[i + 2] == '&')
-			return (unexpected_token(";;&", 0));
-		if (flag == 1 && str[i + 1] == ';')
-			return (unexpected_token(";;", 0));
-		if (flag >= 0 && flag <= 2)
-		{
-			j = i;
-			f[0] = 0;
-			while (--j > -1 && how_is_how(str, j) > 2)
-			{
-				if (how_is_how(str, j) == 5)
-					f[0] = 1;
-			}
-			if (f[0] == 0 && count_chr(str, str[i], i) != 2)
-				return (unexpected_token(ft_strdupn(&str[i], 
-						1 + (ft_strnchr("|&", str[i + 1]) > -1)), 1));
-		}
-		// скобки (echo)
-		if (flag == 8 && i - 1 > -1 && str[i - 1] != '<')
-		{
-			j = i;
-			f[0] = 0;
-			f[1] = 0;
-			while (--j > -1 && how_is_how(str, j) > 2 && how_is_how(str, j) < 9)
-			{
-				if (how_is_how(str, j) == 5)
-					f[0] = 1;
-				else if (f[0] == 1 && how_is_how(str, j) == 6)
-					f[1] = f[0]++;
-			}
-			if (f[0] == 1 && f[1] == 1)
-				return (unexpected_token("(", 0));
-			if ((f[0] == 1 && f[1] == 0) || (f[0] == 2 && f[1] == 1))
-				return (unexpected_token(g_strdupanychr(&str[i + 1], ") "), 1));
-		}
-		// редиректы
-		if (flag > 8)
-		{
-			j = i;
-			f[0] = 1;
-			while (--j > -1 && how_is_how(str, j) > 8)
-				f[0]++;
-			if (f[0] > 2)
-				return (unexpected_token(ft_strdupn(&str[i], 1), 1));
-		}
-	}
-	if (flag > 8)
-		return (unexpected_token("newline", 0));
-	return (0);
 }
 
 int		ft_readline(t_data *data)

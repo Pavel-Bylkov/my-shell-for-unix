@@ -86,9 +86,6 @@ t_pars		        *ft_parsnew(int error, char *path, char **argv, char *f_spec);
 void		        ft_parsadd_back(t_pars **lst, t_pars *new);
 void		        ft_parsadd_front(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
-
-
-//void rl_replace_line(char *s, int k);
 void	            ft_strcopy_fr(char **line, char *str);
 void                init_struct(t_data *data, char **envp);
 int                 one_run(t_data *data, char *str);
@@ -101,9 +98,11 @@ int		            check_unexpected_token(char *str);
 int		            quaote_open_mode(t_data *data);
 void		        free_array(void **s);
 int                 parse_line(t_data *data, int error);
+char				*insert_var_from_env(t_data *data, char *str);
 char			    **argv_split(char *s);
 int                 run_comands(t_data *data, int error);
-void	            print_pars(t_data *data);
+void				find_path(t_data *data, t_pars *tmp);
+void	            print_pars(t_data *data); // temp
 void                free_struct(t_data *data);
 int                 ft_putchar(int c);
 void		        ft_exit_errcode(int errcode, t_data *data);

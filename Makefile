@@ -2,12 +2,12 @@ NAME		= minishell
 
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
-LIBFLAGS	= -L libft -lft -lreadline -L/usr/local/opt/readline/lib #-L/Users/aamarei/.brew/opt/readline/lib #-ltermcap
+LIBFLAGS	= -L libft -lft -lreadline #-L/usr/local/opt/readline/lib #-L/Users/aamarei/.brew/opt/readline/lib #-ltermcap
 
 CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g
 
-INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. -I/usr/local/opt/readline/include #-I/Users/aamarei/.brew/opt/readline/include
+INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. #-I/usr/local/opt/readline/include #-I/Users/aamarei/.brew/opt/readline/include
 
 SRCDIR		= ./sources/
 OBJDIR		= ./objs/
@@ -16,7 +16,10 @@ FLS			= \
 			main \
 			init_structs \
 			mainloop \
+			check_line \
 			parser \
+			insert_env_var \
+			replace_path \
 			read_stdin \
 			split_argv \
 			split_command \
