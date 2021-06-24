@@ -339,7 +339,6 @@ int	ft_choice_command_aam(t_data *data)
 	int			j;
 	int			status;
 	t_pars		*pars;
-	//pid_t		pid;
 
 	pars = data->curr_pars;
 	i = pars->count;
@@ -353,19 +352,6 @@ int	ft_choice_command_aam(t_data *data)
 			ft_redirect_aam(pars, data->fdesk);
 			if (pars->count > 1)
 				ft_choice_command_pipe(data, pars);
-			//{
-			//	pipe(data->fdesk->fd[pars->count - 1]);
-			//	pid = fork();
-			//	if (pid == 0)
-			//	{
-			//		ft_pipe_open_aam(pars, data->fdesk);
-			//		ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
-			//		status = ft_build_in_aam(data, pars);
-			//		exit(status);
-			//	}
-			//	ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
-			//	ft_pipe_close_aam(pars, data->fdesk);
-			//}
 			else
 			{
 				ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
