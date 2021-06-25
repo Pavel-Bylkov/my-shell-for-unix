@@ -170,7 +170,6 @@ int	ft_env(t_data *data, t_pars pars);
 void	ft_env_output(t_data *data);
 int	ft_env_output_err(int code, char *str);
 int	ft_exit(t_pars par);
-void	ft_exit_output_err(char *str1, char *str2);
 int	ft_pwd(void );
 int	ft_cd(t_data *data, t_pars *pars);
 int	ft_cd_path(t_data *data, char **path);

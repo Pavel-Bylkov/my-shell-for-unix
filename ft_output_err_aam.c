@@ -8,18 +8,6 @@ int	ft_env_output_err(int code, char *str)
 	return (code);
 }
 
-void	ft_exit_output_err(char *str1, char *str2)
-{
-	write(1, "my_shell: exit", 14);
-	if (str1 != NULL)
-	{
-		write(1, " ", 1);
-		write(1, str1, ft_strlen(str1));
-	}
-	write(1, str2, ft_strlen(str2));
-	write(1, "\n", 1);
-}
-
 int	ft_export_output_err(int code, char *str)
 {
 	write(2, "my_shell: export: ", 18);
