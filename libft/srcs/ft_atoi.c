@@ -61,5 +61,5 @@ int			ft_atoi(const char *nptr)
 		res *= 10;
 	}
 	res = res / 10;
-	return ((flag < 0) ? -res : res);
+	return ((flag < 0) * -res + (flag >= 0) * res);
 }

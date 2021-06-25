@@ -364,13 +364,11 @@ int	ft_choice_command_waitpid(int j)
 int	ft_choice_command_aam(t_data *data)
 {
 	int			i;
-	int			j;
 	int			status;
 	t_pars		*pars;
 
 	pars = data->curr_pars;
 	i = pars->count;
-	j = i;
 	if (pars->argv[0] == NULL)
 		return (0);
 	while (i-- > 0)
