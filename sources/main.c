@@ -1,4 +1,4 @@
-#define MAIN_FILE
+#define  MAIN_FILE
 #include "my_shell.h"
 
 
@@ -7,16 +7,16 @@ int	main(int argc, char **argv, char **envp)
 	t_data data;
 	int     error;
 
-	g_data = &data;
 	init_struct(&data, envp);
 	error = 0;
+    g_data = &data;
 	if (argc > 2 && ft_strcmp(argv[1], "-c") == 0)
 		return (one_run(&data, argv[2]));
 	else if (argc == 2)
 		error = read_from_file(&data, argv[1]);
 	else
 		main_loop(&data);
-	//free_struct(&data);
+	free_struct(&data);
 	return (error);
 }
 
@@ -25,18 +25,18 @@ int     one_run(t_data *data, char *str)
     int error;
 
     error = 0;
-    data->line = g_strdup(str);
+    data->line = ft_strdup(str);
     if (data->line == NULL)
 		return (0);
     if (check_unexpected_token(data->line) != 0)
-		return (2);
+		return (258);
 	error = parse_line(data, error);
 	data->code_exit = run_comands(data, error);
 	g_free((void *)data->line);
 	ft_parsclear(&(data->curr_pars));
 	g_tmp_files_clear(&(data->tmp_files));
 	data->count_files = 0;
-	//free_struct(data);
+	free_struct(data);
 	return (data->code_exit);
 }
 
@@ -45,9 +45,7 @@ static int		quaote_open_mode2(t_data *data, int fd, int *ret)
     int		len;
     char	*tmp;
 
-    g_data->count_malloc += 1;
     len = ft_strlen(data->line);
-    // отработать сброс при ошибках >>> или <<<< ||| ;; и т.п.
     if (check_unexpected_token(data->line) != 0)
         return (2);
     while (*ret > 0 && is_endl_ignor(data->line, data))
@@ -64,12 +62,11 @@ static int		quaote_open_mode2(t_data *data, int fd, int *ret)
             data->line = g_strjoin(tmp, -1, 0, data->line);
         }
         else if (*ret < 0 && NULL == data->line)
-            return (print_err(2, data));
+            return (ft_perr(NULL, 2, NULL, "No such file or directory"));
         else if (quaote_is_open(tmp, len) != 0)
             data->line = g_strjoin(tmp, 0, 1, data->line);
         else
             data->line = g_strjoin(tmp, 0, 0, data->line);
-        g_data->count_malloc += 1;
     }
     return (0);
 }
@@ -99,10 +96,8 @@ int        read_from_file(t_data *data, char *filename)
             error = quaote_open_mode2(data, fd, &ret);
         error = parse_line(data, error);
         data->code_exit = run_comands(data, error);
-        //print_pars(data);
         g_free(data->line);
         ft_parsclear(&(data->curr_pars));
-        //printf("count malloc = %d\n", data->count_malloc);
     }
     close(fd);
     return (data->code_exit);
