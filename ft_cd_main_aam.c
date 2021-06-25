@@ -1,120 +1,51 @@
 #include "my_shell.h"
 
-void	ft_cd_output_err(char *str1, char *str2)
+int	ft_cd_argv(t_pars *pars, t_data *data, char **path)
 {
-	write(1, "my_shell: cd: ", 14);
-	write(1, str1, ft_strlen(str1));
-	write(1, str2, ft_strlen(str2));
-}
+	int		code;
 
-char	*ft_path_home(t_data *data)
-{
-	int		i;
-	int		pos;
-	char	*str;
-
-	str = NULL;
-	pos = -1;
-	i = -1;
-	while (data->envp[++i] != NULL && pos == -1)
-		if (!ft_strncmp(data->envp[i], "HOME", 4)
-			&& (data->envp[i][4] == '=' || data->envp[i][4] == '\0'))
-			pos = i;
-	if (pos > -1)
+	if (pars->argv[1][0] == '~' && pars->argv[1][1] == '\0')
+		*path = ft_path_home(data);
+	else if (pars->argv[1][0] == '~' && pars->argv[1][1] != '\0')
+		return (ft_output_err_aam(1, pars->argv[1],
+				": No such file or directory\n", NULL));
+	else if (pars->argv[1] != NULL && pars->argv[1][0] == '-'
+		&& ft_strlen(pars->argv[1]) == 1)
 	{
-		if (data->envp[pos][4] == '=' && data->envp[pos][5] != '\0')
-			str = ft_strdup(&data->envp[pos][5]);
-		else
-			str = NULL;
+		code = ft_path_back(data, path);
+		if (code != 0)
+			return (code);
 	}
-	return (str);
-}
-
-char	*ft_path_back(t_data *data)
-{
-	char	*str;
-	int		pos;
-
-	pos = ft_pos_env_aam(data, "OLDPWD");
-	str = NULL;
-	if (data->pwd_oldp->oldpwd_p != NULL)
+	else if (pars->argv[1][0] == '-' && pars->argv[1][1] != '\0')
 	{
-		if (pos == -1)
-			str = ft_strdup(data->pwd_oldp->oldpwd_p);
-		else if (data->envp[pos][6] == '=')
-			str = ft_strdup(data->pwd_oldp->oldpwd_p);
-		else if (data->envp[pos][6] == '\0')
-		{
-			ft_cd_output_err(NULL, "OLDPWD not set\n");
-			str = ft_strdup(data->pwd_oldp->pwd_p);
-		}
-		write(1, str, ft_strlen(str));
-		write(1, "\n", 1);
+		pars->argv[1][2] = '\0';
+		return (ft_output_err_aam(1, pars->argv[1],
+				": invalid option\n", "cd: usage: cd [-L|-P] [dir]\n"));
 	}
 	else
-		ft_cd_output_err(NULL, "OLDPWD not set\n");
-	return (str);
-}
-
-char	*ft_strjoin_path(char *str1, char *str2)
-{
-	char	*line;
-	int		len;
-
-	len = (int)ft_strlen(str1) + 1;
-	line = ft_strjoin(str1, "/");
-	line[len] = '\0';
-	len = len + (int)ft_strlen(str2);
-	str1 = ft_strjoin(line, str2);
-	if (str2)
-		free(str2);
-	free(line);
-	return (str1);
+		*path = ft_strdup(pars->argv[1]);
+	return (0);
 }
 
 int	ft_cd(t_data *data, t_pars *pars)
 {
-	int		code;
-	char	*path;
-	struct stat	buff;
+	int			code;
+	char		*path;
 
 	path = NULL;
 	if (pars->argv[1] == NULL)
 		path = ft_path_home(data);
 	else
 	{
-		if (pars->argv[1][0] == '~' && pars->argv[1][1] == '\0')
-			path = ft_path_home(data);
-		else if (pars->argv[1][0] == '~' && pars->argv[1][1] != '\0')
-			return (ft_output_err_aam(1, pars->argv[1], ": No such file or directory\n", NULL));
-		else if (pars->argv[1] != NULL && pars->argv[1][0] == '-' && ft_strlen(pars->argv[1]) == 1)
-			path = ft_path_back(data);
-		else if (pars->argv[1][0] == '-' && pars->argv[1][1] != '\0')
-		{
-			pars->argv[1][2] = '\0';
-			return (ft_output_err_aam(1, pars->argv[1], ": invalid option\n", "cd: usage: cd [-L|-P] [dir]\n"));
-		}
-		else
-			path = ft_strdup(pars->argv[1]);
+		code = ft_cd_argv(pars, data, &path);
+		if (code != 0)
+			return (code);
 	}
 	if (path)
 	{
-		code = chdir(path);
-		if (code == -1)
-		{
-			if (stat(path, &buff) == 0)
-				code = ft_output_err_aam(1, path, ": Not a directory\n", NULL);
-			else
-				code = ft_output_err_aam(1, path, ": No such file or directory\n", NULL);
-			free(path);
+		code = ft_cd_path(data, &path);
+		if (code != 0)
 			return (code);
-		}
-		else
-		{
-			free(path);
-			path = getcwd(NULL, 0);
-			ft_replace_oldpwd(data, path);
-		}
 	}
 	if (path)
 		free(path);

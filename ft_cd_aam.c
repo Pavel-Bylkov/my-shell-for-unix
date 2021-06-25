@@ -11,7 +11,7 @@ int	ft_pos_env_aam(t_data *data, char *str)
 	{
 		if (!ft_strncmp(data->envp[i], str, ft_strlen(str))
 			&& (data->envp[i][(int)ft_strlen(str)] == '='
-			|| data->envp[i][(int)ft_strlen(str)] == '\0'))
+					|| data->envp[i][(int)ft_strlen(str)] == '\0'))
 			pos = i;
 	}
 	return (pos);

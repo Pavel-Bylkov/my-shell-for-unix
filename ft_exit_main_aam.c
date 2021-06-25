@@ -1,17 +1,5 @@
 #include "my_shell.h"
 
-void	ft_exit_output_err(char *str1, char *str2)
-{
-	write(1, "my_shell: exit", 14);
-	if (str1 != NULL)
-	{
-		write(1, " ", 1);
-		write(1, str1, ft_strlen(str1));
-	}
-	write(1, str2, ft_strlen(str2));
-	write(1, "\n", 1);
-}
-
 int	ft_isnum_aam(char *str)
 {
 	int	i;

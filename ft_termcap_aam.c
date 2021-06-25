@@ -5,48 +5,6 @@
 #include "includes/my_shell.h"
 #include "gnl/get_next_line.h"
 
-size_t	ft_strlen(const char *s)		//! функция Libft
-{
-	unsigned int	i;
-
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
-void	*ft_memset(void *b, int c, size_t len)		//! функция Libft
-{
-	unsigned char	*str;
-	size_t			i;
-
-	i = 0;
-	str = (unsigned char*)b;
-	while (i < len)
-	{
-		*str++ = c;
-		i++;
-	}
-	return (b);
-}
-
-int		ft_strncmp(const char *s1, const char *s2, size_t n)	//! функция Libft
-{
-	unsigned char	str1;
-	unsigned char	str2;
-
-	while (n-- != 0)
-	{
-		str1 = (unsigned char)*s1++;
-		str2 = (unsigned char)*s2++;
-		if (str1 != str2)
-			return (str1 - str2);
-		if (str1 == '\0' && str2 == '\0')
-			return (0);
-	}
-	return (0);
-}
-
 int		ft_putchar(int c)
 {
 	return (write(1, &c, 1));
