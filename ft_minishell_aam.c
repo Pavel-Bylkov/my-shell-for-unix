@@ -332,9 +332,37 @@ void	ft_choice_command_pipe(t_data *data, t_pars *pars)
 	ft_pipe_close_aam(pars, data->fdesk);
 }
 
+int	ft_choice_command_build(t_pars *pars, t_data *data)
+{
+	int		status;
+	int		fd_st[2];
+
+	ft_redirect_aam(pars, data->fdesk);
+	if (pars->count > 1)
+		ft_choice_command_pipe(data, pars);
+	else
+	{
+		ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+		status = ft_build_in_aam(data, pars);
+		ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+		if (status != 0)
+			return (status);
+	}
+	return (0);
+}
+
+int	ft_choice_command_waitpid(int j)
+{
+	int		status;
+
+	while (j-- >= 0)
+		waitpid(0, &status, 0);
+	status = WEXITSTATUS(status);
+	return (status);
+}
+
 int	ft_choice_command_aam(t_data *data)
 {
-	int			fd_st[2];
 	int			i;
 	int			j;
 	int			status;
@@ -349,26 +377,15 @@ int	ft_choice_command_aam(t_data *data)
 	{
 		if (pars->path == NULL)
 		{
-			ft_redirect_aam(pars, data->fdesk);
-			if (pars->count > 1)
-				ft_choice_command_pipe(data, pars);
-			else
-			{
-				ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
-				status = ft_build_in_aam(data, pars);
-				ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
-				if (status != 0)
-					return (status);
-			}
+			status = ft_choice_command_build(pars, data);
+			if (status != 0)
+				return (status);
 		}
 		else
 			status = ft_binar_command_aam(data, pars);
 		pars = pars->next;
 	}
-	while (j-- >= 0)
-		waitpid(0, &status, 0);
-	status = WEXITSTATUS(status);
-	return (status);
+	return (ft_choice_command_waitpid(data->curr_pars->count));
 }
 
 void	ft_init_fd_aam(t_data *data, t_fdesk **fd)
@@ -406,6 +423,54 @@ void	ft_free_fd_aam(t_fdesk **fd)
 	*fd = NULL;
 }
 
+void	aam_main_and(t_data *data, int ret)
+{
+	if (ret == 0)
+		data->curr_pars = data->curr_pars->next;
+	else
+	{
+		while (data->curr_pars->f_spec[0] != ';'
+			&& !(data->curr_pars->f_spec[0] == '|'
+				&& data->curr_pars->f_spec[1] == '|')
+			&& data->curr_pars->next)
+			data->curr_pars = data->curr_pars->next;
+		if (data->curr_pars)
+			data->curr_pars = data->curr_pars->next;
+	}
+}
+
+void	aam_main_or(t_data *data, int ret)
+{
+	if (ret != 0)
+		data->curr_pars = data->curr_pars->next;
+	else
+	{
+		while (data->curr_pars->f_spec[0] != ';'
+			&& data->curr_pars->f_spec[0] != '&'
+			&& data->curr_pars->next)
+			data->curr_pars = data->curr_pars->next;
+		if (data->curr_pars)
+			data->curr_pars = data->curr_pars->next;
+	}
+}
+
+void	aam_main_basic_loop(t_data *data, int *ret)
+{
+	*ret = ft_choice_command_aam(data);
+	while (data->curr_pars->count > 1)
+		data->curr_pars = data->curr_pars->next;
+	if (data->curr_pars->f_spec[0] == ';')
+		data->curr_pars = data->curr_pars->next;
+	else if (data->curr_pars->f_spec[0] == '&'
+		&& data->curr_pars->f_spec[1] == '&')
+		aam_main_and(data, *ret);
+	else if (data->curr_pars->f_spec[0] == '|'
+		&& data->curr_pars->f_spec[1] == '|')
+		aam_main_or(data, *ret);
+	else
+		data->curr_pars = data->curr_pars->next;
+}
+
 int	aam_main(t_data *dt)
 {
 	int			ret;
@@ -419,46 +484,7 @@ int	aam_main(t_data *dt)
 	{
 		fd = (t_fdesk *)malloc(sizeof(t_fdesk));
 		ft_init_fd_aam(data, &fd);
-		ret = ft_choice_command_aam(data);
-		while (data->curr_pars->count > 1)
-			data->curr_pars = data->curr_pars->next;
-		if (data->curr_pars->f_spec[0] == ';')
-			data->curr_pars = data->curr_pars->next;
-		else if (data->curr_pars->f_spec[0] == '&'
-			&& data->curr_pars->f_spec[1] == '&')
-		{
-			if (ret == 0)
-				data->curr_pars = data->curr_pars->next;
-			else
-			{
-				while (data->curr_pars->f_spec[0] != ';'
-					&& !(data->curr_pars->f_spec[0] == '|'
-						&& data->curr_pars->f_spec[1] == '|')
-					&& data->curr_pars->next)
-					data->curr_pars = data->curr_pars->next;
-				if (data->curr_pars)
-					data->curr_pars = data->curr_pars->next;
-			}
-		}
-		else if (data->curr_pars->f_spec[0] == '|'
-			&& data->curr_pars->f_spec[1] == '|')
-		{
-			if (ret != 0)
-				data->curr_pars = data->curr_pars->next;
-			else
-			{
-				while (data->curr_pars->f_spec[0] != ';'
-					&& data->curr_pars->f_spec[0] != '&'
-					&& data->curr_pars->next)
-					data->curr_pars = data->curr_pars->next;
-				if (data->curr_pars)
-					data->curr_pars = data->curr_pars->next;
-			}
-		}
-		else
-		{
-			data->curr_pars = data->curr_pars->next;
-		}
+		aam_main_basic_loop(data, &ret);
 		ft_free_fd_aam(&fd);
 	}
 	if (fd)
