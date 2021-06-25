@@ -18,17 +18,23 @@ FLS			= \
 			mainloop \
 			check_line \
 			parser \
+			pars_struct \
+			pars_command \
 			insert_env_var \
 			replace_path \
 			read_stdin \
 			split_argv \
 			split_command \
 			split_tools \
+			redirects \
+			get_redirects \
 			quaote_open \
+			rl_without_hist \
 			tmp_files_tools \
-			termcap \
+			str_utils \
 			tools \
 			errors \
+			clears \
 			../ft_minishell_aam \
 			../ft_str_utils_aam \
 			../ft_export_main_aam \

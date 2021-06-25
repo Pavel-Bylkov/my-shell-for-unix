@@ -18,24 +18,6 @@ int			brackets_is_open(char *str, int n)
 	return (i[1]);
 }
 
-void		free_array(void **s)
-{
-	size_t	i;
-
-	if (s != NULL)
-	{
-		i = 0;
-		while (s[i] != NULL)
-			g_free(s[i++]);
-		g_free(s);
-	}
-}
-
-int		ft_putchar(int c)
-{
-	return (write(1, &c, 1));
-}
-
 void	print_pars(t_data *data)
 {
 	t_pars *tmp;
@@ -71,57 +53,6 @@ int run_comands(t_data *data, int error)  //! Функция aamarei (моя)
 	if (error != 0)
 		return (error);
     return (aam_main(data));
-}
-
-void free_struct(t_data *data)
-{
-	ft_parsclear(&(data->curr_pars));
-	free_array((void **)data->envp);
-	g_free(data->line);
-	g_free(data->index);
-}
-
-void	g_free(void *content)
-{
-	if (content != NULL)
-	{
-		free(content);
-		content = NULL;
-	}
-}
-
-char	*g_strdupanychr(char *str, char *end)
-{
-	char	*dst;
-	int		len;
-
-	len = 0;
-	while (str[len] && (chr_in_str(str[len], end) == -1 ||
-			quaote_is_open(str, len) != 0 
-			|| backslash_is_active(str, len) != 0))
-		len++;
-	dst = ft_strdupn(str, len);
-	return (dst);
-}
-
-char	*g_strjoin(char *str1, int n, int k, char *str2)
-{
-	char	*res;
-	char	*tmp;
-
-	
-	if (n == -1)
-		str1[ft_strlen(str1) - 1] = '\0';
-	if (k == 1)
-	{
-		tmp = str1;
-		str1 = ft_strjoin(str1, "\n");
-		g_free(tmp);
-	}
-	res = ft_strjoin(str1, str2);
-	g_free(str1);
-	g_free(str2);
-	return (res);
 }
 
 char	*g_newpath(char *dir, int n, char *name)

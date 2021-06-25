@@ -99,7 +99,7 @@ char	*insert_var_from_env(t_data *data, char *str)
 		else
 			buff = g_strjoin(buff, 0, 0, ft_strdupn(&str[i[0]], i[1] - i[0]));
 		i[2] = -1;
-		
+		buff = get_varname(str, i, data, buff);
 		i[0] = i[1] - (str[i[1]] == '\0');
 	}
 	g_free(str);
