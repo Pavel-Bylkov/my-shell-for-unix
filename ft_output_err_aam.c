@@ -1,11 +1,11 @@
 #include "my_shell.h"
 
-void	ft_env_output_err(char *str)
+int	ft_env_output_err(int code, char *str)
 {
-	write(1, "my_shell: env: ", 15);
-	write(1, "`", 1);
+	write(1, "env: ", 5);
 	write(1, str, ft_strlen(str));
-	write(1, "': invalid argument\n", 20);
+	write(1, ": No such file or directory\n", 28);
+	return (code);
 }
 
 void	ft_exit_output_err(char *str1, char *str2)

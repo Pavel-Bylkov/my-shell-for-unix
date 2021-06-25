@@ -21,7 +21,7 @@ int	ft_isnum_aam(char *str)
 	return (1);
 }
 
-void	ft_exit_one(t_pars par)
+int	ft_exit_one(int code, t_pars par)
 {
 	write(1, "exit\n", 5);
 	if (ft_isnum_aam(par.argv[1]) == 1)
@@ -31,6 +31,7 @@ void	ft_exit_one(t_pars par)
 		ft_exit_output_err(par.argv[1], ": numeric argument required");
 		exit(-1);
 	}
+	return (code);
 }
 
 void	ft_exit_two(t_pars par)
@@ -52,10 +53,29 @@ void	ft_exit_two(t_pars par)
 	}
 }
 
+int	ft_exit_token(int code, t_pars par)
+{
+	int		pos;
+
+	pos = ft_char_in_str(par.argv[1], ')');
+	if (pos == 1)
+		return (ft_output_err_aam(code, "syntax error near unexpected token `",
+				"newline'\n", NULL));
+	par.argv[1][pos] = '\0';
+	return (ft_output_err_aam(code, "syntax error near unexpected token `",
+			&par.argv[1][1], "'\n"));
+	return (code);
+}
+
 int	ft_exit(t_pars par)
 {
-	if (par.argv[1] != NULL && par.argv[2] != NULL)
-		ft_exit_one(par);
+	int		code;
+
+	code = 0;
+	if (par.argv[1] != NULL && (par.argv[1][0] == '(' || par.argv[1][0] == ')'))
+		code = ft_exit_token(258, par);
+	else if (par.argv[1] != NULL && par.argv[2] != NULL)
+		code = ft_exit_one(1, par);
 	else if (par.argv[1] == NULL)
 	{
 		write(1, "exit\n", 5);
@@ -63,5 +83,5 @@ int	ft_exit(t_pars par)
 	}
 	else
 		ft_exit_two(par);
-	return (0);
+	return (code);
 }
