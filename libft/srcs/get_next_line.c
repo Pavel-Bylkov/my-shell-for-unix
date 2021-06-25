@@ -64,11 +64,11 @@ int				read_lines(t_rl_my	*tmp, int fd, char **line)
 	{
 		tmp->buf[i] = '\0';
 		tmp->tmp = tmp->arr;
-		tmp->arr = gnl_strjoin(tmp, tmp->buf);
+		tmp->arr = gnl_strjoin(tmp->tmp, tmp->buf);
 		if (!tmp->arr)
-			return (free_str(&tmp, &(tmp->buf)));
-		if (tmp != NULL)
-			free(tmp);
+			return (free_str(&(tmp->tmp), &(tmp->buf)));
+		if (tmp->tmp != NULL)
+			free(tmp->tmp);
 		tmp->p_n = gnl_str_endl(tmp->arr);
 		if (tmp->p_n)
 			return (get_cur_line(&(tmp->arr), line, tmp->p_n, &(tmp->buf)));
