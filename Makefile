@@ -35,19 +35,25 @@ FLS			= \
 			tools \
 			errors \
 			clears \
-			../ft_minishell_aam \
+			../ft_minishell_pipe_aam \
 			../ft_str_utils_aam \
 			../ft_export_main_aam \
 			../ft_export_aam \
 			../ft_unset_main_aam \
 			../ft_unset_aam \
 			../ft_env_main_aam \
-			../ft_env_aam \
 			../ft_exit_main_aam \
 			../ft_pwd_main_aam \
 			../ft_cd_main_aam \
 			../ft_cd_aam \
-			../ft_echo_main_aam
+			../ft_echo_main_aam \
+			../ft_output_err_aam \
+			../ft_cd_path_aam \
+			../ft_minishell_main_aam \
+			../ft_minishell_init_aam \
+			../ft_minishell_choice_aam \
+			../ft_minishell_utils_aam \
+			../ft_minishell_build_aam
 
 SRC			= $(FLS)
 

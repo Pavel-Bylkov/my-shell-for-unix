@@ -1,17 +1,5 @@
 #include "my_shell.h"
 
-void	ft_exit_output_err(char *str1, char *str2)
-{
-	write(1, "my_shell: exit", 14);
-	if (str1 != NULL)
-	{
-		write(1, " ", 1);
-		write(1, str1, ft_strlen(str1));
-	}
-	write(1, str2, ft_strlen(str2));
-	write(1, "\n", 1);
-}
-
 int	ft_isnum_aam(char *str)
 {
 	int	i;
@@ -33,16 +21,17 @@ int	ft_isnum_aam(char *str)
 	return (1);
 }
 
-void	ft_exit_one(t_pars par)
+int	ft_exit_one(int code, t_pars par)
 {
 	write(1, "exit\n", 5);
 	if (ft_isnum_aam(par.argv[1]) == 1)
-		ft_exit_output_err(NULL, ": too many arguments");
+		ft_output_err_aam(code, "exit", ": too many arguments\n", NULL);
 	else
 	{
-		ft_exit_output_err(par.argv[1], ": numeric argument required");
+		ft_output_err_aam(code, NULL, ": numeric argument required\n", NULL);
 		exit(-1);
 	}
+	return (code);
 }
 
 void	ft_exit_two(t_pars par)
@@ -59,15 +48,35 @@ void	ft_exit_two(t_pars par)
 	else
 	{
 		write(1, "exit\n", 5);
-		ft_exit_output_err(par.argv[1], ": numeric argument required");
+		ft_output_err_aam(-1, par.argv[1],
+			": numeric argument required\n", NULL);
 		exit(-1);
 	}
 }
 
+int	ft_exit_token(int code, t_pars par)
+{
+	int		pos;
+
+	pos = ft_char_in_str(par.argv[1], ')');
+	if (pos == 1)
+		return (ft_output_err_aam(code, "syntax error near unexpected token `",
+				"newline'\n", NULL));
+	par.argv[1][pos] = '\0';
+	return (ft_output_err_aam(code, "syntax error near unexpected token `",
+			&par.argv[1][1], "'\n"));
+	return (code);
+}
+
 int	ft_exit(t_pars par)
 {
-	if (par.argv[1] != NULL && par.argv[2] != NULL)
-		ft_exit_one(par);
+	int		code;
+
+	code = 0;
+	if (par.argv[1] != NULL && (par.argv[1][0] == '(' || par.argv[1][0] == ')'))
+		code = ft_exit_token(258, par);
+	else if (par.argv[1] != NULL && par.argv[2] != NULL)
+		code = ft_exit_one(1, par);
 	else if (par.argv[1] == NULL)
 	{
 		write(1, "exit\n", 5);
@@ -75,5 +84,5 @@ int	ft_exit(t_pars par)
 	}
 	else
 		ft_exit_two(par);
-	return (0);
+	return (code);
 }
