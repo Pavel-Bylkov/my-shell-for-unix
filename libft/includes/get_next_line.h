@@ -9,6 +9,14 @@
 #  define BUFFER_SIZE	32
 # endif
 
+typedef struct	    s_rl_my
+{
+	char		*arr;
+	char		*buf;
+	char		*p_n;
+	char		*tmp;
+}				    t_rl_my;
+
 int			get_next_line(int fd, char **line);
 char		*gnl_strjoin(char *s1, char const *s2);
 size_t		gnl_strlen(const char *s);

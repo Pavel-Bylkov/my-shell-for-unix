@@ -78,7 +78,10 @@ static char	*ft_strtrim_2(char const *s1, char const *set)
 	size_t	len;
 
 	tmp_cpy = ft_ptr_start(s1, set);
-	tmp_end = (*tmp_cpy == '\0') ? tmp_cpy : ft_ptr_end(tmp_cpy, set);
+	if (*tmp_cpy == '\0')
+		tmp_end = tmp_cpy;
+	else
+		tmp_end = ft_ptr_end(tmp_cpy, set);
 	len = (size_t)tmp_end - (size_t)tmp_cpy + 1;
 	res = (char *)malloc(len);
 	if (res == NULL)

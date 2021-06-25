@@ -10,7 +10,10 @@ char	*gnl_strjoin(char *s1, char const *s2)
 
 	if (s2 == NULL)
 		return (NULL);
-	len1 = (s1 == NULL) ? 0 : gnl_strlen(s1);
+	if (s1 == NULL)
+		len1 = 0;
+	else
+		len1 = gnl_strlen(s1);
 	len2 = gnl_strlen(s2);
 	res = (char *)malloc(len1 + len2 + 1);
 	if (res == NULL)
