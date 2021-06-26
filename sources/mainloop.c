@@ -4,15 +4,16 @@ void		int_handler(int status)
 {
 	if (status == SIGINT)
 	{
-		// while (write(1, "\e[1С", 4));
-		// write(1, "\e[2D", 4); //[nD — перемещает курсор по строке влево на п позиций.
-		// write(1, "  \n", 3); // Move to a new line
-		//rl_replace_line("\e[2D    ", 0); // Clear the previous text
+		write(1, "\e[2D  \e[2D", 10);
 		write(1, "\n", 1);
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
 		rl_redisplay();
 		g_data->code_exit = 1;
+	}
+	if (status == SIGQUIT)
+	{
+		write(1, "\e[2D  \e[2D", 10);
 	}
 }
 
@@ -21,7 +22,8 @@ static void		eof_exit(t_data *data)
 	add_history("exit");
     write_history(HISTORY_FILE); //! не использовать в финальной версии
 	free_struct(data);
-	write(1, "exit\n", 20);
+	write(1, "\e[2D   \e[2D", 11);
+	write(1, "exit\n", 5);
 	exit(EXIT_SUCCESS);
 }
 
@@ -30,10 +32,13 @@ char 		*rl_gets_with_add_hist(char *promt)
 	char	*line;
 
 	signal(SIGINT, int_handler);
+	signal(SIGQUIT, int_handler);
 	line = readline(promt);
 	if (line && *line)
     	add_history(line);
 	return (line);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
 
 int		ft_readline(t_data *data)
@@ -64,9 +69,10 @@ void main_loop(t_data *data)
 		error = ft_readline(data);
 		if (error == 555)
 			continue ;
+		data->line = brackets_clean(data->line);
 		error = parse_line(data, error);
 		data->code_exit = run_comands(data, error);
-		//print_pars(data);
+		// print_pars(data);
 		g_free((void *)data->line);
 	    ft_parsclear(&(data->curr_pars));
 		g_tmp_files_clear(&(data->tmp_files));
