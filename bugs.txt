@@ -1,2 +1,50 @@
-18. echo a $NOVAR b| wc
-		zsh: segmentation fault  ./minishell
+24. echo -nnn  aaaaaaaaa > /tmp/a | cat -e /tmp/a ; echo
+		-nnn aaaaaaaaa$
+
+or:		aaaaaaaaa
+
+26. echo $"" ; echo "$""" ; echo '$'''
+		my_shell: syntax error near unexpected token `;'
+or:
+		$
+		$
+
+29. toto= 42 ; echo $toto ; echo "$toto" ; echo '$toto'
+		my_shell: toto=: command not found
+
+
+		$toto
+or:		bash: 42: command not found
+
+
+		$toto
+
+30. toto=42 ; echo $toto"" ; echo "$toto""" ; echo '$toto'''
+		my_shell: syntax error near unexpected token `;'
+or:		42
+		42
+		$toto
+
+34. exit dqdsqd 2 dsqdqs
+		exit
+		my_shell: : numeric argument required
+		si-h4%
+or:		exit
+		bash: exit: dqdsqd: numeric argument required
+		si-h4%
+
+36. exit 9223372036854775808
+		exit
+		si-h4%
+or:		exit
+		bash: exit: 9223372036854775808: numeric argument required
+		si-h4%
+
+40. ls | exit
+		exit
+		si-h4%
+or:		bash-3.2$
+
+43. /bin/aaaaaaaaaaaa
+		my_shell: : No such file or directory
+or:		bash: /bin/aaaaaaaaaaaa: No such file or directory
