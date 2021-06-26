@@ -118,7 +118,7 @@ int		            print_err(int errcode, t_data *data);
 int	                chr_in_str(char c, char *s);
 int			        quaote_is_open(char *str, int n);
 int                 backslash_is_active(char *str, int n);
-
+char				*brackets_clean(char *str);
 char	            **get_commands(t_data *data);
 void				g_free(void *content);
 char	            *g_strdupanychr(char *str, char *end);

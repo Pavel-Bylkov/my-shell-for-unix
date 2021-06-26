@@ -4,8 +4,7 @@ void		int_handler2(int status)
 {
 	if (status == SIGINT)
 	{
-		//write(1, "\b\b  ", 4);
-		//write(1, "\n", 1);
+		// write(1, "\e[2D  \e[2D", 10);
 		exit(1);
 	}
 }
@@ -29,6 +28,7 @@ void		child_readline(int *fd, char *promt)
 		exit(130);
 	}
 	exit(0);
+	signal(SIGINT, SIG_DFL);
 }
 
 char	*read_line_from_fd(int *fd)

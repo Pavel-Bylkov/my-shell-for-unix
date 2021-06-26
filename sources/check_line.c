@@ -111,10 +111,10 @@ int		check_unexpected_token(char *str)
 			return (unexpected_token(";;&", 0));
 		if (flag == 1 && str[i + 1] == ';')
 			return (unexpected_token(";;", 0));
+		if (flag > 7 && str[i + 1] == '\0')
+			return (unexpected_token("newline", 0));
 		error += check_spec_redir(str, i, flag);
 		error += check_brakets(str, i, flag);
 	}
-	if (flag > 8)
-		return (unexpected_token("newline", 0));
 	return (error);
 }

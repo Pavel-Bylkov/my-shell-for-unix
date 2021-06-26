@@ -71,7 +71,6 @@ char	**get_commands(t_data *data)
 	char	**commands;
 	int		nstrs;
 
-	// сделать по аналогии разложение на команды, с оставлением окончания.
 	if (data->line == NULL)
 		return (NULL);
 	nstrs = get_ncommand(data);

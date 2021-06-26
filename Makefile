@@ -20,9 +20,11 @@ FLS			= \
 			parser \
 			pars_struct \
 			pars_command \
+			brakets_clean \
 			insert_env_var \
 			replace_path \
 			read_stdin \
+			readdir \
 			split_argv \
 			split_command \
 			split_tools \
