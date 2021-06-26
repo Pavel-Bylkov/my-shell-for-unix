@@ -46,7 +46,7 @@ void	ft_swap(int *a, int *b)
 	*b = c;
 }
 
-void	ft_open_file(int *fd, t_redir *red, int k, int key)
+void	ft_open_file(int *fd, t_redir *red, int k, int key) // ! отловить ошибку октрытия
 {
 	if (*fd > 2)
 	{

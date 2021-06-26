@@ -47,9 +47,16 @@ int	ft_command_err_aam(char *name_f)
 			if (stat(name_f, &buff) >= 0)
 				return (ft_output_err_aam(126, name_f,
 						": Permission denied\n", NULL));
+			name_f[ft_char_in_str(name_f, '/')] = '\0';
+			if (stat(name_f, &buff) >= 0)
+				return (ft_output_err_aam(127, name_f,
+						": Not a directory\n", NULL));
 			return (ft_output_err_aam(127, name_f,
 					": No such file or directory\n", NULL));
 		}
 	}
+	if (stat(name_f, &buff) < 0)
+		return (ft_output_err_aam(127, name_f,
+					": No such file or directory\n", NULL));
 	return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
 }

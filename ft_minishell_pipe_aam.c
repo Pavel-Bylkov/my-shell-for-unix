@@ -10,15 +10,18 @@ int	ft_redirect_aam(t_pars *pars, t_fdesk *fd)
 	while (red)
 	{
 		if (red->f_spec[0] == '>' && red->f_spec[1] == '\0')
+		{
 			ft_open_file(&fd->fd_r, red, 1, 1);
+			if (fd->fd_r < 0)
+				return (ft_command_err_aam(red->out));
+		}
 		if (red->f_spec[0] == '<' && red->f_spec[1] == '\0')
 		{
 			ft_open_file(&fd->fd_w, red, 0, 2);
 			if (fd->fd_w < 0)
 			{
 				ft_open_file(&fd->fd_r, red, 1, 0);
-				return (ft_output_err_aam(1, red->out,
-						" : No such file or directory\n", NULL));
+				return (ft_command_err_aam(red->out));
 			}
 		}
 		if (red->f_spec[0] == '>' && red->f_spec[1] == '>')
@@ -66,6 +69,9 @@ void	ft_binar_subsidiary_aam(t_data *data, t_pars *pars)
 	int		code;
 
 	ft_pipe_open_aam(pars, data->fdesk);
+code = ft_redirect_aam(pars, data->fdesk);
+if (code != 0)
+exit (code);
 	if (data->fdesk->fd_r > 2)
 		dup2(data->fdesk->fd_r, 1);
 	if (data->fdesk->fd_w > 2)
@@ -82,9 +88,9 @@ int	ft_binar_command_aam(t_data *data, t_pars *pars)
 	int			code;
 
 	code = 0;
-	code = ft_redirect_aam(pars, data->fdesk);
-	if (code != 0)
-		return (code);
+	//code = ft_redirect_aam(pars, data->fdesk);
+	//if (code != 0)
+	//	return (code);
 	if (pars->count > 1)
 		pipe(data->fdesk->fd[pars->count - 1]);
 	pid = fork();
