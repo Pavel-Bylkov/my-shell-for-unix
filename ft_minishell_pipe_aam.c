@@ -77,6 +77,7 @@ exit (code);
 	if (data->fdesk->fd_w > 2)
 		dup2(data->fdesk->fd_w, 0);
 	code = execve(pars->path, pars->argv, data->envp);
+printf("code = %d\n", code);
 	if (code < 0)
 		code = ft_command_err_aam(pars->path);
 	exit(code);

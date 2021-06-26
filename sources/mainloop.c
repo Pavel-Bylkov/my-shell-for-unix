@@ -4,11 +4,11 @@ void		int_handler(int status)
 {
 	if (status == SIGINT)
 	{
-		write(1, "\e[2D  \e[2D", 10);
-		write(1, "\n", 1);
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
 		rl_redisplay();
+		write(1, "\b\b", 2);
+		write(1, "\n", 1);
 		g_data->code_exit = 1;
 	}
 	if (status == SIGQUIT)

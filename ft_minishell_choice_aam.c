@@ -33,6 +33,16 @@ int	ft_choice_command_waitpid(int j)
 
 	while (j-- >= 0)
 		waitpid(0, &status, 0);
+	if (WTERMSIG(status) == 3)
+	{
+		write(2, "^\\Quit: 3\n", 10);
+		return (131);
+	}
+	if (WTERMSIG(status) == 2)
+	{
+		//write(2, "^C\n", 3);
+		return (130);
+	}
 	status = WEXITSTATUS(status);
 	return (status);
 }
