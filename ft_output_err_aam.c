@@ -57,6 +57,6 @@ int	ft_command_err_aam(char *name_f)
 	}
 	if (stat(name_f, &buff) < 0)
 		return (ft_output_err_aam(127, name_f,
-					": No such file or directory\n", NULL));
+				": No such file or directory\n", NULL));
 	return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
 }
