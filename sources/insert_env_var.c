@@ -34,7 +34,6 @@ char	*get_var(char **envp, char *buff, char *str, int *i)
 	int		j;
 	char	varname[1024];
 
-
 	value = NULL;
 	if (str[i[1]] == '{')
 		while (str[++i[1]] && str[i[1]] != '}')
@@ -50,7 +49,10 @@ char	*get_var(char **envp, char *buff, char *str, int *i)
 			if (ft_strncmp(envp[j], varname, ft_strlen(varname)) == 0)
 				value = ft_strdup(&envp[j][ft_strlen(varname) + 1]);
 	}
-	return (g_strjoin(buff, 0, 0, backslash_add(value)));
+	value = backslash_add(value);
+	if (value == NULL)
+		value = ft_strdup("");
+	return (g_strjoin(buff, 0, 0, value));
 }
 
 char    *get_varname(char *str, int *i, t_data *data, char *buff)
@@ -74,11 +76,12 @@ char    *get_varname(char *str, int *i, t_data *data, char *buff)
         buff = get_var(data->envp, buff, str, i);
         i[1]--;
     }
-    else if (str[i[1]] == '$' && (ft_strncmp(&str[i[1]], "$ ", 2) == 0
-        ||	ft_strncmp(&str[i[1]], "$\"", 2) == 0 || 
+    else if (str[i[1]] == '$' && 
+			(ft_strncmp(&str[i[1]], "$ ", 2) == 0 ||
+			ft_strncmp(&str[i[1]], "$\"", 2) == 0 || 
 			ft_strncmp(&str[i[1]], "$'", 2) == 0))
-        buff = g_strjoin(buff, 0, 0, ft_strdupn(&str[i[1]++], 2));
-    return (buff);
+		buff = g_strjoin(buff, 0, 0, ft_strdupn(&str[i[1]++], 2));
+	return (buff);
 }
 
 char	*insert_var_from_env(t_data *data, char *str)

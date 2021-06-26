@@ -7,6 +7,10 @@ void		int_handler2(int status)
 		// write(1, "\e[2D  \e[2D", 10);
 		exit(1);
 	}
+	if (status == SIGQUIT)
+	{
+		write(1, "\b\b  ", 4);
+	}
 }
 
 void		child_readline(int *fd, char *promt)
@@ -14,6 +18,7 @@ void		child_readline(int *fd, char *promt)
 	char	*line;
 
 	signal(SIGINT, int_handler2);
+	signal(SIGQUIT, int_handler2);
 	line = readline(promt);
 	if (line != NULL)
 	{
@@ -29,6 +34,7 @@ void		child_readline(int *fd, char *promt)
 	}
 	exit(0);
 	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
 
 char	*read_line_from_fd(int *fd)
