@@ -31,6 +31,7 @@ FLS			= \
 			redirects \
 			get_redirects \
 			quaote_open \
+			rl_with_hist \
 			rl_without_hist \
 			tmp_files_tools \
 			str_utils \
