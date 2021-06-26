@@ -37,7 +37,8 @@ static int		eof_checker(char **cur, char **line, ssize_t i, char **buf)
 
 	if (i < 0)
 		return (free_str(cur, buf));
-	if (*cur && (p_n = gnl_str_endl(*cur)))
+	p_n = gnl_str_endl(*cur);
+	if (*cur && p_n)
 		return (get_cur_line(cur, line, p_n, buf));
 	if (*cur != NULL)
 	{
@@ -54,30 +55,40 @@ static int		eof_checker(char **cur, char **line, ssize_t i, char **buf)
 	return (0);
 }
 
+int				read_lines(t_rl_my	*tmp, int fd, char **line)
+{
+	ssize_t		i;
+
+	i = read(fd, tmp->buf, BUFFER_SIZE);
+	while (i > 0)
+	{
+		tmp->buf[i] = '\0';
+		tmp->tmp = tmp->arr;
+		tmp->arr = gnl_strjoin(tmp->tmp, tmp->buf);
+		if (!tmp->arr)
+			return (free_str(&(tmp->tmp), &(tmp->buf)));
+		if (tmp->tmp != NULL)
+			free(tmp->tmp);
+		tmp->p_n = gnl_str_endl(tmp->arr);
+		if (tmp->p_n)
+			return (get_cur_line(&(tmp->arr), line, tmp->p_n, &(tmp->buf)));
+		i = read(fd, tmp->buf, BUFFER_SIZE);
+	}
+	return (eof_checker(&(tmp->arr), line, i, &(tmp->buf)));
+}
+
 int				get_next_line(int fd, char **line)
 {
 	static char	*arr[1025];
-	char		*buf;
-	ssize_t		i;
-	char		*p_n;
-	char		*tmp;
+	t_rl_my		tmp;
 
-	if (fd < 0 || fd > 1024 || !line || BUFFER_SIZE < 1
-			|| !(buf = (char *)malloc(BUFFER_SIZE + 1)))
+	if (BUFFER_SIZE > 0)
+		tmp.buf = (char *)malloc(BUFFER_SIZE + 1);
+	if (fd < 0 || fd > 1024 || !line || BUFFER_SIZE < 1 || !tmp.buf)
 		return (-1);
 	*line = NULL;
-	if (read(fd, buf, 0) < 0)
-		return (free_str(&arr[fd], &buf));
-	while ((i = read(fd, buf, BUFFER_SIZE)) > 0)
-	{
-		buf[i] = '\0';
-		tmp = arr[fd];
-		if (!(arr[fd] = gnl_strjoin(tmp, buf)))
-			return (free_str(&tmp, &buf));
-		if (tmp != NULL)
-			free(tmp);
-		if ((p_n = gnl_str_endl(arr[fd])))
-			return (get_cur_line(&arr[fd], line, p_n, &buf));
-	}
-	return (eof_checker(&arr[fd], line, i, &buf));
+	tmp.arr = arr[fd];
+	if (read(fd, tmp.buf, 0) < 0)
+		return (free_str(&(tmp.arr), &(tmp.buf)));
+	return (read_lines(&tmp, fd, line));
 }

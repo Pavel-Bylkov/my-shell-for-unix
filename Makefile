@@ -2,12 +2,12 @@ NAME		= minishell
 
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
-LIBFLAGS	= -L libft -lft -lreadline -L/Users/aamarei/.brew/opt/readline/lib #-ltermcap
+LIBFLAGS	= -L libft -lft -lreadline #-L/usr/local/opt/readline/lib #-L/Users/aamarei/.brew/opt/readline/lib #-ltermcap
 
-CFLAGS		= -Wall -Wextra -Werror -D DEBUG=1
+CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g
 
-INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. -I/Users/aamarei/.brew/opt/readline/include
+INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. #-I/usr/local/opt/readline/include #-I/Users/aamarei/.brew/opt/readline/include
 
 SRCDIR		= ./sources/
 OBJDIR		= ./objs/
@@ -16,11 +16,25 @@ FLS			= \
 			main \
 			init_structs \
 			mainloop \
+			check_line \
 			parser \
-			str_split \
-			termcap \
+			pars_struct \
+			pars_command \
+			insert_env_var \
+			replace_path \
+			read_stdin \
+			split_argv \
+			split_command \
+			split_tools \
+			redirects \
+			get_redirects \
+			quaote_open \
+			rl_without_hist \
+			tmp_files_tools \
+			str_utils \
 			tools \
 			errors \
+			clears \
 			../ft_minishell_pipe_aam \
 			../ft_str_utils_aam \
 			../ft_export_main_aam \
