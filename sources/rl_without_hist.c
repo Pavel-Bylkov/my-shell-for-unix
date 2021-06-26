@@ -1,10 +1,34 @@
 #include "my_shell.h"
 
+void		open_close_fd(int *fd)
+{
+	static int	*fd_static;
+
+	if (fd != NULL)
+	{
+		fd_static = (int *)malloc(sizeof(int) * 2);
+		fd_static[0] = fd[0];
+		fd_static[1] = fd[1];
+		write(1, "start fd\n", 9);
+	}
+	else
+	{
+		close(fd_static[0]);
+		close(fd_static[1]);
+		free(fd_static);
+		// signal(SIGINT, SIG_DFL);
+		// signal(SIGQUIT, SIG_DFL);
+		write(1, "close fd\n", 9);
+	}
+		
+}
+
 void		int_handler2(int status)
 {
 	if (status == SIGINT)
 	{
 		// write(1, "\e[2D  \e[2D", 10);
+		open_close_fd(NULL);
 		exit(1);
 	}
 	if (status == SIGQUIT)
@@ -23,18 +47,14 @@ void		child_readline(int *fd, char *promt)
 	if (line != NULL)
 	{
 		write(fd[1], line, ft_strlen(line));
-		close(fd[1]);
-		close(fd[0]);
+		open_close_fd(NULL);
 	}
 	else
 	{
-		close(fd[1]);
-		close(fd[0]);
+		open_close_fd(NULL);
 		exit(130);
 	}
 	exit(0);
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
 }
 
 char	*read_line_from_fd(int *fd)
@@ -71,7 +91,10 @@ char 		*rl_gets_without_hist(char *promt, int *error)
 	pid = fork();
 	line = NULL;
 	if (pid == 0)
+	{
+		open_close_fd(fd);
 		child_readline(fd, promt);
+	}
 	waitpid(0, error, 0);
 	*error = WEXITSTATUS(*error);
 	if (*error == 130)
