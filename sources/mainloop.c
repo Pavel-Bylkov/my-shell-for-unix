@@ -31,6 +31,7 @@ char 		*rl_gets_with_add_hist(char *promt)
 {
 	char	*line;
 
+	//rl_catch_signals = 0;
 	signal(SIGINT, int_handler);
 	signal(SIGQUIT, int_handler);
 	line = readline(promt);
