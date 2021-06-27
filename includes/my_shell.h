@@ -20,8 +20,8 @@
 
 # define ERRORS_FILE "./errors/errors.txt"
 # define HISTORY_FILE "./.history"
-# define SHELL_PROMT "my_shell>$ "
-# define ERROR_PREFIX "my_shell: "
+# define SHELL_PROMT "minishell>$ "
+# define ERROR_PREFIX "minishell: "
 # define QUAOTE_PROMT "> "
 
 typedef struct		s_tmp_files
@@ -107,7 +107,7 @@ int                 read_from_file(t_data *data, char *filename);
 int		            check_unexpected_token(char *str);
 int		            quaote_open_mode(t_data *data);
 void		        free_array(void **s);
-int                 parse_line(t_data *data, int error);
+int                 parse_line(char *line, t_data *data, int error);
 t_pars				*pars_command(char *str);
 char				*insert_var_from_env(t_data *data, char *str);
 char			    **argv_split(char *s);
@@ -122,7 +122,7 @@ int	                chr_in_str(char c, char *s);
 int			        quaote_is_open(char *str, int n);
 int                 backslash_is_active(char *str, int n);
 char				*brackets_clean(char *str);
-char	            **get_commands(t_data *data);
+char	            **get_commands(char *line, char *str);
 void				g_free(void *content);
 char	            *g_strdupanychr(char *str, char *end);
 char				*g_strjoin(char *str1, int n, int k, char *str2);

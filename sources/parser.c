@@ -61,7 +61,7 @@ int	check_open_files(t_pars *tmp)
 	return (0);
 }
 
-int 	parse_line(t_data *data, int error)
+int 	parse_line(char *line, t_data *data, int error)
 {
 	int i;
 	char **commands;
@@ -69,7 +69,7 @@ int 	parse_line(t_data *data, int error)
 
 	if (error != 0)
 		return (error);
-	commands = get_commands(data);
+	commands = get_commands(line, "|&");
 	if (commands != NULL)
 	{
 		i = 0;

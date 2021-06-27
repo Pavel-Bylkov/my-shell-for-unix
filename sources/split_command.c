@@ -23,7 +23,7 @@ static int		get_len_command(char *str, char *chars)
 	return ((min == -1) * ft_strlen(str) + (min != -1) * (min + 1));
 }
 
-static int	get_ncommand(t_data *data)
+static int	get_ncommand(char *line, char *s)
 {
 	int		n_strs;
 	int     i;
@@ -32,18 +32,18 @@ static int	get_ncommand(t_data *data)
 
 	n_strs = 0;
 	i = 0;
-	str = data->line;
+	str = line;
 	while (str[i])
 	{
 		if (str[i])
 			n_strs++;
-		len = get_len_command(&str[i], "|;&");
+		len = get_len_command(&str[i], s);
 		i += len;
 	}
 	return (n_strs);
 }
 
-static int		commandscpy(char **res, size_t n, char *str)
+static int		commandscpy(char **res, size_t n, char *str, char *s)
 {
 	size_t	i;
     int     j;
@@ -53,7 +53,7 @@ static int		commandscpy(char **res, size_t n, char *str)
     j = 0;
 	while (str[j] && i < n)
 	{
-        len = get_len_command(&str[j], "|;&");
+        len = get_len_command(&str[j], s);
 		res[i] = ft_strdupn(&str[j], len);
 		if (res[i++] == NULL)
 		{
@@ -66,21 +66,21 @@ static int		commandscpy(char **res, size_t n, char *str)
 	return (1);
 }
 
-char	**get_commands(t_data *data)
+char	**get_commands(char *line, char *str)
 {
 	char	**commands;
 	int		nstrs;
 
-	if (data->line == NULL)
+	if (line == NULL)
 		return (NULL);
-	nstrs = get_ncommand(data);
+	nstrs = get_ncommand(line, str);
 	commands = NULL;
 	if (nstrs != -1)
 	{
 		commands = (char **)malloc(sizeof(char *) * (nstrs + 1));
 		if (commands == NULL)
 			return (NULL);
-		if (commandscpy(commands, nstrs, data->line))
+		if (commandscpy(commands, nstrs, line, str))
 			return (commands);
 	}	
 	if (commands != NULL)

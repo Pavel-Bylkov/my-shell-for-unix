@@ -79,7 +79,7 @@ char    *get_varname(char *str, int *i, t_data *data, char *buff)
     else if (str[i[1]] == '$' && (ft_strncmp(&str[i[1]], "$ ", 2) == 0 || 
 			str[i[1] + 1] == '\0' || (ft_strncmp(&str[i[1]], "$\"", 2) == 0 
 			&& quaote_is_open(str, i[1]) == 2)))
-		buff = g_strjoin(buff, 0, 0, ft_strdupn(&str[i[1]++], 1));
+		buff = g_strjoin(buff, 0, 0, ft_strdupn(&str[i[1]++], 2));
 	else if (str[i[1]] == '$' && (ft_strncmp(&str[i[1]], "$\"", 2) == 0 ||
 			ft_strncmp(&str[i[1]], "$'", 2) == 0))
 		buff = g_strjoin(buff, 0, 0, ft_strdupn(&str[++i[1]], 1));
