@@ -1,26 +1,5 @@
 #include "my_shell.h"
 
-void		open_close_fd(int *fd)
-{
-	static int	*fd_static;
-
-	if (fd != NULL)
-	{
-		fd_static = (int *)malloc(sizeof(int) * 2);
-		fd_static[0] = fd[0];
-		fd_static[1] = fd[1];
-	}
-	else
-	{
-		close(fd_static[0]);
-		close(fd_static[1]);
-		free(fd_static);
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-	}
-		
-}
-
 void		int_handler2(int status)
 {
 	if (status == SIGINT)
@@ -117,7 +96,5 @@ char 		*rl_gets_without_hist(char *promt, int *error)
 		line = read_line_from_fd(fd);
 	close(fd[1]);
 	close(fd[0]);
-	// signal(SIGINT, SIG_DFL);
-	// signal(SIGQUIT, SIG_DFL);
 	return (line);
 }

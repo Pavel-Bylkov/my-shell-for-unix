@@ -31,3 +31,24 @@ char 		*rl_gets_with_add_hist(char *promt)
 	signal(SIGQUIT, SIG_DFL);
 	return (line);
 }
+
+void		open_close_fd(int *fd)
+{
+	static int	*fd_static;
+
+	if (fd != NULL)
+	{
+		fd_static = (int *)malloc(sizeof(int) * 2);
+		fd_static[0] = fd[0];
+		fd_static[1] = fd[1];
+	}
+	else
+	{
+		close(fd_static[0]);
+		close(fd_static[1]);
+		free(fd_static);
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+	}
+		
+}
