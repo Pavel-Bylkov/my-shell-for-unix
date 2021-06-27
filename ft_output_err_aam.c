@@ -2,9 +2,9 @@
 
 int	ft_env_output_err(int code, char *str)
 {
-	write(1, "env: ", 5);
-	write(1, str, ft_strlen(str));
-	write(1, ": No such file or directory\n", 28);
+	write(2, "env: ", 5);
+	write(2, str, ft_strlen(str));
+	write(2, ": No such file or directory\n", 28);
 	return (code);
 }
 
@@ -20,10 +20,10 @@ int	ft_export_output_err(int code, char *str)
 int	ft_output_err_aam(int code, char *str1, char *str2, char *str3)
 {
 	write(2, "my_shell: ", 10);
-	if (str1)
+	if (str1 != NULL)
 		write(2, str1, ft_strlen(str1));
 	write(2, str2, ft_strlen(str2));
-	if (str3)
+	if (str3 != NULL)
 		write(2, str3, ft_strlen(str3));
 	return (code);
 }
@@ -47,7 +47,7 @@ int	ft_command_err_aam(char *name_f)
 			if (stat(name_f, &buff) >= 0)
 				return (ft_output_err_aam(126, name_f,
 						": Permission denied\n", NULL));
-			name_f[ft_char_in_str(name_f, '/')] = '\0';
+			//name_f[ft_char_in_str(name_f, '/')] = '\0';
 			if (stat(name_f, &buff) >= 0)
 				return (ft_output_err_aam(127, name_f,
 						": Not a directory\n", NULL));

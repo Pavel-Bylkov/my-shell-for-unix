@@ -1,9 +1,4 @@
-24. echo -nnn  aaaaaaaaa > /tmp/a | cat -e /tmp/a ; echo
-		-nnn aaaaaaaaa$
-
-or:		aaaaaaaaa
-
-26. echo $"" ; echo "$""" ; echo '$'''
+26. echo $"" ; echo "$""" ; echo '$'''  //! Ошибка на уровне парсинга
 		my_shell: syntax error near unexpected token `;'
 or:
 		$
@@ -25,14 +20,6 @@ or:		42
 		42
 		$toto
 
-34. exit dqdsqd 2 dsqdqs
-		exit
-		my_shell: : numeric argument required
-		si-h4%
-or:		exit
-		bash: exit: dqdsqd: numeric argument required
-		si-h4%
-
 36. exit 9223372036854775808
 		exit
 		si-h4%
@@ -45,6 +32,37 @@ or:		exit
 		si-h4%
 or:		bash-3.2$
 
-43. /bin/aaaaaaaaaaaa
-		my_shell: : No such file or directory
-or:		bash: /bin/aaaaaaaaaaaa: No such file or directory
+47. ./Makefile ; echo $?
+		my_shell: ./Makefile: Permission denied
+		0
+or:		bash: ./Makefile: Permission denied
+		126
+
+48. /dev ; echo $?
+		my_shell: /dev: is a directory
+		0
+or:		bash: /dev: is a directory
+		126
+
+49. ../../../ls ; echo $?
+
+50. "" ; echo $?
+my_shell: syntax error near unexpected token `;'
+
+55. >/tmp/000 | ls aaaaaaaa >/tmp/0001 ; echo $?
+		0
+or:		ls: aaaaaaaa: No such file or directory
+		1
+
+56. >/tmp/000 | >/tmp/0001 | >/tmp/000 | >/tmp/0001 | >/tmp/000 | >/tmp/0001; echo $?
+не создает файлов, а должен!!!
+
+84. expotr cat ; cat=meow ; env  | sort ; export
+долже переменной cat присвоить значение - у нас просто выдает ошибку
+
+
+[170] export a+====42  ; echo $ ; export
+должен добавить к имеющейся переменной ===42 (склеить)
+
+
+172

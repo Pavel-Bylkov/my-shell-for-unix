@@ -10,10 +10,10 @@ int	ft_choice_command_aam(t_data *data)
 
 	pars = data->curr_pars;
 	i = pars->count;
-	if (pars->argv[0] == NULL)
-		return (0);
 	while (i-- > 0)
 	{
+		if (pars->argv[0] == NULL)
+			return (0);
 		if (pars->path == NULL)
 		{
 			status = ft_choice_command_build(pars, data);
@@ -39,10 +39,7 @@ int	ft_choice_command_waitpid(int j)
 		return (131);
 	}
 	if (WTERMSIG(status) == 2)
-	{
-		//write(2, "^C\n", 3);
 		return (130);
-	}
 	status = WEXITSTATUS(status);
 	return (status);
 }

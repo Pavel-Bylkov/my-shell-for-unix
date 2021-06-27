@@ -18,7 +18,7 @@ int	ft_export(t_data *data, t_pars *pars)
 			if (pars->argv[i][0] == '='
 				|| (pars->argv[i][0] >= 48 && pars->argv[i][0] <= 57)
 				|| ft_chrstr_in_set(pars->argv[i],
-						"!@#$%^&*()±<>~{}[]", pos) == 0)
+						"!@#$%^&*()±<>~{}[],:/;.?+", pos) == 0)
 				code = ft_export_output_err(1, pars->argv[i]);
 			else
 				data->envp = ft_env_add(data, pars->argv[i], &(data->size));
