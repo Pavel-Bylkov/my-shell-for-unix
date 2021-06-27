@@ -4,7 +4,7 @@ void		int_handler2(int status)
 {
 	if (status == SIGINT)
 	{
-		// write(1, "\e[2D  \e[2D", 10);
+		write(1, "\n", 1);
 		open_close_fd(NULL);
 		exit(1);
 	}
