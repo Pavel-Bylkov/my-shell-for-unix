@@ -72,6 +72,7 @@ void main_loop(t_data *data)
 				ft_parsclear(&(data->curr_pars));
 				data->count_files += count_redir(lines[i]);
 			}
+			free_array((void **)lines);
 		}
 		// print_pars(data);
 		g_free((void *)data->line);

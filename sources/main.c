@@ -42,6 +42,7 @@ int     one_run(t_data *data, char *str)
 			data->code_exit = run_comands(data, error);
 			ft_parsclear(&(data->curr_pars));
 		}
+		free_array((void **)lines);
 	}
 	g_free((void *)data->line);
 	g_tmp_files_clear(&(data->tmp_files));
@@ -116,6 +117,7 @@ int        read_from_file(t_data *data, char *filename)
 				data->code_exit = run_comands(data, error);
 				ft_parsclear(&(data->curr_pars));
 			}
+			free_array((void **)lines);
 		}
         g_free(data->line);
     }
