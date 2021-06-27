@@ -20,7 +20,7 @@ int		unexpected_eof(char *str)
 	int		len;
 
 	str_err = ft_strdup("unexpected EOF while looking for matching `");
-	len = ft_strlen(str); // возможно нужно сделать -1
+	len = ft_strlen(str);
 	if (quaote_is_open(str, len) == 1)
 		str_err = g_strjoin(str_err, 0, 0, ft_strdup("''"));
 	else if (quaote_is_open(str, len) == 2)

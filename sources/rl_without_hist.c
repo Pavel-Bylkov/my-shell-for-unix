@@ -15,11 +15,7 @@ void		int_handler2(int status)
 }
 void		int_handler3(int status)
 {
-	if (status == SIGINT)
-	{
-		write(1, "", 0);
-	}
-	if (status == SIGQUIT)
+	if (status == SIGINT || status == SIGQUIT)
 	{
 		write(1, "", 0);
 	}
@@ -40,6 +36,8 @@ void		child_readline(int *fd, char *promt)
 	}
 	else
 	{
+		write(1, "\e[A\e[D", 6);
+		ft_putstr_fd(promt, 1);
 		open_close_fd(NULL);
 		exit(130);
 	}

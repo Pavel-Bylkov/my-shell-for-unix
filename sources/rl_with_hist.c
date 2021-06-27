@@ -25,6 +25,11 @@ char 		*rl_gets_with_add_hist(char *promt)
 	signal(SIGINT, int_handler);
 	signal(SIGQUIT, int_handler);
 	line = readline(promt);
+	if (line == NULL)
+	{
+		write(1, "\e[A\e[D", 6);
+		ft_putstr_fd(promt, 1);
+	}
 	if (line && *line)
 		add_history(line);
 	signal(SIGINT, SIG_DFL);
@@ -47,8 +52,8 @@ void		open_close_fd(int *fd)
 		close(fd_static[0]);
 		close(fd_static[1]);
 		free(fd_static);
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
+		// signal(SIGINT, SIG_DFL);
+		// signal(SIGQUIT, SIG_DFL);
 	}
 		
 }
