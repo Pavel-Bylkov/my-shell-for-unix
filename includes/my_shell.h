@@ -100,7 +100,7 @@ void                main_loop(t_data *data);
 void		        int_handler2(int status);
 int			        is_endl_ignor(char *str, t_data *data);
 char 		        *rl_gets_without_hist(char *promt, int *error);
-char 				*rl_gets_with_add_hist(char *promt, int *error);
+char 				*rl_gets_with_add_hist(char *promt);
 void		open_close_fd(int *fd);
 char				*read_line_from_fd(int *fd);
 int                 read_from_file(t_data *data, char *filename);

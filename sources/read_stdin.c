@@ -70,7 +70,7 @@ int		write_lines_in_file(int fd, t_data *data, char *fname, char *end)
 	}
 	close(fd);
 	if (line == NULL)
-		write(1, "\e[1A", 1);
+		write(1, "\e[C", 3);
 	new = tmp_files_new(data->count_files + 1, fname);
 	tmp_files_add_back(&(data->tmp_files), new);
 	g_free(line);
@@ -89,6 +89,7 @@ int		read_tmp_stdin(t_data *data, char *str, int error)
 	if (fd > 0)
 	{
 		error = write_lines_in_file(fd, data, fname, end_input);
+		error = (error != 130) * error;
 		data->count_files += 1;
 	}	
 	else

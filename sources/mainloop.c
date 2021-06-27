@@ -5,7 +5,7 @@ static void		eof_exit(t_data *data)
 	add_history("exit");
     write_history(HISTORY_FILE); //! не использовать в финальной версии
 	free_struct(data);
-	write(1, "\e[2D   \e[2D", 11);
+	write(1, "  \e[2D", 6);
 	write(1, "exit\n", 5);
 	exit(EXIT_SUCCESS);
 }
@@ -14,14 +14,18 @@ int		ft_readline(t_data *data)
 {
 	int error;
 
-	error = 1;
-	while (error == 1)
+	error = 0;
+	data->line = NULL;
+	while (data->line == NULL)
 	{
-		data->line = rl_gets_with_add_hist(SHELL_PROMT, &error);
+		data->line = rl_gets_with_add_hist(SHELL_PROMT);
 		if (data->line == NULL)
 			eof_exit(data);
 		else if (data->line[0] == '\0')
+		{
+			write(1, "free\n", 5);
 			g_free(data->line);
+		}
 		else
 			error = quaote_open_mode(data);
 		data->code_exit = error;
