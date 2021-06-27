@@ -51,7 +51,7 @@ int     check_spec_redir(char *str, int i, int flag)
 	{
 		while (--j > -1 && how_is_how(str, j) > 2)
 		{
-			if (how_is_how(str, j) == 5)
+			if (how_is_how(str, j) == 5 || how_is_how(str, j) == 3)
 				f = 1;
 		}
 		if (f == 0 && count_chr(str, str[i], i) != 2)

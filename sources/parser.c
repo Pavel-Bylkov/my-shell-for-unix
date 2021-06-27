@@ -46,22 +46,38 @@ void	quaotes_clean(t_pars *tmp)
 	}
 }
 // проверить наличие файлов, добавить ошибки
-int	check_open_files(t_pars *tmp)
+int	check_open_files(t_pars *new)
 {
 	int		fd;
+	t_redir	*tmp;
 
-	if (tmp->path && tmp->error == 0)
+	if (new->path && new->error == 0)
 	{
-		fd = open(tmp->path, O_RDONLY);
+		fd = open(new->path, O_RDONLY);
 		if (fd > 0)
 			close(fd);
 		else
-			tmp->error = errno;
+			new->error = errno;
+	}
+	if (new->redirect)
+	{
+		tmp = new->redirect;
+		while (tmp != NULL)
+		{
+			fd = 0;
+			if (ft_strcmp(tmp->f_spec, ">")  == 0)
+				fd = open(tmp->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			else if (ft_strcmp(tmp->f_spec, ">>")  == 0)
+				fd = open(tmp->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
+			if (fd > 0)
+				close(fd);
+			tmp = tmp->next;
+		}
 	}
 	return (0);
 }
 
-int 	parse_line(t_data *data, int error)
+int 	parse_line(char *line, t_data *data, int error)
 {
 	int i;
 	char **commands;
@@ -69,7 +85,7 @@ int 	parse_line(t_data *data, int error)
 
 	if (error != 0)
 		return (error);
-	commands = get_commands(data);
+	commands = get_commands(line, "|&");
 	if (commands != NULL)
 	{
 		i = 0;

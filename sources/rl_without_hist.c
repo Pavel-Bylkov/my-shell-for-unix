@@ -1,39 +1,27 @@
 #include "my_shell.h"
 
-void		open_close_fd(int *fd)
-{
-	static int	*fd_static;
-
-	if (fd != NULL)
-	{
-		fd_static = (int *)malloc(sizeof(int) * 2);
-		fd_static[0] = fd[0];
-		fd_static[1] = fd[1];
-		write(1, "start fd\n", 9);
-	}
-	else
-	{
-		close(fd_static[0]);
-		close(fd_static[1]);
-		free(fd_static);
-		// signal(SIGINT, SIG_DFL);
-		// signal(SIGQUIT, SIG_DFL);
-		write(1, "close fd\n", 9);
-	}
-		
-}
-
 void		int_handler2(int status)
 {
 	if (status == SIGINT)
 	{
-		// write(1, "\e[2D  \e[2D", 10);
+		write(1, "\n", 1);
 		open_close_fd(NULL);
 		exit(1);
 	}
 	if (status == SIGQUIT)
 	{
-		write(1, "\b\b  ", 4);
+		write(1, "", 0);
+	}
+}
+void		int_handler3(int status)
+{
+	if (status == SIGINT)
+	{
+		write(1, "", 0);
+	}
+	if (status == SIGQUIT)
+	{
+		write(1, "", 0);
 	}
 }
 
@@ -41,6 +29,7 @@ void		child_readline(int *fd, char *promt)
 {
 	char	*line;
 
+	rl_catch_signals = 0;
 	signal(SIGINT, int_handler2);
 	signal(SIGQUIT, int_handler2);
 	line = readline(promt);
@@ -87,6 +76,8 @@ char 		*rl_gets_without_hist(char *promt, int *error)
 	pid_t	pid;
 	int		fd[2];
 
+	signal(SIGINT, int_handler3);
+	signal(SIGQUIT, int_handler3);
 	pipe(fd);
 	pid = fork();
 	line = NULL;
