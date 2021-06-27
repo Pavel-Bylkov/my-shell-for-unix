@@ -25,10 +25,11 @@ int	ft_exit_one(int code, t_pars par)
 {
 	write(1, "exit\n", 5);
 	if (ft_isnum_aam(par.argv[1]) == 1)
-		ft_output_err_aam(code, "exit", ": too many arguments\n", NULL);
+		ft_output_err_aam(code, "exit: ", ": too many arguments\n", NULL);
 	else
 	{
-		ft_output_err_aam(code, NULL, ": numeric argument required\n", NULL);
+		ft_output_err_aam(code, "exit: ", par.argv[1],
+			": numeric argument required\n");
 		exit(-1);
 	}
 	return (code);
@@ -48,8 +49,8 @@ void	ft_exit_two(t_pars par)
 	else
 	{
 		write(1, "exit\n", 5);
-		ft_output_err_aam(-1, par.argv[1],
-			": numeric argument required\n", NULL);
+		ft_output_err_aam(-1, "exit: ", par.argv[1],
+			": numeric argument required\n");
 		exit(-1);
 	}
 }

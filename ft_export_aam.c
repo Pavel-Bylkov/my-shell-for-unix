@@ -4,18 +4,21 @@ void	ft_out_export(t_data data)
 {
 	int		i;
 	int		j;
+	int		fl;
 
 	i = -1;
 	while (++i < data.size)
 	{
+		fl = 0;
 		j = 0;
 		write(1, "declare -x ", 11);
 		while (data.envp[data.index[i]][j] != '\0')
 		{
-			if (data.envp[data.index[i]][j] == '=')
+			if (data.envp[data.index[i]][j] == '=' && fl == 0)
 			{
 				write(1, &(data.envp[data.index[i]][j++]), 1);
 				write(1, "\"", 1);
+				fl = 1;
 			}
 			if (data.envp[data.index[i]][j] == '\\')
 				write(1, "\\", 1);
