@@ -8,17 +8,6 @@ void		int_handler2(int status)
 		open_close_fd(NULL);
 		exit(1);
 	}
-	if (status == SIGQUIT)
-	{
-		write(1, "", 0);
-	}
-}
-void		int_handler3(int status)
-{
-	if (status == SIGINT || status == SIGQUIT)
-	{
-		write(1, "", 0);
-	}
 }
 
 void		child_readline(int *fd, char *promt)
@@ -27,7 +16,7 @@ void		child_readline(int *fd, char *promt)
 
 	rl_catch_signals = 0;
 	signal(SIGINT, int_handler2);
-	signal(SIGQUIT, int_handler2);
+	signal(SIGQUIT, SIG_IGN);
 	line = readline(promt);
 	if (line != NULL)
 	{
@@ -74,8 +63,8 @@ char 		*rl_gets_without_hist(char *promt, int *error)
 	pid_t	pid;
 	int		fd[2];
 
-	signal(SIGINT, int_handler3);
-	signal(SIGQUIT, int_handler3);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	pipe(fd);
 	pid = fork();
 	line = NULL;
