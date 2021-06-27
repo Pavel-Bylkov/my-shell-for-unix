@@ -23,8 +23,8 @@ int		ft_readline(t_data *data)
 			eof_exit(data);
 		else if (data->line[0] == '\0')
 		{
-			write(1, "free\n", 5);
 			g_free(data->line);
+			data->line = NULL;
 		}
 		else
 			error = quaote_open_mode(data);
