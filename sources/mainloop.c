@@ -48,6 +48,27 @@ int 	count_redir(char *str)
 	return (i[1]);
 }
 
+void		count_pipes(t_data *data, int error)
+{
+	int		i;
+	t_pars	*tmp;
+
+	if (error != 0)
+		return ;
+	tmp = data->curr_pars;
+	i = 0;
+	while (tmp != NULL)
+	{
+		if (tmp->count == 1 && i == 0)
+			tmp->counter = 1;
+		else
+			tmp->counter = ++i;
+		if (tmp->count == 1)
+			i = 0;
+		tmp = tmp->next;
+	}
+}
+
 void main_loop(t_data *data)
 {
 	int error;
@@ -68,13 +89,14 @@ void main_loop(t_data *data)
 			{
 				data->count_files += count_redir(lines[i]);
 				error = parse_line(lines[i], data, error);
+				count_pipes(data, error);
 				data->code_exit = run_comands(data, error);
+				// print_pars(data);
 				ft_parsclear(&(data->curr_pars));
 				data->count_files += count_redir(lines[i]);
 			}
 			free_array((void **)lines);
 		}
-		// print_pars(data);
 		g_free((void *)data->line);
 		g_tmp_files_clear(&(data->tmp_files));
 		data->count_files = 0;

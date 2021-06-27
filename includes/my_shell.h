@@ -54,6 +54,7 @@ typedef struct             s_fdesk
 typedef struct	    s_pars
 {
     int                 count;
+    int                 counter;
     int                 error;
     char                *path;
     char                **argv;
