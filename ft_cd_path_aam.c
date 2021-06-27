@@ -59,10 +59,10 @@ int	ft_cd_path(t_data *data, char **path)
 	if (code == -1)
 	{
 		if (stat(*path, &buff) == 0)
-			code = ft_output_err_aam(1, *path, ": Not a directory\n", NULL);
+			code = ft_output_err_aam(126, *path, ": Permission denied\n", NULL);
 		else
-			code = ft_output_err_aam(1, *path,
-					": No such file or directory\n", NULL);
+			code = ft_output_err_aam(1, "cd: ", *path,
+					": No such file or directory\n");
 		free(*path);
 		return (code);
 	}
@@ -72,7 +72,7 @@ int	ft_cd_path(t_data *data, char **path)
 		*path = getcwd(NULL, 0);
 		ft_replace_oldpwd(data, *path);
 	}
-	return (0);
+	return (code);
 }
 
 char	*ft_strjoin_path(char *str1, char *str2)

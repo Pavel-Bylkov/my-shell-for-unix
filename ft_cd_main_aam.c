@@ -4,6 +4,7 @@ int	ft_cd_argv(t_pars *pars, t_data *data, char **path)
 {
 	int		code;
 
+	code = 0;
 	if (pars->argv[1][0] == '~' && pars->argv[1][1] == '\0')
 		*path = ft_path_home(data);
 	else if (pars->argv[1][0] == '~' && pars->argv[1][1] != '\0')
@@ -24,7 +25,7 @@ int	ft_cd_argv(t_pars *pars, t_data *data, char **path)
 	}
 	else
 		*path = ft_strdup(pars->argv[1]);
-	return (0);
+	return (code);
 }
 
 int	ft_cd(t_data *data, t_pars *pars)
@@ -33,6 +34,7 @@ int	ft_cd(t_data *data, t_pars *pars)
 	char		*path;
 
 	path = NULL;
+	code = 0;
 	if (pars->argv[1] == NULL)
 		path = ft_path_home(data);
 	else
@@ -49,5 +51,5 @@ int	ft_cd(t_data *data, t_pars *pars)
 	}
 	if (path)
 		free(path);
-	return (0);
+	return (code);
 }
