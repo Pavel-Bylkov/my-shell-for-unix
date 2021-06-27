@@ -23,6 +23,8 @@ int	main(int argc, char **argv, char **envp)
 int     one_run(t_data *data, char *str)
 {
     int error;
+	char **lines;
+	int	i;
 
     error = 0;
     data->line = ft_strdup(str);
@@ -30,10 +32,19 @@ int     one_run(t_data *data, char *str)
 		return (0);
     if (check_unexpected_token(data->line) != 0)
 		return (258);
-	error = parse_line(data, error);
-	data->code_exit = run_comands(data, error);
+    if (error == 0)
+	{
+		i = -1;
+		lines = get_commands(data->line, ";");
+		while (lines[++i] != NULL)
+		{
+			error = parse_line(lines[i], data, error);
+			data->code_exit = run_comands(data, error);
+			ft_parsclear(&(data->curr_pars));
+		}
+		free_array((void **)lines);
+	}
 	g_free((void *)data->line);
-	ft_parsclear(&(data->curr_pars));
 	g_tmp_files_clear(&(data->tmp_files));
 	data->count_files = 0;
 	free_struct(data);
@@ -76,6 +87,8 @@ int        read_from_file(t_data *data, char *filename)
     int		    ret;
     int         fd;
     int         error;
+	char **lines;
+	int	i;
 
     fd = open(filename, O_RDONLY);
     if (fd < 0)
@@ -94,10 +107,19 @@ int        read_from_file(t_data *data, char *filename)
         }
         else
             error = quaote_open_mode2(data, fd, &ret);
-        error = parse_line(data, error);
-        data->code_exit = run_comands(data, error);
+		if (error == 0)
+		{
+			i = -1;
+			lines = get_commands(data->line, ";");
+			while (lines[++i] != NULL)
+			{
+				error = parse_line(lines[i], data, error);
+				data->code_exit = run_comands(data, error);
+				ft_parsclear(&(data->curr_pars));
+			}
+			free_array((void **)lines);
+		}
         g_free(data->line);
-        ft_parsclear(&(data->curr_pars));
     }
     close(fd);
     return (data->code_exit);

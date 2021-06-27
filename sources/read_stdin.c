@@ -34,7 +34,8 @@ char		*get_end_input(char *str, t_data *data)
 			i[0]++;
 	}
 	i[1] = i[0] - 1;
-	while (str[i[1]] && (str[i[1]] != ' ' || (quaote_is_open(str, i[1]) != 0
+	while (str[i[1]] && ((str[i[1]] != ' ' && str[i[1]] != ';' && str[i[1]] != '|'
+			&& str[i[1]] != '&') || (quaote_is_open(str, i[1]) != 0
 			|| backslash_is_active(str, i[1]) != 0)))
 		i[1]++;
 	end_input = ft_strdupn(&str[i[0] - 1], i[1] - i[0] + 1);
@@ -69,8 +70,8 @@ int		write_lines_in_file(int fd, t_data *data, char *fname, char *end)
 		line = rl_gets_without_hist(QUAOTE_PROMT, &error);
 	}
 	close(fd);
-	if (line == NULL)
-		write(1, "\e[1A", 1);
+	// if (line == NULL)
+	// 	write(1, "\e[C", 3);
 	new = tmp_files_new(data->count_files + 1, fname);
 	tmp_files_add_back(&(data->tmp_files), new);
 	g_free(line);
@@ -89,6 +90,7 @@ int		read_tmp_stdin(t_data *data, char *str, int error)
 	if (fd > 0)
 	{
 		error = write_lines_in_file(fd, data, fname, end_input);
+		error = (error != 130) * error;
 		data->count_files += 1;
 	}	
 	else
