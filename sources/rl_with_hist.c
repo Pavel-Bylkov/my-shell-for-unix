@@ -11,6 +11,7 @@ void		int_handler(int status)
 		rl_redisplay();
 		g_data->code_exit = 1;
 	}
+	return ;
 }
 
 char 		*rl_gets_with_add_hist(char *promt)
@@ -33,7 +34,7 @@ char 		*rl_gets_with_add_hist(char *promt)
 	return (line);
 }
 
-void		open_close_fd(int *fd)
+void		open_close_fd(int *fd, int k)
 {
 	static int	*fd_static;
 
@@ -47,9 +48,17 @@ void		open_close_fd(int *fd)
 	{
 		close(fd_static[0]);
 		close(fd_static[1]);
-		free(fd_static);
-		// signal(SIGINT, SIG_DFL);
-		// signal(SIGQUIT, SIG_DFL);
-	}
+		if (fd_static != NULL)
+		{
+			free(fd_static);
+			fd_static = NULL;
+		}
 		
+		if (k == 1)
+		{
+			rl_catch_signals = 1;
+			// signal(SIGINT, SIG_DFL);
+			// signal(SIGQUIT, SIG_DFL);
+		}
+	}
 }
