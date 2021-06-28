@@ -19,7 +19,7 @@ int	ft_build_in_aam(t_data *data, t_pars *pars)
 	else if (!ft_strcmp(pars->argv[0], "echo"))
 		return (ft_echo(*pars));
 	return (ft_output_err_aam(127, pars->argv[0],
-					": command not found\n", NULL));
+					": No such file or directory\n", NULL));
 }
 
 void	ft_build_open_aam(t_fdesk *fd, int *fd_st0, int *fd_st1)
