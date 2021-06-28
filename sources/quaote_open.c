@@ -56,12 +56,12 @@ int		quaote_open_mode(t_data *data)
 	error = 0;
 	if (check_unexpected_token(data->line) != 0)
 		return (258);
-	while (is_endl_ignor(data->line, data) && error == 0)
+	while (error == 0 && is_endl_ignor(data->line, data))
 	{
 		tmp = data->line;
 		read_next_line(data, tmp, &error);
 		if (NULL == data->line)
-			return (unexpected_eof(tmp));
+			error = unexpected_eof(tmp);
 	}
 	if (error == 258)
 		ft_perr("syntax error", 258, NULL, "unexpected end of file");

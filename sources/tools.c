@@ -11,6 +11,7 @@ void	print_pars(t_data *data)
 	{
 		printf("------------------------------------\n");
 		printf("count : %d\n", tmp->count);
+		printf("counter : %d\n", tmp->counter);
 		printf("error : %d\n", tmp->error);
 		printf("path : %s\n", tmp->path);
 		printf("argv :\n");

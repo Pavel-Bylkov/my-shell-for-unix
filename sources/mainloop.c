@@ -1,5 +1,13 @@
 #include "my_shell.h"
 
+void		initialize_readline(void)
+{
+	rl_instream = stdin;
+	rl_outstream = stderr;
+	rl_readline_name = "Minishell";
+	rl_initialize ();
+}
+
 static void		eof_exit(t_data *data)
 {
 	add_history("exit");
@@ -16,6 +24,7 @@ int		ft_readline(t_data *data)
 
 	error = 0;
 	data->line = NULL;
+	initialize_readline();
 	while (data->line == NULL)
 	{
 		data->line = rl_gets_with_add_hist(SHELL_PROMT);
@@ -28,7 +37,6 @@ int		ft_readline(t_data *data)
 		}
 		else
 			error = quaote_open_mode(data);
-		data->code_exit = error;
 	}
 	return (error);
 }
@@ -46,6 +54,27 @@ int 	count_redir(char *str)
 			i[1]++;
 	}
 	return (i[1]);
+}
+
+void		count_pipes(t_data *data, int error)
+{
+	int		i;
+	t_pars	*tmp;
+
+	if (error != 0)
+		return ;
+	tmp = data->curr_pars;
+	i = 0;
+	while (tmp != NULL)
+	{
+		if (tmp->count == 1 && i == 0)
+			tmp->counter = 1;
+		else
+			tmp->counter = ++i;
+		if (tmp->count == 1)
+			i = 0;
+		tmp = tmp->next;
+	}
 }
 
 void main_loop(t_data *data)
@@ -66,8 +95,10 @@ void main_loop(t_data *data)
 			data->count_files = 0;
 			while (lines[++i] != NULL)
 			{
+				printf("%s\n", lines[i]);
 				data->count_files += count_redir(lines[i]);
 				error = parse_line(lines[i], data, error);
+				count_pipes(data, error);
 				data->code_exit = run_comands(data, error);
 				print_pars(data);
 				ft_parsclear(&(data->curr_pars));

@@ -54,6 +54,7 @@ typedef struct             s_fdesk
 typedef struct	    s_pars
 {
     int                 count;
+    int                 counter;
     int                 error;
     char                *path;
     char                **argv;
@@ -101,7 +102,7 @@ void		        int_handler2(int status);
 int			        is_endl_ignor(char *str, t_data *data);
 char 		        *rl_gets_without_hist(char *promt, int *error);
 char 				*rl_gets_with_add_hist(char *promt);
-void		open_close_fd(int *fd);
+void		open_close_fd(int *fd, int k);
 char				*read_line_from_fd(int *fd);
 int                 read_from_file(t_data *data, char *filename);
 int		            check_unexpected_token(char *str);
