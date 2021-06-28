@@ -5,6 +5,8 @@
 //# include <curses.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <term.h>
+# include <termios.h>
 # include <sys/stat.h>
 # include <dirent.h>
 # include <unistd.h>

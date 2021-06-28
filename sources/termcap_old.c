@@ -1,9 +1,5 @@
 #include "my_shell.h"
 
-#include <string.h>
-#include <stdio.h>
-
-
 char	*ft_del_symbol(char *str, int i) //? Удаление i-го символа
 {
 	char	*s;
@@ -50,22 +46,6 @@ char	*ft_add_symbol_str(char *str, char c, int i) //? Вставка симво�
 	s[k + 1] = '\0';
 	free(str);
 	return (s);
-}
-
-void	ft_strcopy_fr(char **line, char *str)
-{
-	int k;
-
-	free(*line);
-	k = ft_strlen(str);
-	*line = (char *)malloc(sizeof(char) * k);
-	k = 0;
-	while (str[k] != '\0')
-	{
-		(*line)[k] = str[k];
-		k++;
-	}
-	(*line)[k] = '\0';
 }
 
 void	ft_key_delete(t_history **hist, char **line, int *pos)
