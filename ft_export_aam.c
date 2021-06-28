@@ -65,7 +65,7 @@ void	ft_env_add_loop(t_data *data, char ***new_env, char *str, int *flag)
 	while (data->envp[i])
 	{
 		(*new_env)[i] = NULL;
-		if (ft_strncmp(data->envp[i], str, pos) == 0)
+		if (ft_strncmp(data->envp[i], str, pos + 1) == 0)
 		{
 			(*new_env)[i] = ft_env_work_add(data->envp[i], str, pos);
 			*flag = 1;
