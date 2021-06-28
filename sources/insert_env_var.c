@@ -41,13 +41,14 @@ char	*get_var(char **envp, char *buff, char *str, int *i)
 	if (is_var_chars(str[i[1] + 1]))
 		while (str[++i[1]] && is_var_chars(str[i[1]]))
             varname[++i[2]] = str[i[1]];
+	varname[++i[2]] = '=';
 	varname[++i[2]] = '\0';
 	if (envp)
 	{
 		j = -1;
 		while (envp[++j] != NULL)
 			if (ft_strncmp(envp[j], varname, ft_strlen(varname)) == 0)
-				value = ft_strdup(&envp[j][ft_strlen(varname) + 1]);
+				value = ft_strdup(&envp[j][ft_strlen(varname)]);
 	}
 	value = backslash_add(value);
 	if (value == NULL)

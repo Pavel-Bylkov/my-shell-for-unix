@@ -22,9 +22,9 @@ int	main(int argc, char **argv, char **envp)
 
 int     one_run(t_data *data, char *str)
 {
-    int error;
-	char **lines;
-	int	i;
+    int     error;
+	char    **lines;
+	int     i;
 
     error = 0;
     data->line = ft_strdup(str);
@@ -87,7 +87,7 @@ int        read_from_file(t_data *data, char *filename)
     int		    ret;
     int         fd;
     int         error;
-	char **lines;
+	char        **lines;
 	int	i;
 
     fd = open(filename, O_RDONLY);
