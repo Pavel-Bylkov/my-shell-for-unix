@@ -23,6 +23,24 @@ char	*ft_del_symbol_aam(char *str, int i) //? Удаление i-го симво
 	return (s);
 }
 
+char	*ft_shift_str_aam(char *str, int pos)
+{
+	int		i;
+	char	*newstr;
+
+	i = ft_strlen(str) - pos;
+	newstr = (char *)malloc(sizeof(char) * (i + 1));
+
+	i = pos + 2;
+	while (str[++i])
+	{
+	printf("%c\n", str[i]);
+		newstr[i - pos - 3] = str[i];
+	}
+	newstr[i - pos - 3] = '\0';
+	return (newstr);
+}
+
 void	ft_export_join_aam(t_data *data, char *str, int size)
 {
 	int		pos;
@@ -30,6 +48,7 @@ void	ft_export_join_aam(t_data *data, char *str, int size)
 	char	*line;
 	char	*newstr;
 	int		fl;
+	char	*sss;
 
 	i = -1;
 	fl = 0;
@@ -38,12 +57,15 @@ void	ft_export_join_aam(t_data *data, char *str, int size)
 	{
 		if (ft_strncmp(data->envp[i], str, pos) == 0 && data->envp[i][pos] == '=')
 		{
-printf("data->envp[i] = %s\n", data->envp[i]);
-			newstr = ft_strdup(&(str[pos + 2]));
-			line = ft_strjoin(data->envp[i], newstr);
-			free(newstr);
-			free(data->envp[i]);
+sss = data->envp[i];
+printf("data->envp[i] = %s\n", sss);
+			newstr = ft_shift_str_aam(str, pos);
+printf("newstr = %s\n", newstr);
+			line = ft_strjoin(sss, newstr);
+			free(sss);
+	printf("afte free data->envp = %s\n", sss);
 			data->envp[i] = ft_strdup(line);
+			free(newstr);
 			free(line);
 			fl = 1;
 		}
@@ -56,6 +78,10 @@ printf("str = %s\n", str);
 		data->envp = ft_env_add(data, line, &(data->size));
 		free(line);
 	}
+
+	i = -1;
+	while (data->envp[++i])
+		printf("%s\n", data->envp[i]);
 }
 
 int	ft_export(t_data *data, t_pars *pars)
