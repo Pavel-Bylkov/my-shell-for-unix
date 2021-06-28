@@ -7,7 +7,7 @@ static int		get_len_command(char *str, char *chars)
 	int min;
 
 	j = 0;
-	while (j < 3)
+	while (j < (int)ft_strlen(chars))
 	{
 		len[j] = chr_in_str(chars[j], str);
 		if (len[j] > -1 && (str[len[j] + 1] == '|' || str[len[j] + 1] == '&'))
@@ -38,6 +38,7 @@ static int	get_ncommand(char *line, char *s)
 		if (str[i])
 			n_strs++;
 		len = get_len_command(&str[i], s);
+		printf("len com=%d\n", len);
 		i += len;
 	}
 	return (n_strs);
@@ -74,6 +75,7 @@ char	**get_commands(char *line, char *str)
 	if (line == NULL)
 		return (NULL);
 	nstrs = get_ncommand(line, str);
+	printf("nstr=%d\n", nstrs);
 	commands = NULL;
 	if (nstrs != -1)
 	{
