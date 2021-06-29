@@ -60,7 +60,7 @@ int		quaote_open_mode(t_data *data)
 	{
 		tmp = data->line;
 		read_next_line(data, tmp, &error);
-		if (NULL == data->line)
+		if (NULL == data->line && error != 1)
 			error = unexpected_eof(tmp);
 	}
 	if (error == 258)

@@ -28,6 +28,8 @@ int		ft_readline(t_data *data)
 		}
 		else
 			error = quaote_open_mode(data);
+		if (error == 1)
+			data->code_exit = error;
 	}
 	return (error);
 }
