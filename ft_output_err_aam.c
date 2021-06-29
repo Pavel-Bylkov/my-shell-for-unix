@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_output_err_aam.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 10:56:25 by aamarei           #+#    #+#             */
+/*   Updated: 2021/06/29 11:05:44 by aamarei          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "my_shell.h"
 
 int	ft_env_output_err(int code, char *str)
@@ -28,6 +40,25 @@ int	ft_output_err_aam(int code, char *str1, char *str2, char *str3)
 	return (code);
 }
 
+int	ft_command_err_slesh(char *name_f)
+{
+	struct stat	buff;
+
+	if (opendir(name_f) != NULL)
+		return (ft_output_err_aam(126, name_f, ": is a directory\n", NULL));
+	else
+	{
+		if (stat(name_f, &buff) >= 0)
+			return (ft_output_err_aam(126, name_f,
+					": Permission denied\n", NULL));
+		if (stat(name_f, &buff) >= 0)
+			return (ft_output_err_aam(127, name_f,
+					": Not a directory\n", NULL));
+		return (ft_output_err_aam(127, name_f,
+				": No such file or directory\n", NULL));
+	}
+}
+
 int	ft_command_err_aam(char *name_f)
 {
 	struct stat	buff;
@@ -39,22 +70,7 @@ int	ft_command_err_aam(char *name_f)
 	if (name_f[0] == '.' && name_f[1] == '.' && name_f[2] == '\0')
 		return (ft_output_err_aam(127, name_f, ": command not found\n", NULL));
 	if (ft_char_in_str(name_f, '/') < (int)ft_strlen(name_f))
-	{
-		if (opendir(name_f) != NULL)
-			return (ft_output_err_aam(126, name_f, ": is a directory\n", NULL));
-		else
-		{
-			if (stat(name_f, &buff) >= 0)
-				return (ft_output_err_aam(126, name_f,
-						": Permission denied\n", NULL));
-			//name_f[ft_char_in_str(name_f, '/')] = '\0';
-			if (stat(name_f, &buff) >= 0)
-				return (ft_output_err_aam(127, name_f,
-						": Not a directory\n", NULL));
-			return (ft_output_err_aam(127, name_f,
-					": No such file or directory\n", NULL));
-		}
-	}
+		return (ft_command_err_slesh(name_f));
 	if (stat(name_f, &buff) < 0)
 		return (ft_output_err_aam(127, name_f,
 				": No such file or directory\n", NULL));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 15:15:40 by whector           #+#    #+#             */
-/*   Updated: 2021/03/24 15:15:58 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/29 13:05:26 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	check_sign(const char *str, int *i)
 	return (flag);
 }
 
-int			ft_atoi(const char *nptr)
+int	ft_atoi(const char *nptr)
 {
 	int					i;
 	int					flag;
@@ -46,8 +46,8 @@ int			ft_atoi(const char *nptr)
 
 	i = 0;
 	res = 0;
-	while (nptr[i] == ' ' || nptr[i] == '\n' || nptr[i] == '\f' ||
-			nptr[i] == '\r' || nptr[i] == '\t' || nptr[i] == '\v')
+	while (nptr[i] == ' ' || nptr[i] == '\n' || nptr[i] == '\f'
+		|| nptr[i] == '\r' || nptr[i] == '\t' || nptr[i] == '\v')
 		i++;
 	flag = check_sign(nptr, &i);
 	n = len_number(&nptr[i]);

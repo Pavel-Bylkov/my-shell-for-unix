@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:20:48 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:20:51 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/29 13:31:42 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static char	*ft_strtrim_2(char const *s1, char const *set)
 	return (res);
 }
 
-char		*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
 	char	*res;
 

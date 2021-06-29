@@ -1,4 +1,3 @@
-
 #include "get_next_line.h"
 
 char	*gnl_strjoin(char *s1, char const *s2)
@@ -29,7 +28,7 @@ char	*gnl_strjoin(char *s1, char const *s2)
 
 size_t	gnl_strlen(const char *s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (s[i])

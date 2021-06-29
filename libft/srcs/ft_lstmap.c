@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 15:20:34 by whector           #+#    #+#             */
-/*   Updated: 2021/03/24 15:20:40 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/29 13:19:32 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static t_list	*ft_clean(t_list *start, void (*del)(void *))
 	return (NULL);
 }
 
-t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
-								void (*del)(void *))
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *),
+					void (*del)(void *))
 {
 	t_list	*elem;
 	t_list	*result;

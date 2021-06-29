@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 15:18:11 by whector           #+#    #+#             */
-/*   Updated: 2021/03/24 15:18:13 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/29 13:09:44 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*ft_strndup(char *str, size_t len)
 	return (dst);
 }
 
-char		*ft_itoa(long long int n)
+char	*ft_itoa(long long int n)
 {
 	char					*res;
 	char					buf[25];

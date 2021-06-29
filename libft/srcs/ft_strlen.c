@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:10 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:12 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/29 13:33:05 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 size_t	ft_strlen(char *str)
 {
-	size_t i;
+	size_t	i;
 
 	if (str == NULL)
 		return (0);

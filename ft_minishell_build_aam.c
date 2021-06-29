@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_minishell_build_aam.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 09:56:33 by aamarei           #+#    #+#             */
+/*   Updated: 2021/06/29 09:56:35 by aamarei          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include "my_shell.h"
 #include <string.h>
@@ -19,7 +31,7 @@ int	ft_build_in_aam(t_data *data, t_pars *pars)
 	else if (!ft_strcmp(pars->argv[0], "echo"))
 		return (ft_echo(*pars));
 	return (ft_output_err_aam(127, pars->argv[0],
-					": No such file or directory\n", NULL));
+			": No such file or directory\n", NULL));
 }
 
 void	ft_build_open_aam(t_fdesk *fd, int *fd_st0, int *fd_st1)

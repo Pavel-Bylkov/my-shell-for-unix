@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd_aam.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 08:30:16 by aamarei           #+#    #+#             */
+/*   Updated: 2021/06/29 08:31:17 by aamarei          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "my_shell.h"
 
 int	ft_pos_env_aam(t_data *data, char *str)
@@ -11,7 +23,7 @@ int	ft_pos_env_aam(t_data *data, char *str)
 	{
 		if (!ft_strncmp(data->envp[i], str, ft_strlen(str))
 			&& (data->envp[i][(int)ft_strlen(str)] == '='
-					|| data->envp[i][(int)ft_strlen(str)] == '\0'))
+			|| data->envp[i][(int)ft_strlen(str)] == '\0'))
 			pos = i;
 	}
 	return (pos);

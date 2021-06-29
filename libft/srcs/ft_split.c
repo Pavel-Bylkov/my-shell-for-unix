@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:17:38 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:17:40 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/29 13:27:58 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char		*ft_strdupchr(char *s, char c)
+static char	*ft_strdupchr(char *s, char c)
 {
 	char	*res;
 	size_t	i;
@@ -33,7 +33,7 @@ static char		*ft_strdupchr(char *s, char c)
 	return (res);
 }
 
-static void		free_strs(char **res)
+static void	free_strs(char **res)
 {
 	size_t	i;
 
@@ -65,7 +65,7 @@ static size_t	get_nstrs(char *str, char c)
 	return (n_strs);
 }
 
-static void		ft_strscpy(char **res, size_t n, char *str, char c)
+static void	ft_strscpy(char **res, size_t n, char *str, char c)
 {
 	size_t	i;
 
@@ -86,7 +86,7 @@ static void		ft_strscpy(char **res, size_t n, char *str, char c)
 	res[i] = NULL;
 }
 
-char			**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char	*str;
 	char	**res;

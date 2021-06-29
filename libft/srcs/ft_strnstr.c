@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:20:01 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:20:03 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/29 13:32:25 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static size_t	len_str(const char *str)
 	return ((size_t)to_find - (size_t)str);
 }
 
-static int		check_find_str(char *str, char *to_find)
+static int	check_find_str(char *str, char *to_find)
 {
 	char	*tmp;
 	int		flag;
@@ -42,7 +42,7 @@ static int		check_find_str(char *str, char *to_find)
 	return (0);
 }
 
-char			*ft_strnstr(const char *big, const char *little, size_t len)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
 	char	*str;
 	size_t	len_l;

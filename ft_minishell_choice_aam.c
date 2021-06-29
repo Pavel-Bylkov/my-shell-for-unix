@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_minishell_choice_aam.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 09:56:47 by aamarei           #+#    #+#             */
+/*   Updated: 2021/06/29 10:23:55 by aamarei          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include "my_shell.h"
 #include <string.h>
@@ -50,7 +62,7 @@ int	ft_choice_command_build(t_pars *pars, t_data *data)
 	int		fd_st[2];
 
 	ft_redirect_aam(pars, data->fdesk);
-	if (pars->count > 1)
+	if (pars->count > 1 || pars->counter > 1)
 		ft_choice_command_pipe(data, pars);
 	else
 	{

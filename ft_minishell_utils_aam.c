@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_minishell_utils_aam.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 09:57:17 by aamarei           #+#    #+#             */
+/*   Updated: 2021/06/29 09:57:18 by aamarei          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include "my_shell.h"
 #include <string.h>
@@ -46,7 +58,7 @@ void	ft_swap(int *a, int *b)
 	*b = c;
 }
 
-void	ft_open_file(int *fd, t_redir *red, int k, int key) // ! отловить ошибку октрытия
+void	ft_open_file(int *fd, t_redir *red, int k, int key)
 {
 	if (*fd > 2)
 	{

@@ -99,7 +99,7 @@ void main_loop(t_data *data)
 				error = parse_line(lines[i], data, error);
 				count_pipes(data, error);
 				data->code_exit = run_comands(data, error);
-				//print_pars(data);
+				print_pars(data);
 				ft_parsclear(&(data->curr_pars));
 				data->count_files += count_redir(lines[i]);
 			}

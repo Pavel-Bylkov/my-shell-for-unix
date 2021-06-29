@@ -1,4 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export_aam.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 08:33:15 by aamarei           #+#    #+#             */
+/*   Updated: 2021/06/29 08:44:10 by aamarei          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "my_shell.h"
+
+int	ft_out_export_loop(t_data data, int i, int j, int *fl)
+{
+	if (data.envp[data.index[i]][j] == '=' && *fl == 0)
+	{
+		write(1, &(data.envp[data.index[i]][j++]), 1);
+		write(1, "\"", 1);
+		*fl = 1;
+	}
+	if (data.envp[data.index[i]][j] == '\\')
+		write(1, "\\", 1);
+	if (data.envp[data.index[i]][j] != '\0')
+		write(1, &(data.envp[data.index[i]][j++]), 1);
+	return (j);
+}
 
 void	ft_out_export(t_data data)
 {
@@ -13,33 +40,11 @@ void	ft_out_export(t_data data)
 		j = 0;
 		write(1, "declare -x ", 11);
 		while (data.envp[data.index[i]][j] != '\0')
-		{
-			if (data.envp[data.index[i]][j] == '=' && fl == 0)
-			{
-				write(1, &(data.envp[data.index[i]][j++]), 1);
-				write(1, "\"", 1);
-				fl = 1;
-			}
-			if (data.envp[data.index[i]][j] == '\\')
-				write(1, "\\", 1);
-			if (data.envp[data.index[i]][j] != '\0')
-				write(1, &(data.envp[data.index[i]][j++]), 1);
-		}
+			j = ft_out_export_loop(data, i, j, &fl);
 		if (ft_char_in_str(data.envp[i], '=') != (int)ft_strlen(data.envp[i]))
 			write(1, "\"", 1);
 		write(1, "\n", 1);
 	}
-}
-
-char	**ft_free_mas(char **mas)
-{
-	int		i;
-
-	i = 0;
-	while (mas[i] != NULL)
-		free(mas[i++]);
-	free(mas);
-	return (NULL);
 }
 
 char	*ft_env_work_add(char *line, char *str, int pos)
