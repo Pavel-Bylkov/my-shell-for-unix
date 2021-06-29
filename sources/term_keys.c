@@ -31,8 +31,11 @@ void	ft_key_backspace(char **line, int *pos)
 
 void	ft_key_delete(char **line, int *pos)
 {
-	tputs(tgetstr("dc", 0), 1, ft_putchar);
-	*line = ft_del_symbol(*line, (*pos) + 1);
+	if (*pos > 0)
+	{
+		tputs(tgetstr("dc", 0), 1, ft_putchar);
+		*line = ft_del_symbol(*line, (*pos) + 1);
+	}
 }
 
 void	ft_key_symbol(char **line, char *str, int *pos)

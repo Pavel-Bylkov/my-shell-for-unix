@@ -118,7 +118,7 @@ int                 run_comands(t_data *data, int error);
 void				find_path(t_data *data, t_pars *tmp);
 void	            print_pars(t_data *data); // temp
 void                free_struct(t_data *data);
-char    *term_readline(char *promt);
+char    *term_readline(char *promt, int *error);
 int                 ft_putchar(int c);
 char	*ft_del_symbol(char *str, int i);
 char	*ft_add_symbol_str(char *str, char c, int i);

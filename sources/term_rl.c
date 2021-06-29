@@ -48,6 +48,11 @@ char	*ft_add_symbol_str(char *str, char c, int i) //? Вставка симво�
 	return (s);
 }
 
+void	eof_symbol(void)
+{
+	write(1, "d", 1);
+}
+
 void	choise_keys(char *str, char **line, int *pos)
 {
 	if (!ft_strncmp(str, "\e[D", 3))		//* стрелка влево
@@ -58,44 +63,72 @@ void	choise_keys(char *str, char **line, int *pos)
 		ft_key_backspace(line, pos);
 	else if (!ft_strncmp(str, "\e[3", 3))		//* стрелка delete
 		ft_key_delete(line, pos);
-	else
+	else if (ft_isprint(str[0]))
 		ft_key_symbol(line, str, pos);
 }
 
-void    ft_press_key(char **line, int pos)
+void    ft_press_key(char **line, int pos, int *error)
 {
 	char	str[5];
 	int		l;
 
+	signal(SIGINT, SIG_IGN);
+	*line = (char *)malloc(sizeof(char) + 1);
+	*line[0] = '\0';
+	ft_memset(str, 0, 5);
 	l = read(0, str, 5);    //! Проверить на ошибку чтения
-	while (ft_strncmp(str, "\n", 1) != 0 && l > 0)
+	if (!ft_strncmp(str, "\x03", 1))
+		*error = 1;
+	while (ft_strncmp(str, "\n", 1) != 0 && l > 0 && 
+		!(pos == 0 && !ft_strncmp(str, "\x04", 1)) && *error == 0)
 	{
 		choise_keys(str, line, &pos);
 		ft_memset(str, 0, 5);
 		l = read(0, str, 5);
+		if (!ft_strncmp(str, "\x03", 1))
+			*error = 1;
 	}
+	if ((pos == 0 && !ft_strncmp(str, "\x04", 1)) || *error == 1)
+	{
+		g_free(*line);
+		*line = NULL;
+	}
+	signal(SIGINT, SIG_DFL);
 	//! отработать пустую строку и стрл д в режиме пустой строуи и на 6 символ
 }
 
-char    *term_readline(char *promt)
+// void	term_restore(void)
+// {
+// 	pid_t			pid;
+
+// 	pid = fork();
+// 	if (pid == 0)
+// 		execve("stty sane", );
+// }
+
+char    *term_readline(char *promt, int *error)
 {
     struct termios  term;
 	char            *term_name;
     char            *line;
-
+	unsigned long 	tmp;
+	
 	term_name = "xterm-256color";
 	tcgetattr(0, &term);
+	tmp = term.c_lflag;
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &=~(ICANON);
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
     ft_putstr_fd(promt, 1);
-    line = (char *)malloc(sizeof(char) + 1);
-	line[0] = '\0';
     tputs(save_cursor, 1, ft_putchar);
-    ft_press_key(&line, 0);
+    ft_press_key(&line, 0, error);
 	tputs(restore_cursor, 1, ft_putchar);
-	write(0, line, ft_strlen(line));
-    write(1, "\n", 1);
+	if (line != NULL)
+		write(0, line, ft_strlen(line));
+    // write(1, "\n", 1);
+	term.c_lflag = tmp;
+	tcsetattr(0, TCSANOW, &term);
+	tgetent(0, term_name);
     return (line);
 }

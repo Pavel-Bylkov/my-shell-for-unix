@@ -4,7 +4,6 @@ void		int_handler(int status)
 {
 	if (status == SIGINT)
 	{
-		// write(1, "  \e[2D", 6);
 		write(1, "\n", 1);
 		rl_on_new_line(); // Regenerate the prompt on a newline
 		rl_replace_line("", 0); // Clear the previous text
@@ -32,33 +31,4 @@ char 		*rl_gets_with_add_hist(char *promt)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	return (line);
-}
-
-void		open_close_fd(int *fd, int k)
-{
-	static int	*fd_static;
-
-	if (fd != NULL)
-	{
-		fd_static = (int *)malloc(sizeof(int) * 2);
-		fd_static[0] = fd[0];
-		fd_static[1] = fd[1];
-	}
-	else
-	{
-		close(fd_static[0]);
-		close(fd_static[1]);
-		if (fd_static != NULL)
-		{
-			free(fd_static);
-			fd_static = NULL;
-		}
-		
-		if (k == 1)
-		{
-			rl_catch_signals = 1;
-			// signal(SIGINT, SIG_DFL);
-			// signal(SIGQUIT, SIG_DFL);
-		}
-	}
 }

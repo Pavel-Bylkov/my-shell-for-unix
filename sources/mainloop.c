@@ -1,13 +1,5 @@
 #include "my_shell.h"
 
-void		initialize_readline(void)
-{
-	rl_instream = stdin;
-	rl_outstream = stderr;
-	rl_readline_name = "Minishell";
-	rl_initialize ();
-}
-
 static void		eof_exit(t_data *data)
 {
 	add_history("exit");
@@ -24,7 +16,6 @@ int		ft_readline(t_data *data)
 
 	error = 0;
 	data->line = NULL;
-	initialize_readline();
 	while (data->line == NULL)
 	{
 		data->line = rl_gets_with_add_hist(SHELL_PROMT);
