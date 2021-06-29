@@ -23,7 +23,7 @@ int	main(int argc, char **argv, char **envp)
 int     one_run(t_data *data, char *str)
 {
     int     error;
-	char    **lines;
+	char    **clines;
 	int     i;
 
     error = 0;
@@ -35,14 +35,14 @@ int     one_run(t_data *data, char *str)
     if (error == 0)
 	{
 		i = -1;
-		lines = get_commands(data->line, ";");
-		while (lines[++i] != NULL)
+		clines = get_commands(data->line, ";");
+		while (clines[++i] != NULL)
 		{
-			error = parse_line(lines[i], data, error);
+			error = parse_line(clines[i], data, error);
 			data->code_exit = run_comands(data, error);
 			ft_parsclear(&(data->curr_pars));
 		}
-		free_array((void **)lines);
+		free_array((void **)clines);
 	}
 	g_free((void *)data->line);
 	g_tmp_files_clear(&(data->tmp_files));
@@ -87,7 +87,7 @@ int        read_from_file(t_data *data, char *filename)
     int		    ret;
     int         fd;
     int         error;
-	char        **lines;
+	char        **clines;
 	int	i;
 
     fd = open(filename, O_RDONLY);
@@ -110,14 +110,14 @@ int        read_from_file(t_data *data, char *filename)
 		if (error == 0)
 		{
 			i = -1;
-			lines = get_commands(data->line, ";");
-			while (lines[++i] != NULL)
+			clines = get_commands(data->line, ";");
+			while (clines[++i] != NULL)
 			{
-				error = parse_line(lines[i], data, error);
+				error = parse_line(clines[i], data, error);
 				data->code_exit = run_comands(data, error);
 				ft_parsclear(&(data->curr_pars));
 			}
-			free_array((void **)lines);
+			free_array((void **)clines);
 		}
         g_free(data->line);
     }

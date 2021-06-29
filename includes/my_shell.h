@@ -3,8 +3,8 @@
 
 # include <stdio.h>
 //# include <curses.h>
-//# include <term.h>
-//# include <termios.h>
+# include <term.h>
+# include <termios.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/stat.h>
@@ -118,9 +118,15 @@ int                 run_comands(t_data *data, int error);
 void				find_path(t_data *data, t_pars *tmp);
 void	            print_pars(t_data *data); // temp
 void                free_struct(t_data *data);
+char    *term_readline(char *promt);
 int                 ft_putchar(int c);
-void		        ft_exit_errcode(int errcode, t_data *data);
-int		            print_err(int errcode, t_data *data);
+char	*ft_del_symbol(char *str, int i);
+char	*ft_add_symbol_str(char *str, char c, int i);
+void	ft_key_left(int *pos);
+void	ft_key_right(char *line, int *pos);
+void	ft_key_backspace(char **line, int *pos);
+void	ft_key_delete(char **line, int *pos);
+void	ft_key_symbol(char **line, char *str, int *pos);
 int	                chr_in_str(char c, char *s);
 int			        quaote_is_open(char *str, int n);
 int                 backslash_is_active(char *str, int n);

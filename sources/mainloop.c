@@ -80,7 +80,7 @@ void		count_pipes(t_data *data, int error)
 void main_loop(t_data *data)
 {
 	int error;
-	char **lines;
+	char **clines;
 	int	i;
 
 	error = read_history(HISTORY_FILE); //! не использовать в финальной версии 	error = 0;
@@ -91,19 +91,19 @@ void main_loop(t_data *data)
 		if (error == 0)
 		{
 			i = -1;
-			lines = get_commands(data->line, ";");
+			clines = get_commands(data->line, ";");
 			data->count_files = 0;
-			while (lines[++i] != NULL)
+			while (clines[++i] != NULL)
 			{
-				data->count_files += count_redir(lines[i]);
-				error = parse_line(lines[i], data, error);
+				data->count_files += count_redir(clines[i]);
+				error = parse_line(clines[i], data, error);
 				count_pipes(data, error);
 				data->code_exit = run_comands(data, error);
 				//print_pars(data);
 				ft_parsclear(&(data->curr_pars));
-				data->count_files += count_redir(lines[i]);
+				data->count_files += count_redir(clines[i]);
 			}
-			free_array((void **)lines);
+			free_array((void **)clines);
 		}
 		g_free((void *)data->line);
 		g_tmp_files_clear(&(data->tmp_files));
