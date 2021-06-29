@@ -3,15 +3,15 @@
 int		is_builtin(char *str)
 {
 	return (ft_strncmp(str, "echo", 5) == 0 ||
-            ft_strncmp(str, "cd", 3) == 0 ||
-		    ft_strncmp(str, "env", 4) == 0 ||
-            ft_strncmp(str, "pwd", 4) == 0 ||
-		    ft_strncmp(str, "export", 7) == 0 ||
-            ft_strncmp(str, "unset", 6) == 0 ||
-            ft_strncmp(str, "exit", 5) == 0);
+			ft_strncmp(str, "cd", 3) == 0 ||
+			ft_strncmp(str, "env", 4) == 0 ||
+			ft_strncmp(str, "pwd", 4) == 0 ||
+			ft_strncmp(str, "export", 7) == 0 ||
+			ft_strncmp(str, "unset", 6) == 0 ||
+			ft_strncmp(str, "exit", 5) == 0);
 }
 
-char    *get_path(t_data *data)
+char	*get_path(t_data *data)
 {
 	char	*path;
 	int		i;
@@ -24,23 +24,22 @@ char    *get_path(t_data *data)
 			if (ft_strncmp(data->envp[i], "PATH=", 5) == 0)
 				path = data->envp[i];
 	}
-    return (path);
+	return (path);
 }
 
 char	*get_abs_path(char	*abs_path, char *path, char *name, int *flag)
 {
-	int		i;
-	int		j;
+	int		i[2];
 	int		fd;
 
-	i = 5;
+	i[0] = 5;
 	*flag = 0;
-	while (path[i] && *flag == 0)
+	while (path[i[0]] && *flag == 0)
 	{
-		j = i;
-		while (path[j] != '\0' && path[j] != ':')
-			j++;
-		abs_path = g_newpath(&path[i], j - i, name);
+		i[1] = i[0];
+		while (path[i[1]] != '\0' && path[i[1]] != ':')
+			i[1]++;
+		abs_path = ft_newpath(&path[i[0]], i[1] - i[0], name);
 		fd = open(abs_path, O_RDONLY);
 		if (fd > 0)
 		{
@@ -48,8 +47,8 @@ char	*get_abs_path(char	*abs_path, char *path, char *name, int *flag)
 			close(fd);
 		}
 		else
-			g_free(abs_path);
-		i = j + (path[j] == ':') * 1;
+			ft_free(&abs_path);
+		i[0] = i[1] + (path[i[1]] == ':') * 1;
 	}
 	return (abs_path);
 }
@@ -66,7 +65,7 @@ char	*search_in_path(t_data *data, char *name)
 		abs_path = get_abs_path(NULL, path, name, &flag);
 		if (flag)
 		{
-			g_free(name);
+			ft_free(&name);
 			return (abs_path);
 		}
 	}

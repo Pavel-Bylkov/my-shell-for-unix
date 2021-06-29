@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-char	*ft_del_symbol(char *str, int i) //? Удаление i-го символа
+char	*ft_del_symbol(char *str, int i)
 {
 	char	*s;
 	int		k;
@@ -23,14 +23,14 @@ char	*ft_del_symbol(char *str, int i) //? Удаление i-го символа
 	return (s);
 }
 
-char	*ft_add_symbol_str(char *str, char c, int i) //? Вставка символа c в строку str после i-го символа
+char	*ft_add_symbol_str(char *str, char c, int i)
 {
 	char	*s;
 	int		len;
 	int		k;
 
 	len = ft_strlen(str);
-	s = (char *)malloc(sizeof(char) * len + 2);
+	s = (char *)malloc(sizeof(char) * (len + 2));
 	k = 0;
 	while (k < i)
 	{
@@ -48,20 +48,15 @@ char	*ft_add_symbol_str(char *str, char c, int i) //? Вставка симво�
 	return (s);
 }
 
-void	eof_symbol(void)
-{
-	write(1, "d", 1);
-}
-
 void	choise_keys(char *str, char **line, int *pos)
 {
-	if (!ft_strncmp(str, "\e[D", 3))		//* стрелка влево
+	if (!ft_strncmp(str, "\e[D", 3))
 		ft_key_left(pos);
-	else if (!ft_strncmp(str, "\e[C", 3))		//* стрелка вправо
+	else if (!ft_strncmp(str, "\e[C", 3))
 		ft_key_right(*line, pos);
-	else if (!ft_strncmp(str, "\x7f", 1))		//* стрелка backspace
+	else if (!ft_strncmp(str, "\x7f", 1))
 		ft_key_backspace(line, pos);
-	else if (!ft_strncmp(str, "\e[3", 3))		//* стрелка delete
+	else if (!ft_strncmp(str, "\e[3", 3))
 		ft_key_delete(line, pos);
 	else if (ft_isprint(str[0]))
 		ft_key_symbol(line, str, pos);
@@ -83,11 +78,10 @@ void	hand_c(int sig)
 {
 	if (sig == SIGINT)
 		open_close_fd(1, 0);
-		//write(0, "\x03\x04\x04\x04\0", 5);
 	return ;
 }	
 
-void    ft_press_key(char **line, int pos, int *error)
+void	ft_press_key(char **line, int pos, int *error)
 {
 	char	str[5];
 	int		l;
@@ -119,24 +113,14 @@ void    ft_press_key(char **line, int pos, int *error)
 	}
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	//! отработать пустую строку и стрл д в режиме пустой строуи и на 6 символ
 }
 
-// void	term_restore(void)
-// {
-// 	pid_t			pid;
-
-// 	pid = fork();
-// 	if (pid == 0)
-// 		execve("stty sane", );
-// }
-
-char    *term_readline(char *promt, int *error)
+char	*term_readline(char *promt, int *error)
 {
-    struct termios  term;
-	char            *term_name;
-    char            *line;
-	unsigned long 	tmp;
+	struct termios	term;
+	char			*term_name;
+	char			*line;
+	unsigned long	tmp;
 	
 	term_name = "xterm-256color";
 	tcgetattr(0, &term);
@@ -145,15 +129,14 @@ char    *term_readline(char *promt, int *error)
 	term.c_lflag &=~(ICANON);
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
-    ft_putstr_fd(promt, 1);
-    tputs(save_cursor, 1, ft_putchar);
-    ft_press_key(&line, 0, error);
+	ft_putstr_fd(promt, 1);
+	tputs(save_cursor, 1, ft_putchar);
+	ft_press_key(&line, 0, error);
 	tputs(restore_cursor, 1, ft_putchar);
 	if (line != NULL)
 		write(0, line, ft_strlen(line));
-    // write(1, "\n", 1);
 	term.c_lflag = tmp;
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
-    return (line);
+	return (line);
 }

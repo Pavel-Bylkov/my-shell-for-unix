@@ -2,7 +2,7 @@
 
 int			how_is_how(char *str, int i)
 {
-	if (ft_isalpha(str[i]) || ft_isdigit(str[i]) || 
+	if (ft_isalpha(str[i]) || ft_isdigit(str[i]) ||
 				ft_strnchr(".*_@#$~!%%^[]{}:?-=+`/,", str[i]) != -1)
 		return (5); 
 	if (quaote_is_open(str, i) == 0 
@@ -23,10 +23,10 @@ int			how_is_how(char *str, int i)
 	return (3);
 }
 
-int		count_chr(char *str, char c, int n)
+int			count_chr(char *str, char c, int n)
 {
 	int	i;
-	int count;
+	int	count;
 
 	i = -1;
 	count = 0;
@@ -40,7 +40,7 @@ int		count_chr(char *str, char c, int n)
 	return (count);
 }
 
-int     check_spec_redir(char *str, int i, int flag)
+int			check_spec_redir(char *str, int i, int flag)
 {
 	int	j;
 	int	f;
@@ -49,11 +49,8 @@ int     check_spec_redir(char *str, int i, int flag)
 	f = 0;
 	if (flag >= 0 && flag <= 2)
 	{
-		while (--j > -1 && how_is_how(str, j) > 2)
-		{
-			if (how_is_how(str, j) == 5 || how_is_how(str, j) == 3)
-				f = 1;
-		}
+		while (--j > -1 && how_is_how(str, j) > 2 && f == 0)
+			f = (how_is_how(str, j) == 5 || how_is_how(str, j) == 3);
 		if (f == 0 && count_chr(str, str[i], i) != 2)
 			return (unexpected_token(ft_strdupn(&str[i], 
 					1 + (ft_strnchr("|&", str[i + 1]) > -1)), 1));
@@ -68,7 +65,7 @@ int     check_spec_redir(char *str, int i, int flag)
 	return (0);
 }
 
-int		check_brakets(char *str, int i, int flag)
+int			check_brakets(char *str, int i, int flag)
 {
 	int	j;
 	int	f[2];
@@ -93,15 +90,15 @@ int		check_brakets(char *str, int i, int flag)
 	return (0);
 }
 
-int		check_unexpected_token(char *str)
+int			check_unexpected_token(char *str)
 {
 	int		flag;
 	int		i;
-    int     error;
+	int		error;
 
 	i = -1;
 	flag = -1;
-    error = 0;
+	error = 0;
 	while (str[++i] && error == 0)
 	{
 		flag = how_is_how(str, i);

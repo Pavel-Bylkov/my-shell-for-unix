@@ -8,17 +8,17 @@ int			brackets_is_open(char *str, int n)
     i[1] = 0;
 	while (str[++i[0]] != '\0' && i[0] < n)
 	{
-        if (str[i[0]] == '(' && backslash_is_active(str, i[0]) == 0 
+        if (str[i[0]] == '(' && backslash_is_active(str, i[0]) == 0
 				&& quaote_is_open(str, i[0]) == 0)
 			++i[1];
-        else if (str[i[0]] == ')' && backslash_is_active(str, i[0]) == 0 
+        else if (str[i[0]] == ')' && backslash_is_active(str, i[0]) == 0
 				&& quaote_is_open(str, i[0]) == 0)
 			--i[1];
 	}
 	return (i[1]);
 }
 
-char	*brackets_clean(char *str)
+char		*brackets_clean(char *str)
 {
 	char	*rez;
 	int		i;
@@ -38,6 +38,6 @@ char	*brackets_clean(char *str)
 		rez[++j] = str[i];
 	}
 	rez[++j] = '\0';
-	g_free(str);
+	ft_free(&str);
 	return (rez);
 }

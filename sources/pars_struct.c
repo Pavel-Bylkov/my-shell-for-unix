@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-t_pars		*ft_parsnew(int error, char *path, char **argv, char *f_spec)
+t_pars	*ft_parsnew(int error, char *path, char **argv, char *f_spec)
 {
 	t_pars	*rez;
 	int		j;
@@ -24,7 +24,7 @@ t_pars		*ft_parsnew(int error, char *path, char **argv, char *f_spec)
 	return (rez);
 }
 
-void		ft_parsadd_back(t_pars **lst, t_pars *new)
+void	ft_parsadd_back(t_pars **lst, t_pars *new)
 {
 	t_pars	*last;
 
@@ -39,7 +39,7 @@ void		ft_parsadd_back(t_pars **lst, t_pars *new)
 	}
 }
 
-void		ft_parsadd_front(t_pars **lst, t_pars *new)
+void	ft_parsadd_front(t_pars **lst, t_pars *new)
 {
 	t_pars	*last;
 
@@ -60,8 +60,7 @@ void		ft_parsadd_front(t_pars **lst, t_pars *new)
 	}
 }
 
-
-void				ft_parsclear(t_pars **lst)
+void	ft_parsclear(t_pars **lst)
 {
 	t_pars	*tmp;
 
@@ -69,12 +68,12 @@ void				ft_parsclear(t_pars **lst)
 	{
 		tmp = (*lst)->next;
 		if ((*lst)->path)
-			g_free((*lst)->path);
+			ft_free(&((*lst)->path));
 		if ((*lst)->argv)
 			free_array((void **)((*lst)->argv));
 		if ((*lst)->redirect)
 			ft_redirclear(&((*lst)->redirect));
-		g_free((*lst));
+		ft_free(lst);
 		*lst = tmp;
 	}
 }

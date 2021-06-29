@@ -18,11 +18,13 @@ FLS			= \
 			init_structs \
 			mainloop \
 			check_line \
+			pars_and_run \
 			parser \
 			pars_struct \
 			pars_command \
 			brakets_clean \
 			insert_env_var \
+			get_var_name \
 			replace_path \
 			read_stdin \
 			readdir \

@@ -1,19 +1,19 @@
 #include "my_shell.h"
 
-void		int_handler(int status)
+void	int_handler(int status)
 {
 	if (status == SIGINT)
 	{
 		write(1, "\n", 1);
-		rl_on_new_line(); // Regenerate the prompt on a newline
-		rl_replace_line("", 0); // Clear the previous text
+		rl_on_new_line();
+		rl_replace_line("", 0);
 		rl_redisplay();
 		g_data->code_exit = 1;
 	}
 	return ;
 }
 
-char 		*rl_gets_with_add_hist(char *promt)
+char 	*rl_gets_with_add_hist(char *promt)
 {
 	char	*line;
 

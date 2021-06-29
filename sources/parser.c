@@ -6,7 +6,7 @@ char	*quaote_backslash_clean(char *str)
 	int		i;
 	int		j;
 
-	rez = (char *)malloc(ft_strlen(str) + 1);
+	rez = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
 	i = -1;
 	j = -1;
 	while (str[++i])
@@ -23,7 +23,7 @@ char	*quaote_backslash_clean(char *str)
 		rez[++j] = str[i];
 	}
 	rez[++j] = '\0';
-	g_free(str);
+	ft_free(&str);
 	return (rez);
 }
 
@@ -45,12 +45,32 @@ void	quaotes_clean(t_pars *tmp)
 		}
 	}
 }
-// проверить наличие файлов, добавить ошибки
-int	check_open_files(t_pars *new)
+
+void	check_open_redir(t_pars *new)
 {
 	int		fd;
 	t_redir	*tmp;
 
+	tmp = new->redirect;
+	while (tmp != NULL)
+	{
+		fd = 0;
+		if (ft_strcmp(tmp->f_spec, ">")  == 0)
+			fd = open(tmp->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		else if (ft_strcmp(tmp->f_spec, ">>")  == 0)
+			fd = open(tmp->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
+		if (fd > 0)
+			close(fd);
+		tmp = tmp->next;
+	}
+}
+
+int		check_and_clean_pars(t_data *data, t_pars *new)
+{
+	int		fd;
+
+	quaotes_clean(new);
+	find_path(data, new);
 	if (new->path && new->error == 0)
 	{
 		fd = open(new->path, O_RDONLY);
@@ -60,20 +80,7 @@ int	check_open_files(t_pars *new)
 			new->error = errno;
 	}
 	if (new->redirect)
-	{
-		tmp = new->redirect;
-		while (tmp != NULL)
-		{
-			fd = 0;
-			if (ft_strcmp(tmp->f_spec, ">")  == 0)
-				fd = open(tmp->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-			else if (ft_strcmp(tmp->f_spec, ">>")  == 0)
-				fd = open(tmp->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
-			if (fd > 0)
-				close(fd);
-			tmp = tmp->next;
-		}
-	}
+		check_open_redir(new);
 	return (0);
 }
 
@@ -94,11 +101,9 @@ int 	parse_line(char *line, t_data *data, int error)
 		while (--i > -1)
 		{
 			commands[i] = insert_var_from_env(data, commands[i]);
-			new = pars_command(commands[i]);
+			new = pars_command(commands[i], data);
 			ft_parsadd_front(&(data->curr_pars), new);
-			quaotes_clean(new);
-			find_path(data, new);
-			error = check_open_files(new);
+			error = check_and_clean_pars(data, new);
 		}
 		free_array((void **)commands);
 		return (error);
