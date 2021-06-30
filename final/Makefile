@@ -78,7 +78,6 @@ $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c $(HEADER)
 
 $(NAME):		$(OBJDIR) $(LIBFT) $(OBJ)
 	@echo '----Making minishell ------'
-	#@make		-C libft/
 	$(CC)		$(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFLAGS) -o $(NAME)
 	@echo "Ready"
 

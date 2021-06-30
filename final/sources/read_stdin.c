@@ -71,6 +71,7 @@ int		write_lines_in_file(int fd, t_data *data, char *fname, char *end)
 	char		*line;
 	int			error;
 
+	error = 0;
 	line = rl_gets_without_hist(QUAOTE_PROMT, &error);
 	while (line && end && ft_strcmp(line, end) != 0 && error == 0)
 	{
