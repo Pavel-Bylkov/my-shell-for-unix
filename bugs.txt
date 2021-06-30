@@ -67,13 +67,3 @@ or:		ls: aaaaaaaa: No such file or directory
 [562] cal >/tmp ; echo $?
 
 [565] echo aaaaaaaaa >/tmp >/tmp >/ ; echo $?
-
-
-
-
-<<<<<<< HEAD
-=======
-172
-
-echo INVALID
->>>>>>> pavel
