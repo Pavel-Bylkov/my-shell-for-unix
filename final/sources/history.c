@@ -1,87 +1,45 @@
-#include "my_shell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   history.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
+/*   Updated: 2021/06/30 17:34:35 by aamarei          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-t_history		*new_history(char *str)
+#include "minishell.h"
+
+void	ft_add_history(char *str)
 {
-	t_history	*rez;
+	int		fd_hist;
 
-	rez = (t_history *)malloc(sizeof(*rez));
-	if (rez == NULL)
-		return (NULL);
-	rez->line = NULL;
-	rez->next = NULL;
-	rez->prev = NULL;
-	ft_change_struct(&rez, str);
-	return (rez);
-}
-
-void	history_add_front(t_history **lst, t_history *new)
-{
-	if (lst != NULL && new != NULL)
+	fd_hist = open(".history", O_WRONLY | O_CREAT | O_APPEND, 0666);
+	if (fd_hist > 0)
 	{
-		if (*lst != NULL)
-		{
-			new->next = *lst;
-			new->next->prev = new;
-		}
-		*lst = new;
+		ft_putendl_fd(str, fd_hist);
+		close(fd_hist);
 	}
+	add_history(str);
 }
 
-void	ft_change_struct(t_history **list, char *s)
+void	load_history(void)
 {
-	if ((*list)->line != NULL)
-		free((*list)->line);
-	(*list)->line = ft_strdup(s);
-}
+	int		fd_hist;
+	char	*line;
 
-void	ft_last_in_struct(t_history **list, char *str)
-{
-	while ((*list)->prev != NULL)
-		*list = (*list)->prev;
-	ft_change_struct(list, str);
-}
-
-void save_history(t_data *data)
-{
-    if (data->history->line[0] != '\0') //если последняя команда не пустая - записываем в файл истории
+	fd_hist = open(".history", O_RDONLY);
+	if (fd_hist < 0)
+		return ;
+	line = NULL;
+	while (get_next_line(fd_hist, &line) > 0)
 	{
-		write(data->fd_hist, data->history->line, ft_strlen(data->history->line));
-		write(data->fd_hist, "\n", 1);
-	}
-}
-
-void				ft_historyclear(t_history **lst)
-{
-	t_history	*tmp;
-
-	while (*lst)
-	{
-		tmp = (*lst)->next;
-		if ((*lst)->line)
-			free((*lst)->line);
-		free((*lst));
-		*lst = tmp;
-	}
-}
-
-void		load_history(t_data *data)
-{
-	char		*line;
-
-	data->fd_hist = open(".history", O_CREAT | O_RDWR, 0666);
-    if (data->fd_hist < 0)
-        ft_exit_errcode(151, data);
-    line = NULL;
-    while (get_next_line(data->fd_hist, &line) > 0)
-	{
-		history_add_front(&(data->history), new_history(line));
-		free(line);
-		line = NULL;
-	}
-    if (line != NULL)
-    {
-		history_add_front(&(data->history), new_history(line));
+		add_history(line);
 		free(line);
 	}
-	history_add_front(&(data->history), new_history(""));
+	if (line != NULL)
+		free(line);
+	close(fd_hist);
 }

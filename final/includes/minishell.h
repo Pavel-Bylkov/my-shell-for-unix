@@ -164,6 +164,9 @@ int					unexpected_eof_infile(char *str);
 int					unexpected_token(char *str, int flag);
 int					is_spec_chr(char c, char *str);
 int					is_redirects(char *str, int *i, char *s);
+int					check_number(char *str);
+void				ft_add_history(char *str);
+void				load_history(void);
 
 int					ft_export(t_data *data, t_pars *pars);
 void				ft_out_export(t_data data);

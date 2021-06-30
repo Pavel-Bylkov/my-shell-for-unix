@@ -6,7 +6,7 @@
 /*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 10:56:25 by aamarei           #+#    #+#             */
-/*   Updated: 2021/06/29 11:05:44 by aamarei          ###   ########.fr       */
+/*   Updated: 2021/06/30 15:21:14 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_command_err_slesh(char *name_f)
 	struct stat	buff;
 
 	if (opendir(name_f) != NULL)
-		return (ft_output_err_aam(126, name_f, ": is a directory\n", NULL));
+		return (ft_output_err_aam(1, name_f, ": Is a directory\n", NULL));
 	else
 	{
 		if (stat(name_f, &buff) >= 0)

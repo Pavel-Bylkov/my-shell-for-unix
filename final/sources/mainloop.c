@@ -14,7 +14,7 @@
 
 static void	eof_exit(t_data *data)
 {
-	add_history("exit");
+	ft_add_history("exit");
 	free_struct(data);
 	write(1, "  \e[2D", 6);
 	write(1, "exit\n", 5);
@@ -83,6 +83,7 @@ void	main_loop(t_data *data)
 	int		error;
 
 	error = 0;
+	load_history();
 	while (1)
 	{
 		error = ft_readline(data);

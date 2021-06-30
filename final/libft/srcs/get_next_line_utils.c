@@ -3,82 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Created: 2020/11/20 11:09:36 by aamarei           #+#    #+#             */
+/*   Updated: 2021/06/30 18:16:28 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*gnl_strjoin(char *s1, char const *s2)
-{
-	char	*res;
-	char	*tmp;
-	size_t	len1;
-	size_t	len2;
-
-	if (s2 == NULL)
-		return (NULL);
-	if (s1 == NULL)
-		len1 = 0;
-	else
-		len1 = gnl_strlen(s1);
-	len2 = gnl_strlen(s2);
-	res = (char *)malloc(len1 + len2 + 1);
-	if (res == NULL)
-		return (NULL);
-	tmp = res;
-	while (len1 != 0 && len1-- != 0)
-		*tmp++ = *s1++;
-	while (len2 != 0 && len2-- != 0)
-		*tmp++ = *s2++;
-	*tmp = '\0';
-	return (res);
-}
-
-size_t	gnl_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-char	*gnl_str_endl(char *s)
+char	*ft_strjoin_gnl(char *s1, char *s2)
 {
 	char	*str;
+	int		i;
+	int		k;
 
-	if (s == NULL)
+	i = ft_strlen(s1);
+	k = ft_strlen(s2);
+	str = (char *)malloc(i + k + 1);
+	if (str == NULL)
 		return (NULL);
-	str = s;
-	while (*str)
-	{
-		if (*str == '\n')
-			return (str);
-		str++;
-	}
-	return (NULL);
+	i = -1;
+	while (s1 && s1[++i])
+		str[i] = s1[i];
+	k = 0;
+	while (s2 && s2[k])
+		str[i++] = s2[k++];
+	str[i] = '\0';
+	free(s1);
+	return (str);
 }
 
-char	*gnl_strdup(const char *str)
+int	ft_in_set(char *str, char c)
 {
-	char	*src;
-	size_t	len;
-	char	*dst;
-	char	*strcp;
+	int		t;
 
-	len = gnl_strlen(str);
-	src = (char *)str;
-	dst = (char *)malloc(len + 1);
-	if (NULL == dst)
+	t = 1;
+	if (str == NULL)
+		return (0);
+	while (str[t - 1] != c && str[t - 1] != '\0')
+		t++;
+	if (str[t - 1] == '\0')
+		t = 0;
+	return (t);
+}
+
+char	*ft_trim(char *str, int n)
+{
+	char	*rez;
+	int		i;
+
+	i = 0;
+	while (str[n + i])
+		i++;
+	rez = (char *)malloc(i + 1);
+	if (!rez)
 		return (NULL);
-	strcp = dst;
-	while (len-- != 0)
-		*strcp++ = *src++;
-	*strcp = '\0';
-	return (dst);
+	i = 0;
+	while (str[n + i])
+	{
+		rez[i] = str[n + i];
+		i++;
+	}
+	rez[i] = '\0';
+	free(str);
+	return (rez);
 }

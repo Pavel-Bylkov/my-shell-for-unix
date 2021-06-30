@@ -6,7 +6,7 @@
 /*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 08:33:39 by aamarei           #+#    #+#             */
-/*   Updated: 2021/06/29 10:55:15 by aamarei          ###   ########.fr       */
+/*   Updated: 2021/06/30 14:25:08 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,9 @@ void	ft_exit_two(t_pars par)
 {
 	int	num;
 
-	num = 0;
-	if (ft_isnum_aam(par.argv[1]) == 1)
-	{
-		num = ft_atoi(par.argv[1]);
+	num = check_number(par.argv[1]);
+	if (num != -1)
 		exit(num);
-	}
 	else
 	{
 		ft_output_err_aam(-1, "exit: ", par.argv[1],

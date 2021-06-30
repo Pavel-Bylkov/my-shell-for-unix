@@ -3,105 +3,102 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Created: 2020/11/13 20:06:23 by aamarei           #+#    #+#             */
+/*   Updated: 2021/06/30 18:16:04 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	free_str(char **cur, char **buf)
+int	ft_exit_free(char **line, char *remainder)
 {
-	if (*cur != NULL)
-		free(*cur);
-	*cur = NULL;
-	if (*buf != NULL)
-		free(*buf);
-	*buf = NULL;
+	if (*line)
+		free(*line);
+	if (remainder)
+		free(remainder);
 	return (-1);
 }
 
-static int	get_cur_line(char **cur, char **line, char *p_n, char **buf)
+int	add_str_in_line(char **str, char *buf, char **remainder, int n)
 {
-	char	*new;
-
-	*p_n = '\0';
-	*line = gnl_strdup(*cur);
-	if (!(*line))
-		return (free_str(cur, buf));
-	new = gnl_strdup(++p_n);
-	if (!new)
+	if (n == 0)
+		*str = ft_strjoin_gnl(*str, buf);
+	else
 	{
-		free(*line);
-		*line = NULL;
-		return (free_str(cur, buf));
+		buf[n - 1] = '\0';
+		*str = ft_strjoin_gnl(*str, buf);
+		*remainder = ft_strjoin_gnl(*remainder, &buf[n]);
+		free(buf);
+		if (!(*str) || !(*remainder))
+			return (-1);
+		return (1);
 	}
-	free_str(cur, buf);
-	*cur = new;
-	return (1);
-}
-
-static int	eof_checker(char **cur, char **line, ssize_t i, char **buf)
-{
-	char	*p_n;
-	char	empty[1];
-
-	if (i < 0)
-		return (free_str(cur, buf));
-	p_n = gnl_str_endl(*cur);
-	if (*cur && p_n)
-		return (get_cur_line(cur, line, p_n, buf));
-	if (*cur != NULL)
-	{
-		*line = *cur;
-		*cur = NULL;
-		free_str(cur, buf);
-		return (0);
-	}
-	empty[0] = '\0';
-	*line = gnl_strdup(empty);
-	if (*line == NULL)
-		return (free_str(cur, buf));
-	free_str(cur, buf);
 	return (0);
 }
 
-int	read_lines(t_rl_my	*tmp, int fd, char **line)
+int	ft_gnl_work(int fd, char **str, char **remainder)
 {
-	ssize_t		i;
+	char		*buf;
+	int			n;
+	int			k;
 
-	i = read(fd, tmp->buf, BUFFER_SIZE);
-	while (i > 0)
+	buf = (char *)malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (-1);
+	n = read(fd, buf, BUFFER_SIZE);
+	while (n > 0)
 	{
-		tmp->buf[i] = '\0';
-		tmp->tmp = tmp->arr;
-		tmp->arr = gnl_strjoin(tmp->tmp, tmp->buf);
-		if (!tmp->arr)
-			return (free_str(&(tmp->tmp), &(tmp->buf)));
-		if (tmp->tmp != NULL)
-			free(tmp->tmp);
-		tmp->p_n = gnl_str_endl(tmp->arr);
-		if (tmp->p_n)
-			return (get_cur_line(&(tmp->arr), line, tmp->p_n, &(tmp->buf)));
-		i = read(fd, tmp->buf, BUFFER_SIZE);
+		buf[n] = '\0';
+		n = ft_in_set(buf, '\n');
+		k = add_str_in_line(str, buf, remainder, n);
+		if (k != 0)
+			return (k);
+		if (!(*str))
+			return (-1);
+		n = read(fd, buf, BUFFER_SIZE);
 	}
-	return (eof_checker(&(tmp->arr), line, i, &(tmp->buf)));
+	free(buf);
+	return (0);
+}
+
+int	next_line(int fd, int n, char **remainder, char **line)
+{
+	*line = ft_strjoin_gnl(*line, *remainder);
+	if (!*remainder)
+	{
+		*remainder = (char *)malloc(1);
+		if (!(*remainder))
+			return (-1);
+	}
+	**remainder = '\0';
+	n = ft_gnl_work(fd, line, remainder);
+	if (!*line || n == -1)
+		free(*line);
+	return (n);
 }
 
 int	get_next_line(int fd, char **line)
 {
-	static char	*arr[1025];
-	t_rl_my		tmp;
+	static char	*remainder;
+	int			n;
+	char		buf[1];
 
-	if (BUFFER_SIZE > 0)
-		tmp.buf = (char *)malloc(BUFFER_SIZE + 1);
-	if (fd < 0 || fd > 1024 || !line || BUFFER_SIZE < 1 || !tmp.buf)
+	if (!line || BUFFER_SIZE <= 0 || fd < 0 || read(fd, buf, 0) < 0)
 		return (-1);
-	*line = NULL;
-	tmp.arr = arr[fd];
-	if (read(fd, tmp.buf, 0) < 0)
-		return (free_str(&(tmp.arr), &(tmp.buf)));
-	return (read_lines(&tmp, fd, line));
+	*line = (char *)malloc(1);
+	*line[0] = '\0';
+	n = ft_in_set(remainder, '\n');
+	if (!n)
+		return (next_line(fd, n, &remainder, line));
+	else
+	{
+		remainder[n - 1] = '\0';
+		*line = ft_strjoin_gnl(*line, remainder);
+		remainder = ft_trim(remainder, n);
+		if (!(*line) || !remainder)
+			return (ft_exit_free(line, remainder));
+	}
+	return (1);
 }

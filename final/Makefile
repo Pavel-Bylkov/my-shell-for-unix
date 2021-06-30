@@ -42,6 +42,7 @@ FLS			= \
 			tmp_files_tools \
 			str_utils \
 			tools \
+			history \
 			errors \
 			clears \
 			ft_minishell_pipe_aam \
@@ -62,7 +63,8 @@ FLS			= \
 			ft_minishell_init_aam \
 			ft_minishell_choice_aam \
 			ft_minishell_utils_aam \
-			ft_minishell_build_aam
+			ft_minishell_build_aam \
+			ft_redirect_aam
 
 SRC			= $(FLS)
 
@@ -86,12 +88,12 @@ $(OBJDIR):
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
 
-$(LIBFT):	FORCE
+$(LIBFT):	#FORCE
 	@echo '---Making libft ------'
 	$(MAKE) -C $(LIBDIR)
 	@echo 'Making libft done'
 
-FORCE:
+#FORCE:
 
 clean:
 	$(MAKE) clean	-C $(LIBDIR)

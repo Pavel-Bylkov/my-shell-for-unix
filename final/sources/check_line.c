@@ -22,7 +22,7 @@ int	how_is_how(char *str, int i)
 	{
 		if (str[i] == ' ')
 			return (6);
-		if (str[i] == ')' && brackets_is_open(str, i) < 0)
+		if (str[i] == ')' && brackets_is_open(str, i + 1) < 0)
 			return (7);
 		if (str[i] == '(')
 			return (8);
@@ -61,7 +61,8 @@ int	check_spec_redir(char *str, int i, int flag)
 	f = 0;
 	if (flag >= 0 && flag <= 2)
 	{
-		while (--j > -1 && how_is_how(str, j) > 2 && f == 0)
+		while (--j > -1 && (how_is_how(str, j) > 2 || how_is_how(str, j) == -1)
+				 && f == 0)
 			f = (how_is_how(str, j) == 5 || how_is_how(str, j) == 3);
 		if (f == 0 && count_chr(str, str[i], i) != 2)
 			return (unexpected_token(ft_strdupn(&str[i],

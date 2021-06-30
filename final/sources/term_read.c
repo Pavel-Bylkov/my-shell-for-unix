@@ -28,7 +28,8 @@ void	open_close_fd(int k, int fd)
 		{
 			close(savefd);
 			savefd = 0;
-			signal(SIGINT, SIG_IGN);
+			signal(SIGINT, int_handler2);
+			signal(SIGQUIT, int_handler2);
 		}
 	}
 }

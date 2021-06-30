@@ -6,40 +6,11 @@
 /*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 09:57:12 by aamarei           #+#    #+#             */
-/*   Updated: 2021/06/29 09:57:13 by aamarei          ###   ########.fr       */
+/*   Updated: 2021/06/30 17:36:39 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_redirect_aam(t_pars *pars, t_fdesk *fd)
-{
-	t_redir		*red;
-
-	red = pars->redirect;
-	while (red)
-	{
-		if (red->f_spec[0] == '>' && red->f_spec[1] == '\0')
-		{
-			ft_open_file(&fd->fd_r, red, 1, 1);
-			if (fd->fd_r < 0)
-				return (ft_command_err_aam(red->out));
-		}
-		if (red->f_spec[0] == '<' && red->f_spec[1] == '\0')
-		{
-			ft_open_file(&fd->fd_w, red, 0, 2);
-			if (fd->fd_w < 0)
-			{
-				ft_open_file(&fd->fd_r, red, 1, 0);
-				return (ft_command_err_aam(red->out));
-			}
-		}
-		if (red->f_spec[0] == '>' && red->f_spec[1] == '>')
-			ft_open_file(&fd->fd_r, red, 1, 3);
-		red = red->next;
-	}
-	return (0);
-}
 
 void	ft_pipe_open_aam(t_pars *pars, t_fdesk *fd)
 {

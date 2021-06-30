@@ -29,7 +29,7 @@ char	*get_line_slash(char *line, char *tmp, int *error)
 	if (NULL == line)
 		return (NULL);
 	line = ft_g_strjoin(tmp, -1, 0, line);
-	add_history(line);
+	ft_add_history(line);
 	return (line);
 }
 
@@ -42,7 +42,7 @@ char	*get_line_quaote(char *line, char *tmp, int *error, int len)
 		line = ft_g_strjoin(tmp, 0, 1, line);
 	else
 		line = ft_g_strjoin(tmp, 0, 0, line);
-	add_history(line);
+	ft_add_history(line);
 	return (line);
 }
 

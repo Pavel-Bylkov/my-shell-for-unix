@@ -63,3 +63,27 @@ int	ft_atoi(const char *nptr)
 	res = res / 10;
 	return ((flag < 0) * -res + (flag >= 0) * res);
 }
+
+unsigned long long	ft_atoi_llu(const char *nptr)
+{
+	int					i;
+	unsigned long int	res;
+	int					n;
+
+	i = 0;
+	res = 0;
+	while (nptr[i] == ' ' || nptr[i] == '\n' || nptr[i] == '\f'
+		|| nptr[i] == '\r' || nptr[i] == '\t' || nptr[i] == '\v')
+		i++;
+	check_sign(nptr, &i);
+	n = len_number(&nptr[i]);
+	if (n > 19)
+		return (0);
+	while (nptr[i + 1] && nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		res = res + nptr[i++] - 48;
+		res *= 10;
+	}
+	res = res + nptr[i] - 48;
+	return (res);
+}

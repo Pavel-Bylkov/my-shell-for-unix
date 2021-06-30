@@ -6,7 +6,7 @@
 /*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 09:56:47 by aamarei           #+#    #+#             */
-/*   Updated: 2021/06/29 10:23:55 by aamarei          ###   ########.fr       */
+/*   Updated: 2021/06/30 15:16:44 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,21 @@ int	ft_choice_command_build(t_pars *pars, t_data *data)
 	int		status;
 	int		fd_st[2];
 
-	ft_redirect_aam(pars, data->fdesk);
-	if (pars->count > 1 || pars->counter > 1)
-		ft_choice_command_pipe(data, pars);
-	else
+	status = ft_redirect_aam(pars, data->fdesk);
+	if (status == 0)
 	{
-		ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
-		status = ft_build_in_aam(data, pars);
-		ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
-		if (status != 0)
-			return (status);
+		if (pars->count > 1 || pars->counter > 1)
+			ft_choice_command_pipe(data, pars);
+		else
+		{
+			ft_build_open_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+			status = ft_build_in_aam(data, pars);
+			ft_build_close_aam(data->fdesk, &fd_st[0], &fd_st[1]);
+			if (status != 0)
+				return (status);
+		}
 	}
-	return (0);
+	return (status);
 }
 
 void	ft_choice_command_pipe(t_data *data, t_pars *pars)

@@ -47,6 +47,7 @@ char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *big, const char *little,
 						size_t len);
 int					ft_atoi(const char *nptr);
+unsigned long long	ft_atoi_llu(const char *nptr);
 void				*ft_calloc(size_t number, size_t size);
 char				*ft_strdup(const char *str);
 char				*ft_strdupn(const char *str, size_t len);

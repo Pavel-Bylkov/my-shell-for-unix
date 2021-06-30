@@ -6,7 +6,7 @@
 /*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/06/30 10:18:20 by aamarei          ###   ########.fr       */
+/*   Updated: 2021/06/30 17:33:47 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,28 @@ char	*ft_g_strjoin(char *str1, int n, int k, char *str2)
 	ft_free((void **)&str1);
 	ft_free((void **)&str2);
 	return (res);
+}
+
+int	check_number(char *str)
+{
+	int					i;
+	unsigned long long	rez;
+
+	if (((int)ft_strlen(str) > 19 && str[0] != '-')
+		|| ft_strcmp(str, "9223372036854775808") == 0
+		|| ft_strcmp(str, "9223372036854775809") == 0
+		|| (int)ft_strlen(str) > 20)
+		return (-1);
+	i = -1;
+	while (str[++i])
+	{
+		if (ft_isdigit(str[i]) || (i == 0 && str[i] == '-'))
+			continue ;
+		return (-1);
+	}
+	rez = ft_atoi_llu(str);
+	rez = rez % 256;
+	if (str[0] == '-')
+		return (256 - (int)rez);
+	return ((int)rez);
 }

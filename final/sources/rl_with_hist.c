@@ -25,6 +25,15 @@ void	int_handler(int status)
 	return ;
 }
 
+void	int_handler2(int status)
+{
+	if (status == SIGINT)
+		write(1, "\n", 1);
+	if (status == SIGQUIT)
+		write(1, "\e[2D", 4);
+	return ;
+}
+
 char 	*rl_gets_with_add_hist(char *promt)
 {
 	char	*line;
@@ -39,6 +48,8 @@ char 	*rl_gets_with_add_hist(char *promt)
 		ft_putstr_fd(promt, 1);
 	}
 	if (line && *line)
-		add_history(line);
+		ft_add_history(line);
+	signal(SIGINT, int_handler2);
+	signal(SIGQUIT, int_handler2);
 	return (line);
 }
