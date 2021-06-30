@@ -69,7 +69,7 @@ SRC			= $(FLS)
 OBJ			= $(addprefix $(OBJDIR), $(SRC:=.o))
 DFLS		= $(SRC:=.d)
 
-all: $(LIBFT)
+all: $(LIBFT) | $(NAME)
 	$(MAKE) $(NAME)
 
 $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c $(HEADER)
