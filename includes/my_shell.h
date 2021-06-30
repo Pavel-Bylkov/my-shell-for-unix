@@ -121,6 +121,8 @@ void				find_path(t_data *data, t_pars *tmp);
 void				print_pars(t_data *data);
 void				free_struct(t_data *data);
 char				*term_readline(char *promt, int *error);
+void				ft_press_key(char **line, int pos, int *error);
+void				handler_close(int sig);
 int					ft_putchar(int c);
 char				*ft_del_symbol(char *str, int i);
 char				*ft_add_symbol_str(char *str, char c, int i);

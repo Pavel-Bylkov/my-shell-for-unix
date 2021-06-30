@@ -62,59 +62,6 @@ void	choise_keys(char *str, char **line, int *pos)
 		ft_key_symbol(line, str, pos);
 }
 
-void	open_close_fd(int k, int fd)
-{
-	static int	savefd;
-
-	if (k == 0)
-		savefd = fd;
-	else
-	{
-		close(savefd);
-	}	
-}
-
-void	hand_c(int sig)
-{
-	if (sig == SIGINT)
-		open_close_fd(1, 0);
-	return ;
-}	
-
-void	ft_press_key(char **line, int pos, int *error)
-{
-	char	str[5];
-	int		l;
-	int		fd;
-
-	fd = dup(0);
-	signal(SIGINT, hand_c);
-	signal(SIGQUIT, SIG_IGN);
-	open_close_fd(0, fd);
-	*line = (char *)malloc(sizeof(char) + 1);
-	*line[0] = '\0';
-	ft_memset(str, 0, 5);
-	l = read(fd, str, 5);    //! Проверить на ошибку чтения
-	if (l < 0)
-		*error = 1;
-	while (ft_strncmp(str, "\n", 1) != 0 && l > 0 && 
-		!(pos == 0 && !ft_strncmp(str, "\x04", 1)) && *error == 0)
-	{
-		choise_keys(str, line, &pos);
-		ft_memset(str, 0, 5);
-		l = read(fd, str, 5);
-		if (l < 0)
-			*error = 1;
-	}
-	if ((pos == 0 && !ft_strncmp(str, "\x04", 1)) || *error == 1)
-	{
-		g_free(*line);
-		*line = NULL;
-	}
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
 char	*term_readline(char *promt, int *error)
 {
 	struct termios	term;

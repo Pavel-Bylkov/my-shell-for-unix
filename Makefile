@@ -37,6 +37,7 @@ FLS			= \
 			rl_with_hist \
 			rl_without_hist \
 			term_rl \
+			term_read \
 			term_keys \
 			tmp_files_tools \
 			str_utils \
