@@ -72,7 +72,7 @@ DFLS		= $(SRC:=.d)
 all: $(LIBFT)
 	$(MAKE) $(NAME)
 
-$(OBJ):			$(OBJDIR) $(OBJDIR)%.o: $(SRCDIR)%.c $(HEADER)
+$(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c $(HEADER)
 	@$(CC)		$(CFLAGS) $(INCLUDES) -c $< -o $@ -MMD
 	@echo "Compiled $@"
 
@@ -86,9 +86,6 @@ $(OBJDIR):
 	@mkdir -p $@
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
-
-tester:
-	./tests/test_42fr.sh
 
 $(LIBFT):	FORCE
 	@echo '---Making libft ------'

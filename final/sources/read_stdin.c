@@ -82,7 +82,7 @@ int		write_lines_in_file(int fd, t_data *data, char *fname, char *end)
 	close(fd);
 	new = tmp_files_new(data->count_files + 1, fname);
 	tmp_files_add_back(&(data->tmp_files), new);
-	ft_free(&line);
+	ft_free((void **)&line);
 	return (error);
 }
 
@@ -102,7 +102,7 @@ int		read_tmp_stdin(t_data *data, char *str, int error)
 		data->count_files += 1;
 	}
 	else
-		ft_free(&fname);
-	ft_free(&end_input);
+		ft_free((void **)&fname);
+	ft_free((void **)&end_input);
 	return (error);
 }

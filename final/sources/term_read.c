@@ -71,5 +71,5 @@ void	ft_press_key(char **line, int pos, int *error)
 	}
 	open_close_fd(1, 0);
 	if ((pos == 0 && !ft_strncmp(str, "\x04", 1)) || *error == 1)
-		ft_free(line);
+		ft_free((void **)line);
 }

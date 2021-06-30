@@ -59,7 +59,7 @@ char	*get_abs_path(char	*abs_path, char *path, char *name, int *flag)
 			close(fd);
 		}
 		else
-			ft_free(&abs_path);
+			ft_free((void **)&abs_path);
 		i[0] = i[1] + (path[i[1]] == ':') * 1;
 	}
 	return (abs_path);
@@ -77,7 +77,7 @@ char	*search_in_path(t_data *data, char *name)
 		abs_path = get_abs_path(NULL, path, name, &flag);
 		if (flag)
 		{
-			ft_free(&name);
+			ft_free((void **)&name);
 			return (abs_path);
 		}
 	}

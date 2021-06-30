@@ -21,15 +21,15 @@ void			ft_tmp_files_clear(t_tmp_files **lst)
 	{
 		head = *lst;
 		unlink(head->fname);
-		ft_free(&(head->fname));
+		ft_free((void **)&(head->fname));
 		head = head->next;
-		ft_free(lst);
+		ft_free((void **)lst);
 		while (head != NULL)
 		{
 			tmp = head->next;
 			unlink(head->fname);
-			ft_free(&(head->fname));
-			ft_free(&head);
+			ft_free((void **)&(head->fname));
+			ft_free((void **)&head);
 			head = tmp;
 		}
 		*lst = NULL;

@@ -32,7 +32,7 @@ int			ft_readline(t_data *data)
 		if (data->line == NULL)
 			eof_exit(data);
 		else if (data->line[0] == '\0')
-			ft_free(&(data->line));
+			ft_free((void **)&(data->line));
 		else
 			error = quaote_open_mode(data);
 		if (error == 1)
@@ -88,7 +88,7 @@ void		main_loop(t_data *data)
 		error = ft_readline(data);
 		data->line = brackets_clean(data->line);
 		pars_and_run(data, &error);
-		ft_free(&(data->line));
+		ft_free((void **)&(data->line));
 		ft_tmp_files_clear(&(data->tmp_files));
 		data->count_files = 0;
 	}

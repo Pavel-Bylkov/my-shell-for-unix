@@ -30,7 +30,7 @@ char	*backslash_add(char *str)
 		rez[++j] = str[i];
 	}
 	rez[++j] = '\0';
-	ft_free(&str);
+	ft_free((void **)&str);
 	return (rez);
 }
 
@@ -57,6 +57,6 @@ char	*insert_var_from_env(t_data *data, char *str)
 		buff = get_varname(str, i, data, buff);
 		i[0] = i[1] - (str[i[1]] == '\0');
 	}
-	ft_free(&str);
+	ft_free((void **)&str);
 	return (buff);
 }

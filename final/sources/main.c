@@ -40,7 +40,7 @@ int		one_run(t_data *data, char *str)
 	if (check_unexpected_token(data->line) != 0)
 		return (258);
 	pars_and_run(data, &error);
-	ft_free(&(data->line));
+	ft_free((void **)&(data->line));
 	ft_tmp_files_clear(&(data->tmp_files));
 	data->count_files = 0;
 	free_struct(data);

@@ -97,7 +97,7 @@ int			check_brakets(char *str, int i, int flag)
 		if (f[0] == 1 && f[1] == 1)
 			return (unexpected_token("(", 0));
 		if ((f[0] == 1 && f[1] == 0) || (f[0] == 2 && f[1] == 1))
-			return (unexpected_token(g_strdupanychr(&str[i + 1], ") "), 1));
+			return (unexpected_token(ft_g_strdupanychr(&str[i + 1], ") "), 1));
 	}
 	return (0);
 }

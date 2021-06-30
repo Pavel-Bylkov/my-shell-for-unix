@@ -101,7 +101,7 @@ t_pars	*pars_command(char *str, t_data *data)
 	get_fspec_commands(&str, f_spec);
 	get_argv(str, &argv);
 	new = ft_parsnew(0, NULL, argv_split(argv), f_spec);
-	ft_free(&argv);
+	ft_free((void **)&argv);
 	new->redirect = get_redirects(str, data);
 	return (new);
 }

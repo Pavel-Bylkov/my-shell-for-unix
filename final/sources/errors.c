@@ -40,8 +40,8 @@ int		unexpected_eof(char *str)
 	else if (brackets_is_open(str, len) > 0)
 		str_err = ft_g_strjoin(str_err, 0, 0, ft_strdup(")'"));
 	ft_perr(NULL, 258, NULL, str_err);
-	ft_free(&str_err);
-	ft_free(&str);
+	ft_free((void **)&str_err);
+	ft_free((void **)&str);
 	return (258);
 }
 
@@ -68,6 +68,6 @@ int		unexpected_token(char *str, int flag)
 	ft_perr(NULL, 258, NULL, strerr);
 	free(strerr);
 	if (flag)
-		ft_free(&str);
+		ft_free((void **)&str);
 	return (258);
 }

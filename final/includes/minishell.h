@@ -101,17 +101,19 @@ t_pars				*ft_parsnew(int error, char *path, char **argv,
 void				ft_parsadd_back(t_pars **lst, t_pars *new);
 void				ft_parsadd_front(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
-
+void				choise_keys(char *str, char **line, int *pos);
 t_redir				*get_redirects(char *str, t_data *data);
 void				ft_redirclear(t_redir **redir);
 t_redir				*ft_redirnew(t_data *data, int l1, int l2);
 void				ft_redir_add(t_redir **lst, t_redir *new);
 int					is_redir(char c);
-
+char				*backslash_add(char *str);
 void				ft_strcopy_fr(char **line, char *str);
 void				init_struct(t_data *data, char **envp);
 int					one_run(t_data *data, char *str);
 void				main_loop(t_data *data);
+int 				count_redir(char *str);
+void				count_pipes(t_data *data, int error);
 void				int_handler2(int status);
 int					is_endl_ignor(char *str, t_data *data);
 char				*rl_gets_without_hist(char *promt, int *error);

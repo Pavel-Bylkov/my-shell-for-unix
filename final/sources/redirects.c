@@ -75,8 +75,8 @@ void	ft_redirclear(t_redir **redir)
 	{
 		tmp = (*redir)->next;
 		if ((*redir)->out)
-			ft_free(&((*redir)->out));
-		ft_free(redir);
+			ft_free((void **)&((*redir)->out));
+		ft_free((void **)redir);
 		*redir = tmp;
 	}
 }

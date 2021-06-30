@@ -50,6 +50,6 @@ char		*brackets_clean(char *str)
 		rez[++j] = str[i];
 	}
 	rez[++j] = '\0';
-	ft_free(&str);
+	ft_free((void **)&str);
 	return (rez);
 }

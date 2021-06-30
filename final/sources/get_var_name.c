@@ -27,12 +27,6 @@ char	*get_var(char **envp, char *buff, char *str, int *i)
 	value = NULL;
 	while (str[++i[1]] && (str[i[1]] != '}' || is_var_chars(str[i[1]])))
 		varname[++i[2]] = str[i[1]];
-	// if (str[i[1]] == '{')
-	// 	while (str[++i[1]] && str[i[1]] != '}')
-	// 		varname[++i[2]] = str[i[1]];
-	// if (is_var_chars(str[i[1] + 1]))
-	// 	while (str[++i[1]] && is_var_chars(str[i[1]]))
-	// 		varname[++i[2]] = str[i[1]];
 	varname[++i[2]] = '=';
 	varname[++i[2]] = '\0';
 	if (envp)

@@ -16,7 +16,7 @@ void	ft_strcopy_fr(char **line, char *str)
 {
 	int k;
 
-	ft_free(line);
+	ft_free((void **)line);
 	k = ft_strlen(str);
 	*line = (char *)malloc(sizeof(char) * k);
 	k = 0;
@@ -58,10 +58,10 @@ char	*ft_g_strjoin(char *str1, int n, int k, char *str2)
 	{
 		tmp = str1;
 		str1 = ft_strjoin(str1, "\n");
-		ft_free(&tmp);
+		ft_free((void **)&tmp);
 	}
 	res = ft_strjoin(str1, str2);
-	ft_free(&str1);
-	ft_free(&str2);
+	ft_free((void **)&str1);
+	ft_free((void **)&str2);
 	return (res);
 }
