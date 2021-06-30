@@ -9,7 +9,7 @@ CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g
 
 INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. -I/usr/local/opt/readline/include #-I/Users/aamarei/.brew/opt/readline/include
-HEADER		= ./includes/my_shell.h
+HEADER		= ./includes/minishell.h
 
 SRCDIR		= ./sources/
 OBJDIR		= ./objs/
