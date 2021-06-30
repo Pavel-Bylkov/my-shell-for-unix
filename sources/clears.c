@@ -8,24 +8,24 @@ void		free_array(void **s)
 	{
 		i = 0;
 		while (s[i] != NULL)
-			g_free(s[i++]);
-		g_free(s);
+			ft_free(&s[i++]);
+		ft_free(&s);
 	}
 }
 
-void free_struct(t_data *data)
+void		free_struct(t_data *data)
 {
 	ft_parsclear(&(data->curr_pars));
 	free_array((void **)data->envp);
-	g_free(data->line);
-	g_free(data->index);
+	ft_free(&data->line);
+	ft_free(&data->index);
 }
 
-void	g_free(void *content)
+void		ft_free(void **content)
 {
-	if (content != NULL)
+	if (*content != NULL)
 	{
-		free(content);
-		content = NULL;
+		free(*content);
+		*content = NULL;
 	}
 }

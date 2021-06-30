@@ -2,12 +2,14 @@ NAME		= minishell
 
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
-LIBFLAGS	= -L libft -lft -lreadline  -L/Users/aamarei/.brew/opt/readline/lib # -L/usr/local/opt/readline/lib
+
+LIBFLAGS	= -L libft -lft -lreadline -ltermcap -L/usr/local/opt/readline/lib  #-L/Users/aamarei/.brew/opt/readline/lib 
 
 CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g
 
-INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/.   -I/Users/aamarei/.brew/opt/readline/include #-I/usr/local/opt/readline/include
+INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. -I/usr/local/opt/readline/include #-I/Users/aamarei/.brew/opt/readline/include
+HEADER		= ./includes/my_shell.h
 
 SRCDIR		= ./sources/
 OBJDIR		= ./objs/
@@ -17,11 +19,13 @@ FLS			= \
 			init_structs \
 			mainloop \
 			check_line \
+			pars_and_run \
 			parser \
 			pars_struct \
 			pars_command \
 			brakets_clean \
 			insert_env_var \
+			get_var_name \
 			replace_path \
 			read_stdin \
 			readdir \
@@ -33,6 +37,9 @@ FLS			= \
 			quaote_open \
 			rl_with_hist \
 			rl_without_hist \
+			term_rl \
+			term_read \
+			term_keys \
 			tmp_files_tools \
 			str_utils \
 			tools \
@@ -63,51 +70,49 @@ SRC			= $(FLS)
 OBJ			= $(addprefix $(OBJDIR), $(SRC:=.o))
 DFLS		= $(SRC:=.d)
 
-all: $(LIBFT) | $(NAME)
+all: $(LIBFT)
+	$(MAKE) $(NAME)
 
-$(NAME):		$(LIBFT) $(OBJ)
+$(OBJ):			$(OBJDIR) $(OBJDIR)%.o: $(SRCDIR)%.c $(HEADER)
+	@$(CC)		$(CFLAGS) $(INCLUDES) -c $< -o $@ -MMD
+	@echo "Compiled $@"
+
+$(NAME):		$(OBJDIR) $(LIBFT) $(OBJ)
 	@echo '----Making minishell ------'
 	#@make		-C libft/
 	$(CC)		$(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFLAGS) -o $(NAME)
 	@echo "Ready"
 
-$(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c
-	@mkdir -p	$(OBJDIR)
-	@$(CC)		$(CFLAGS) $(INCLUDES) -c $< -o $@ -MMD
-	@echo "Compiled $@"
-
-
-bonus: all
+$(OBJDIR):
+	@mkdir -p $@
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
 
 tester:
 	./tests/test_42fr.sh
 
-$(LIBFT):
+$(LIBFT):	FORCE
 	@echo '---Making libft ------'
-	@make		-C $(LIBDIR) --no-print-directory
+	$(MAKE) -C $(LIBDIR)
 	@echo 'Making libft done'
 
-libft_clean:
-	make clean	-C $(LIBDIR)
+FORCE:
 
-libft_fclean:
-	make fclean	-C $(LIBDIR)
+clean:
+	$(MAKE) clean	-C $(LIBDIR)
+	rm -rf		$(OBJDIR) *.o *.d
 
-libft_re:
-	make re		-C $(LIBDIR)
+fclean:		clean
+	$(MAKE) fclean	-C $(LIBDIR)
+	rm -f		$(NAME)
+	rm -rf		.*.tmp *.tmp
+
+re:		fclean
+	$(MAKE)
 
 norma:
 	norminette $(SRCDIR) $(LIBDIR)srcs/*.c $(LIBDIR)includes/*.h ./includes/
 
-clean:
-	rm -rf		$(OBJDIR) *.o *.d
-
-fclean:			clean
-	rm -f		$(NAME)
-	rm -rf		.*.tmp *.tmp
-
-re:				fclean all
+bonus:	all
 
 .PHONY: all debug clean fclean re bonus

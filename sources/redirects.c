@@ -1,6 +1,13 @@
 #include "my_shell.h"
 
-void		ft_redir_add(t_redir **lst, t_redir *new)
+int		is_redirects(char *str, int *i, char *s)
+{
+	return (ft_strncmp(&str[i[0]], s, 2) == 0 &&
+				backslash_is_active(str, i[0]) == 0 
+				&& quaote_is_open(str, i[0]) == 0);
+}
+
+void	ft_redir_add(t_redir **lst, t_redir *new)
 {
 	t_redir	*last;
 
@@ -15,7 +22,16 @@ void		ft_redir_add(t_redir **lst, t_redir *new)
 	}
 }
 
-t_redir		*ft_redirnew(char *f_spec, int l1, char *out, int l2)
+void	create_redir_stdin(t_redir	*rez, t_data *data)
+{
+	rez->f_spec[0] = '<';
+	rez->f_spec[1] = '\0';
+	rez->out = ft_strdup(
+		get_filename_by_index(data->tmp_files, data->count_files));
+	data->count_files -= 1;
+}
+
+t_redir	*ft_redirnew(t_data *data, int l1, int l2)
 {
 	t_redir	*rez;
 	int		j;
@@ -23,27 +39,23 @@ t_redir		*ft_redirnew(char *f_spec, int l1, char *out, int l2)
 	rez = (t_redir *)malloc(sizeof(*rez));
 	if (rez == NULL)
 		return (NULL);
-	if (ft_strncmp(f_spec, "<<", 2) != 0)
+	if (ft_strncmp(data->tmp_fcpec, "<<", 2) != 0)
 	{
 		j = -1;
 		while (++j != l1)
-			rez->f_spec[j] = f_spec[j];
+			rez->f_spec[j] = data->tmp_fcpec[j];
 		rez->f_spec[j] = '\0';
-		rez->out = ft_strdupn(out, l2);
+		rez->out = ft_strdupn(data->tmp_out, l2);
 	}
 	else
-	{
-		rez->f_spec[0] = '<';
-		rez->f_spec[1] = '\0';
-		rez->out = ft_strdup(
-			get_filename_by_index(g_data->tmp_files, g_data->count_files));
-		g_data->count_files -= 1;
-	}
+		create_redir_stdin(rez, data);
 	rez->next = NULL;
+	data->tmp_fcpec = NULL;
+	data->tmp_out = NULL;
 	return (rez);
 }
 
-void				ft_redirclear(t_redir **redir)
+void	ft_redirclear(t_redir **redir)
 {
 	t_redir	*tmp;
 
@@ -51,8 +63,8 @@ void				ft_redirclear(t_redir **redir)
 	{
 		tmp = (*redir)->next;
 		if ((*redir)->out)
-			g_free((*redir)->out);
-		g_free((*redir));
+			ft_free(&((*redir)->out));
+		ft_free(redir);
 		*redir = tmp;
 	}
 }

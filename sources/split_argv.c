@@ -1,9 +1,9 @@
 #include "my_shell.h"
 
-static size_t	get_nstrs(char *str)
+static int		get_nstrs(char *str)
 {
-	size_t	n_strs;
-	int     i;
+	int		n_strs;
+	int		i;
 	int		len;
 
 	n_strs = 0;
@@ -23,39 +23,38 @@ static size_t	get_nstrs(char *str)
 	return (n_strs);
 }
 
-static void		ft_strscpy(char **res, size_t n, char *str)
+static void		ft_strscpy(char **res, int n, char *str)
 {
-	size_t	i;
-    int     j;
+	int		i[2];
 	int		len;
 
-	i = 0;
-    j = 0;
-	while (str[j] && i < n)
+	i[0] = 0;
+	i[1] = 0;
+	while (str[i[1]] && i[0] < n)
 	{
-		while (str[j] && str[j] == ' ')
-			j++;
-        len = chr_in_str(' ', &str[j]);
+		while (str[i[1]] && str[i[1]] == ' ')
+			i[1]++;
+		len = chr_in_str(' ', &str[i[1]]);
 		if (len == -1)
-			len = ft_strlen(&str[j]);
-		res[i] = ft_strdupn(&str[j], len);
-		if (res[i++] == NULL)
+			len = ft_strlen(&str[i[1]]);
+		res[i[0]] = ft_strdupn(&str[i[1]], len);
+		if (res[i[0]++] == NULL)
 		{
 			free_array((void **)res);
 			return ;
 		}
-		j += len + 1;
-		while (str[j] && str[j] == ' ')
-			j++;
+		i[1] += len + 1;
+		while (str[i[1]] && str[i[1]] == ' ')
+			i[1]++;
 	}
-	res[i] = NULL;
+	res[i[0]] = NULL;
 }
 
 char			**argv_split(char *s)
 {
 	char	*str;
 	char	**res;
-	size_t	nstrs;
+	int		nstrs;
 
 	if (s == NULL)
 		return (NULL);
@@ -67,4 +66,3 @@ char			**argv_split(char *s)
 	ft_strscpy(res, nstrs, str);
 	return (res);
 }
-

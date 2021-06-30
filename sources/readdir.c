@@ -1,7 +1,7 @@
 #include <dirent.h>
 #include "my_shell.h"
 
-int	teamplate_cmp(char *temp, char *str)
+int		teamplate_cmp(char *temp, char *str)
 {
 	int i;
 	int j;
@@ -36,6 +36,6 @@ int		get_files(char *arg)
 		while (entry != NULL)
 			printf("  %s\n", entry->d_name);
 		closedir(dir);
-    }
+	}
 	return (0);
 }

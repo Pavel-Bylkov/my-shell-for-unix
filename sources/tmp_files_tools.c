@@ -1,6 +1,6 @@
 #include "my_shell.h"
 
-void	g_tmp_files_clear(t_tmp_files **lst)
+void			ft_tmp_files_clear(t_tmp_files **lst)
 {
 	t_tmp_files	*head;
 	t_tmp_files	*tmp;
@@ -9,22 +9,22 @@ void	g_tmp_files_clear(t_tmp_files **lst)
 	{
 		head = *lst;
 		unlink(head->fname);
-		g_free(head->fname);
+		ft_free(&(head->fname));
 		head = head->next;
-		g_free(*lst);
+		ft_free(lst);
 		while (head != NULL)
 		{
 			tmp = head->next;
 			unlink(head->fname);
-			g_free(head->fname);
-			g_free(head);
+			ft_free(&(head->fname));
+			ft_free(&head);
 			head = tmp;
 		}
 		*lst = NULL;
 	}
 }
 
-t_tmp_files	*tmp_files_new(int index, char *fname)
+t_tmp_files		*tmp_files_new(int index, char *fname)
 {
 	t_tmp_files	*new;
 
@@ -37,10 +37,10 @@ t_tmp_files	*tmp_files_new(int index, char *fname)
 	return (new);
 }
 
-int		tmp_files_size(t_tmp_files *lst)
+int				tmp_files_size(t_tmp_files *lst)
 {
 	t_tmp_files	*cur;
-	int		n;
+	int			n;
 
 	if (lst == NULL)
 		return (0);
@@ -56,7 +56,7 @@ int		tmp_files_size(t_tmp_files *lst)
 	return (n);
 }
 
-void	tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new)
+void			tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new)
 {
 	t_tmp_files	*last;
 
@@ -71,7 +71,7 @@ void	tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new)
 	}
 }
 
-char		*get_filename_by_index(t_tmp_files *head, int index)
+char			*get_filename_by_index(t_tmp_files *head, int index)
 {
 	t_tmp_files *tmp;
 

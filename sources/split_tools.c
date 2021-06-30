@@ -1,25 +1,25 @@
 #include "my_shell.h"
 
-int         backslash_is_active(char *str, int n)
+int		backslash_is_active(char *str, int n)
 {
-    int		i[2];
+	int	i[2];
 
 	i[0] = -1;
-    i[1] = 0;
+	i[1] = 0;
 	while (str[++i[0]] != '\0' && i[0] < n)
 	{
-        if (str[i[0]] == '\\')
+		if (str[i[0]] == '\\')
 			++i[1];
-        else
+		else
 			i[1] = 0;
-    }
-    return (i[1] > 0 && i[1] % 2 == 1);
+	}
+	return (i[1] > 0 && i[1] % 2 == 1);
 }
 
-int			quaote_is_open(char *str, int n)
+int		quaote_is_open(char *str, int n)
 {
 	int		i[2];
-	int		f[3]; // 0 - open' 1 - open" 2 - activ '\'
+	int		f[3];
 
 	i[0] = -1;
 	i[1] = 0;
@@ -32,8 +32,8 @@ int			quaote_is_open(char *str, int n)
 		{
 			f[2] = (i[1] > 0 && i[1] % 2 == 1);
 			i[1] = 0;
-        }
-        else
+		}
+		else
 			i[1] = 0;
 		if (str[i[0]] == '\'' && f[2] == 0)
 			f[0] = (f[1] == 0 && f[0] == 0);
@@ -43,7 +43,7 @@ int			quaote_is_open(char *str, int n)
 	return (f[0] + f[1] * 2);
 }
 
-int	    chr_in_str(char c, char *s)
+int		chr_in_str(char c, char *s)
 {
 	int 	i;
 
@@ -51,7 +51,7 @@ int	    chr_in_str(char c, char *s)
 	while (s[i])
 	{
 		if (s[i] == c && quaote_is_open(s, i) == 0
-            && backslash_is_active(s, i) == 0)
+				 && backslash_is_active(s, i) == 0)
 			return (i);
 		i++;
 	}
