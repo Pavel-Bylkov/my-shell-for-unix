@@ -24,7 +24,7 @@ int			ft_readline(t_data *data)
 			ft_free(&(data->line));
 		else
 			error = quaote_open_mode(data);
-		if (error == 1)
+		if (error == 1 || error == 258)
 			data->code_exit = error;
 	}
 	return (error);

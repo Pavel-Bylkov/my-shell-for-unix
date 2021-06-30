@@ -64,9 +64,6 @@ void	ft_export_join_aam(t_data *data, char *str, int size)
 		data->envp = ft_env_add(data, line, &(data->size));
 		free(line);
 	}
-	i = -1;
-	while (data->envp[++i])
-		printf("%s\n", data->envp[i]);
 }
 
 int	ft_export_loop(t_data *data, t_pars *pars)
