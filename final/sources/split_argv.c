@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   split_argv.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:15:50 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		get_nstrs(char *str)
+static int	get_nstrs(char *str)
 {
 	int		n_strs;
 	int		i;
@@ -35,7 +35,7 @@ static int		get_nstrs(char *str)
 	return (n_strs);
 }
 
-static void		ft_strscpy(char **res, int n, char *str)
+static void	ft_strscpy(char **res, int n, char *str)
 {
 	int		i[2];
 	int		len;
@@ -62,7 +62,7 @@ static void		ft_strscpy(char **res, int n, char *str)
 	res[i[0]] = NULL;
 }
 
-char			**argv_split(char *s)
+char	**argv_split(char *s)
 {
 	char	*str;
 	char	**res;

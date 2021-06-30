@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:00:03 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	get_fspec_commands(char **str, char *f_spec)
 	f_spec[i] = '\0';
 }
 
-int		str_is_fd(char *str, int n)
+int	str_is_fd(char *str, int n)
 {
 	int		i;
 
@@ -54,7 +54,7 @@ void	save_argv(char *str, char **argv, int *i)
 	i[1] = i[0];
 	while (str[i[1]] && ((!is_redir(str[i[1]]) && str[i[1]] != ' ')
 			|| (quaote_is_open(str, i[1]) != 0
-			|| backslash_is_active(str, i[1]) != 0)))
+				|| backslash_is_active(str, i[1]) != 0)))
 		i[1]++;
 	if (!is_redir(str[i[1]]) || !str_is_fd(&str[i[0]], i[1] - i[0]))
 	{
@@ -82,7 +82,7 @@ void	get_argv(char *str, char **argv)
 				i[0]++;
 			while (str[i[0]] && (str[i[0]] != ' '
 					|| (quaote_is_open(str, i[0]) != 0
-					|| backslash_is_active(str, i[0]) != 0)))
+						|| backslash_is_active(str, i[0]) != 0)))
 				i[0]++;
 		}
 		i[0] -= (str[i[0]] == '\0');
@@ -93,7 +93,7 @@ void	get_argv(char *str, char **argv)
 t_pars	*pars_command(char *str, t_data *data)
 {
 	t_pars		*new;
-	char 		f_spec[10];
+	char		f_spec[10];
 	char		*argv;
 
 	argv = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));

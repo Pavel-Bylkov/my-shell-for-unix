@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:42:08 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,34 +35,34 @@
 # define ERROR_PREFIX "minishell: "
 # define QUAOTE_PROMT "> "
 
-typedef struct		s_tmp_files
+typedef struct s_tmp_files
 {
 	int					index;
 	char				*fname;
 	struct s_tmp_files	*next;
 }					t_tmp_files;
 
-typedef struct		s_redir
+typedef struct s_redir
 {
 	char				f_spec[10];
 	char				*out;
 	struct s_redir		*next;
 }					t_redir;
 
-typedef struct		s_pwdpath
+typedef struct s_pwdpath
 {
 	char				*pwd_p;
 	char				*oldpwd_p;
 }					t_pwdpath;
 
-typedef struct		s_fdesk
+typedef struct s_fdesk
 {
 	int					**fd;
 	int					fd_r;
 	int					fd_w;
 }					t_fdesk;
 
-typedef struct		s_pars
+typedef struct s_pars
 {
 	int					count;
 	int					counter;
@@ -74,7 +74,7 @@ typedef struct		s_pars
 	struct s_pars		*next;
 }					t_pars;
 
-typedef struct		s_data
+typedef struct s_data
 {
 	char				*line;
 	t_tmp_files			*tmp_files;
@@ -90,14 +90,10 @@ typedef struct		s_data
 	char				*tmp_out;
 }					t_data;
 
-#ifdef MAIN_FILE
-t_data					*g_data;
-#else
 extern t_data			*g_data;
-#endif
 
 t_pars				*ft_parsnew(int error, char *path, char **argv,
-														char *f_spec);
+						char *f_spec);
 void				ft_parsadd_back(t_pars **lst, t_pars *new);
 void				ft_parsadd_front(t_pars **lst, t_pars *new);
 void				ft_parsclear(t_pars **lst);
@@ -112,7 +108,7 @@ void				ft_strcopy_fr(char **line, char *str);
 void				init_struct(t_data *data, char **envp);
 int					one_run(t_data *data, char *str);
 void				main_loop(t_data *data);
-int 				count_redir(char *str);
+int					count_redir(char *str);
 void				count_pipes(t_data *data, int error);
 void				int_handler2(int status);
 int					is_endl_ignor(char *str, t_data *data);
@@ -213,7 +209,7 @@ void				ft_binar_subsidiary_aam(t_data *data, t_pars *pars);
 int					ft_binar_command_aam(t_data *data, t_pars *pars);
 int					ft_command_err_aam(char *name_f);
 int					ft_output_err_aam(int code, char *str1, char *str2,
-																char *str3);
+						char *str3);
 int					ft_chrstr_in_set(char *str, char *set, int n);
 int					ft_choice_command_aam(t_data *data);
 int					ft_choice_command_waitpid(int j);

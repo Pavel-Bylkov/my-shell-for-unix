@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 09:51:51 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_perr(char *com, int code, char *str1, char *str2)
+int	ft_perr(char *com, int code, char *str1, char *str2)
 {
 	ft_putstr_fd(ERROR_PREFIX, 2);
 	if (com)
@@ -26,9 +26,9 @@ int		ft_perr(char *com, int code, char *str1, char *str2)
 	return (code);
 }
 
-int		unexpected_eof(char *str)
+int	unexpected_eof(char *str)
 {
-	char 	*str_err;
+	char	*str_err;
 	int		len;
 
 	str_err = ft_strdup("unexpected EOF while looking for matching `");
@@ -45,7 +45,7 @@ int		unexpected_eof(char *str)
 	return (258);
 }
 
-int		unexpected_eof_infile(char *str)
+int	unexpected_eof_infile(char *str)
 {
 	char	*strerr;
 
@@ -58,7 +58,7 @@ int		unexpected_eof_infile(char *str)
 	return (0);
 }
 
-int		unexpected_token(char *str, int flag)
+int	unexpected_token(char *str, int flag)
 {
 	char	*strerr;
 

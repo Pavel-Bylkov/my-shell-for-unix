@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   redirects.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:13:13 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		is_redirects(char *str, int *i, char *s)
+int	is_redirects(char *str, int *i, char *s)
 {
-	return (ft_strncmp(&str[i[0]], s, 2) == 0 &&
-				backslash_is_active(str, i[0]) == 0 
-				&& quaote_is_open(str, i[0]) == 0);
+	return (ft_strncmp(&str[i[0]], s, 2) == 0
+		&& backslash_is_active(str, i[0]) == 0
+		&& quaote_is_open(str, i[0]) == 0);
 }
 
 void	ft_redir_add(t_redir **lst, t_redir *new)
@@ -38,8 +38,8 @@ void	create_redir_stdin(t_redir	*rez, t_data *data)
 {
 	rez->f_spec[0] = '<';
 	rez->f_spec[1] = '\0';
-	rez->out = ft_strdup(
-		get_filename_by_index(data->tmp_files, data->count_files));
+	rez->out = ft_strdup(get_filename_by_index(data->tmp_files,
+				data->count_files));
 	data->count_files -= 1;
 }
 

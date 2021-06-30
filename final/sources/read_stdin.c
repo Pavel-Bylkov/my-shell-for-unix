@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   read_stdin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:11:31 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_stdin_active(char *str, t_data *data)
+int	ft_stdin_active(char *str, t_data *data)
 {
 	int		i[2];
 
@@ -44,9 +44,9 @@ char	*get_end_input(char *str, t_data *data)
 			i[0]++;
 	}
 	i[1] = i[0] - 1;
-	while (str[i[1]] && (!is_spec_chr(str[i[1]], " ;|&") ||
-			(quaote_is_open(str, i[1]) != 0 ||
-			backslash_is_active(str, i[1]) != 0)))
+	while (str[i[1]] && (!is_spec_chr(str[i[1]], " ;|&")
+			|| (quaote_is_open(str, i[1]) != 0
+				|| backslash_is_active(str, i[1]) != 0)))
 		i[1]++;
 	end_input = ft_strdupn(&str[i[0] - 1], i[1] - i[0] + 1);
 	return (quaote_backslash_clean(end_input));
@@ -65,7 +65,7 @@ char	*get_filename(t_data *data)
 	return (fname);
 }
 
-int		write_lines_in_file(int fd, t_data *data, char *fname, char *end)
+int	write_lines_in_file(int fd, t_data *data, char *fname, char *end)
 {
 	t_tmp_files	*new;
 	char		*line;
@@ -87,7 +87,7 @@ int		write_lines_in_file(int fd, t_data *data, char *fname, char *end)
 	return (error);
 }
 
-int		read_tmp_stdin(t_data *data, char *str, int error)
+int	read_tmp_stdin(t_data *data, char *str, int error)
 {
 	char	*end_input;
 	char	*fname;

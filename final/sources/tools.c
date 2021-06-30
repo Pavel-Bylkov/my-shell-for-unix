@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:22:01 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	print_pars(t_data *data)
 {
-	t_pars *tmp;
-	t_redir *last;
+	t_pars	*tmp;
+	t_redir	*last;
 	int		i;
 
 	tmp = data->curr_pars;
@@ -38,11 +38,11 @@ void	print_pars(t_data *data)
 	}
 }
 
-int run_comands(t_data *data, int error)
+int	run_comands(t_data *data, int error)
 {
 	if (error != 0)
 		return (error);
-    return (aam_main(data));
+	return (aam_main(data));
 }
 
 char	*ft_newpath(char *dir, int n, char *name)
@@ -59,7 +59,7 @@ char	*ft_newpath(char *dir, int n, char *name)
 	return (res);
 }
 
-int		is_spec_chr(char c, char *str)
+int	is_spec_chr(char c, char *str)
 {
 	int	i;
 

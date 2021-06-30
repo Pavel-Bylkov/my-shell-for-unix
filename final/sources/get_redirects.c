@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   get_redirects.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 09:52:45 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			is_redir(char c)
+int	is_redir(char c)
 {
 	return (c == '>' || c == '<' || c == '&');
 }
 
-void		add_redir(t_redir **new, char *str, int *i, t_data *data)
+void	add_redir(t_redir **new, char *str, int *i, t_data *data)
 {
 	if (!ft_isdigit(str[i[0]]))
 		i[0] = i[1];
@@ -32,14 +32,14 @@ void		add_redir(t_redir **new, char *str, int *i, t_data *data)
 	i[1] = i[3];
 	while (str[i[1]] && (str[i[1]] != ' '
 			|| (quaote_is_open(str, i[1]) != 0
-			|| backslash_is_active(str, i[1]) != 0)))
+				|| backslash_is_active(str, i[1]) != 0)))
 		i[1]++;
 	data->tmp_fcpec = &str[i[0]];
 	data->tmp_out = &str[i[3]];
 	ft_redir_add(new, ft_redirnew(data, i[2] - i[0], i[1] - i[3]));
 }
 
-t_redir		*get_redirects(char *str, t_data *data)
+t_redir	*get_redirects(char *str, t_data *data)
 {
 	t_redir		*new;
 	int			i[4];
@@ -51,7 +51,7 @@ t_redir		*get_redirects(char *str, t_data *data)
 		i[1] = i[0];
 		while (str[i[1]] && ((!is_redir(str[i[1]]) && str[i[1]] != ' ')
 				|| (quaote_is_open(str, i[1]) != 0
-				|| backslash_is_active(str, i[1]) != 0)))
+					|| backslash_is_active(str, i[1]) != 0)))
 			i[1]++;
 		if (is_redir(str[i[1]]))
 			add_redir(&new, str, i, data);

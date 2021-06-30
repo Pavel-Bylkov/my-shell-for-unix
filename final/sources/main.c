@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:40:39 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define MAIN_FILE
 #include "minishell.h"
 
-int		main(int argc, char **argv, char **envp)
+t_data		*g_data;
+
+int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 	int		error;
@@ -29,7 +30,7 @@ int		main(int argc, char **argv, char **envp)
 	return (error);
 }
 
-int		one_run(t_data *data, char *str)
+int	one_run(t_data *data, char *str)
 {
 	int		error;
 

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tmp_files_tools.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:20:48 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void			ft_tmp_files_clear(t_tmp_files **lst)
+void	ft_tmp_files_clear(t_tmp_files **lst)
 {
 	t_tmp_files	*head;
 	t_tmp_files	*tmp;
@@ -36,7 +36,7 @@ void			ft_tmp_files_clear(t_tmp_files **lst)
 	}
 }
 
-t_tmp_files		*tmp_files_new(int index, char *fname)
+t_tmp_files	*tmp_files_new(int index, char *fname)
 {
 	t_tmp_files	*new;
 
@@ -49,7 +49,7 @@ t_tmp_files		*tmp_files_new(int index, char *fname)
 	return (new);
 }
 
-int				tmp_files_size(t_tmp_files *lst)
+int	tmp_files_size(t_tmp_files *lst)
 {
 	t_tmp_files	*cur;
 	int			n;
@@ -68,7 +68,7 @@ int				tmp_files_size(t_tmp_files *lst)
 	return (n);
 }
 
-void			tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new)
+void	tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new)
 {
 	t_tmp_files	*last;
 
@@ -83,9 +83,9 @@ void			tmp_files_add_back(t_tmp_files **lst, t_tmp_files *new)
 	}
 }
 
-char			*get_filename_by_index(t_tmp_files *head, int index)
+char	*get_filename_by_index(t_tmp_files *head, int index)
 {
-	t_tmp_files *tmp;
+	t_tmp_files	*tmp;
 
 	if (head == NULL)
 		return (NULL);

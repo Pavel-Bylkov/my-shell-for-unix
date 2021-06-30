@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   replace_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:14:20 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		is_builtin(char *str)
+int	is_builtin(char *str)
 {
-	return (ft_strncmp(str, "echo", 5) == 0 ||
-			ft_strncmp(str, "cd", 3) == 0 ||
-			ft_strncmp(str, "env", 4) == 0 ||
-			ft_strncmp(str, "pwd", 4) == 0 ||
-			ft_strncmp(str, "export", 7) == 0 ||
-			ft_strncmp(str, "unset", 6) == 0 ||
-			ft_strncmp(str, "exit", 5) == 0);
+	return (ft_strncmp(str, "echo", 5) == 0
+		|| ft_strncmp(str, "cd", 3) == 0
+		|| ft_strncmp(str, "env", 4) == 0
+		|| ft_strncmp(str, "pwd", 4) == 0
+		|| ft_strncmp(str, "export", 7) == 0
+		|| ft_strncmp(str, "unset", 6) == 0
+		|| ft_strncmp(str, "exit", 5) == 0);
 }
 
 char	*get_path(t_data *data)

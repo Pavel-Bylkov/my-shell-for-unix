@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*  check_line.c                                        :+:      :+:    :+:   */
+/*   check_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 09:50:36 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			how_is_how(char *str, int i)
+int	how_is_how(char *str, int i)
 {
-	if (ft_isalpha(str[i]) || ft_isdigit(str[i]) ||
-				ft_strnchr(".*_@#$~!%%^[]{}:?-=+`/,", str[i]) != -1)
-		return (5); 
-	if (quaote_is_open(str, i) == 0 
-			&& backslash_is_active(str, i) == 0)
+	if (ft_isalpha(str[i]) || ft_isdigit(str[i])
+		|| ft_strnchr(".*_@#$~!%%^[]{}:?-=+`/,", str[i]) != -1)
+		return (5);
+	if (quaote_is_open(str, i) == 0
+		&& backslash_is_active(str, i) == 0)
 	{
 		if (str[i] == ' ')
 			return (6);
@@ -35,7 +35,7 @@ int			how_is_how(char *str, int i)
 	return (3);
 }
 
-int			count_chr(char *str, char c, int n)
+int	count_chr(char *str, char c, int n)
 {
 	int	i;
 	int	count;
@@ -52,7 +52,7 @@ int			count_chr(char *str, char c, int n)
 	return (count);
 }
 
-int			check_spec_redir(char *str, int i, int flag)
+int	check_spec_redir(char *str, int i, int flag)
 {
 	int	j;
 	int	f;
@@ -64,8 +64,8 @@ int			check_spec_redir(char *str, int i, int flag)
 		while (--j > -1 && how_is_how(str, j) > 2 && f == 0)
 			f = (how_is_how(str, j) == 5 || how_is_how(str, j) == 3);
 		if (f == 0 && count_chr(str, str[i], i) != 2)
-			return (unexpected_token(ft_strdupn(&str[i], 
-					1 + (ft_strnchr("|&", str[i + 1]) > -1)), 1));
+			return (unexpected_token(ft_strdupn(&str[i],
+						1 + (ft_strnchr("|&", str[i + 1]) > -1)), 1));
 	}
 	if (flag > 8)
 	{
@@ -77,7 +77,7 @@ int			check_spec_redir(char *str, int i, int flag)
 	return (0);
 }
 
-int			check_brakets(char *str, int i, int flag)
+int	check_brakets(char *str, int i, int flag)
 {
 	int	j;
 	int	f[2];
@@ -102,7 +102,7 @@ int			check_brakets(char *str, int i, int flag)
 	return (0);
 }
 
-int			check_unexpected_token(char *str)
+int	check_unexpected_token(char *str)
 {
 	int		flag;
 	int		i;

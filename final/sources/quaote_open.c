@@ -3,31 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   quaote_open.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 11:04:33 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		is_endl_ignor(char *str, t_data *data)
+int	is_endl_ignor(char *str, t_data *data)
 {
 	int		len;
 
 	len = ft_strlen(str);
-	return (backslash_is_active(str, len) ||
-			quaote_is_open(str, len) != 0 || str[len - 1] == '|'
-			|| ft_strncmp(&str[len - 2], "&&", 2) == 0 ||
-			brackets_is_open(str, len) > 0 || ft_stdin_active(str, data));
+	return (backslash_is_active(str, len)
+		|| quaote_is_open(str, len) != 0 || str[len - 1] == '|'
+		|| ft_strncmp(&str[len - 2], "&&", 2) == 0
+		|| brackets_is_open(str, len) > 0 || ft_stdin_active(str, data));
 }
 
 char	*get_line_slash(char *line, char *tmp, int *error)
 {
 	line = rl_gets_without_hist(QUAOTE_PROMT, error);
 	if (NULL == line)
-		exit(0);
+		return (NULL);
 	line = ft_g_strjoin(tmp, -1, 0, line);
 	add_history(line);
 	return (line);
@@ -59,7 +59,7 @@ void	read_next_line(t_data *data, char *tmp, int *error)
 		data->line = get_line_quaote(data->line, tmp, error, len);
 }
 
-int		quaote_open_mode(t_data *data)
+int	quaote_open_mode(t_data *data)
 {
 	int		error;
 	char	*tmp;

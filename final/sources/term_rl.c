@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   term_rl.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:19:52 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,12 @@ char	*term_readline(char *promt, int *error)
 	char			*term_name;
 	char			*line;
 	unsigned long	tmp;
-	
+
 	term_name = "xterm-256color";
 	tcgetattr(0, &term);
 	tmp = term.c_lflag;
 	term.c_lflag &= ~(ECHO);
-	term.c_lflag &=~(ICANON);
+	term.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
 	ft_putstr_fd(promt, 1);

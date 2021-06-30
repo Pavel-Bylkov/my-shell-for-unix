@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   split_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 10:16:35 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		get_len_command(char *str, char *chars)
+static int	get_len_command(char *str, char *chars)
 {
 	int	j;
 	int	len[3];
@@ -35,7 +35,7 @@ static int		get_len_command(char *str, char *chars)
 	return ((min == -1) * ft_strlen(str) + (min != -1) * (min + 1));
 }
 
-static int		get_ncommand(char *line, char *s)
+static int	get_ncommand(char *line, char *s)
 {
 	int		n_strs;
 	int		i;
@@ -55,7 +55,7 @@ static int		get_ncommand(char *line, char *s)
 	return (n_strs);
 }
 
-static int		commandscpy(char **res, int n, char *str, char *s)
+static int	commandscpy(char **res, int n, char *str, char *s)
 {
 	int		i;
 	int		j;
@@ -78,7 +78,7 @@ static int		commandscpy(char **res, int n, char *str, char *s)
 	return (1);
 }
 
-char			**get_commands(char *line, char *str)
+char	**get_commands(char *line, char *str)
 {
 	char	**commands;
 	int		nstrs;
@@ -94,7 +94,7 @@ char			**get_commands(char *line, char *str)
 			return (NULL);
 		if (commandscpy(commands, nstrs, line, str))
 			return (commands);
-	}	
+	}
 	if (commands != NULL)
 		free_array((void **)commands);
 	return (NULL);

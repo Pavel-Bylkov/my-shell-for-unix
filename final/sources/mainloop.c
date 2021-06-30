@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mainloop.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: whector <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aamarei <aamarei@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 07:19:20 by whector           #+#    #+#             */
-/*   Updated: 2021/03/25 07:19:22 by whector          ###   ########.fr       */
+/*   Updated: 2021/06/30 09:58:47 by aamarei          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ static void	eof_exit(t_data *data)
 	exit(EXIT_SUCCESS);
 }
 
-int			ft_readline(t_data *data)
+int	ft_readline(t_data *data)
 {
-	int error;
+	int		error;
 
 	error = 0;
 	while (data->line == NULL)
@@ -41,7 +41,7 @@ int			ft_readline(t_data *data)
 	return (error);
 }
 
-int 		count_redir(char *str)
+int	count_redir(char *str)
 {
 	int		i[2];
 
@@ -49,15 +49,15 @@ int 		count_redir(char *str)
 	i[1] = 0;
 	while (str[++i[0]] != '\0')
 	{
-		if (ft_strncmp(&str[i[0]], "<<", 2) == 0 &&
-				backslash_is_active(str, i[0]) == 0
-				&& quaote_is_open(str, i[0]) == 0)
+		if (ft_strncmp(&str[i[0]], "<<", 2) == 0
+			&& backslash_is_active(str, i[0]) == 0
+			&& quaote_is_open(str, i[0]) == 0)
 			i[1]++;
 	}
 	return (i[1]);
 }
 
-void		count_pipes(t_data *data, int error)
+void	count_pipes(t_data *data, int error)
 {
 	int		i;
 	t_pars	*tmp;
@@ -78,9 +78,9 @@ void		count_pipes(t_data *data, int error)
 	}
 }
 
-void		main_loop(t_data *data)
+void	main_loop(t_data *data)
 {
-	int error;
+	int		error;
 
 	error = 0;
 	while (1)
