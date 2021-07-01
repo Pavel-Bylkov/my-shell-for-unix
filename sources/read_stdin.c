@@ -1,6 +1,6 @@
-#include "my_shell.h"
+#include "mshell.h"
 
-int		ft_stdin_active(char *str, t_data *data)
+int	ft_stdin_active(char *str, t_data *data)
 {
 	int		i[2];
 
@@ -32,9 +32,9 @@ char	*get_end_input(char *str, t_data *data)
 			i[0]++;
 	}
 	i[1] = i[0] - 1;
-	while (str[i[1]] && (!is_spec_chr(str[i[1]], " ;|&") ||
-			(quaote_is_open(str, i[1]) != 0 ||
-			backslash_is_active(str, i[1]) != 0)))
+	while (str[i[1]] && (!is_spec_chr(str[i[1]], " ;|&")
+			|| (quaote_is_open(str, i[1]) != 0
+				|| backslash_is_active(str, i[1]) != 0)))
 		i[1]++;
 	end_input = ft_strdupn(&str[i[0] - 1], i[1] - i[0] + 1);
 	return (quaote_backslash_clean(end_input));
@@ -53,12 +53,13 @@ char	*get_filename(t_data *data)
 	return (fname);
 }
 
-int		write_lines_in_file(int fd, t_data *data, char *fname, char *end)
+int	write_lines_in_file(int fd, t_data *data, char *fname, char *end)
 {
 	t_tmp_files	*new;
 	char		*line;
 	int			error;
 
+	error = 0;
 	line = rl_gets_without_hist(QUAOTE_PROMT, &error);
 	while (line && end && ft_strcmp(line, end) != 0 && error == 0)
 	{
@@ -70,11 +71,11 @@ int		write_lines_in_file(int fd, t_data *data, char *fname, char *end)
 	close(fd);
 	new = tmp_files_new(data->count_files + 1, fname);
 	tmp_files_add_back(&(data->tmp_files), new);
-	ft_free(&line);
+	ft_free((void **)&line);
 	return (error);
 }
 
-int		read_tmp_stdin(t_data *data, char *str, int error)
+int	read_tmp_stdin(t_data *data, char *str, int error)
 {
 	char	*end_input;
 	char	*fname;
@@ -90,7 +91,7 @@ int		read_tmp_stdin(t_data *data, char *str, int error)
 		data->count_files += 1;
 	}
 	else
-		ft_free(&fname);
-	ft_free(&end_input);
+		ft_free((void **)&fname);
+	ft_free((void **)&end_input);
 	return (error);
 }

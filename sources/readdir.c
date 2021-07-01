@@ -1,5 +1,5 @@
 #include <dirent.h>
-#include "my_shell.h"
+#include "mshell.h"
 
 int		teamplate_cmp(char *temp, char *str)
 {

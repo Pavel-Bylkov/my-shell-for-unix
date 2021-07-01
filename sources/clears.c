@@ -1,6 +1,6 @@
-#include "my_shell.h"
+#include "mshell.h"
 
-void		free_array(void **s)
+void	free_array(void **s)
 {
 	size_t	i;
 
@@ -8,20 +8,20 @@ void		free_array(void **s)
 	{
 		i = 0;
 		while (s[i] != NULL)
-			ft_free(&s[i++]);
-		ft_free(&s);
+			ft_free((void **)&s[i++]);
+		ft_free((void **)&s);
 	}
 }
 
-void		free_struct(t_data *data)
+void	free_struct(t_data *data)
 {
 	ft_parsclear(&(data->curr_pars));
 	free_array((void **)data->envp);
-	ft_free(&data->line);
-	ft_free(&data->index);
+	ft_free((void **)&data->line);
+	ft_free((void **)&data->index);
 }
 
-void		ft_free(void **content)
+void	ft_free(void **content)
 {
 	if (*content != NULL)
 	{

@@ -1,16 +1,16 @@
-#include "my_shell.h"
+#include "mshell.h"
 
-int			how_is_how(char *str, int i)
+int	how_is_how(char *str, int i)
 {
-	if (ft_isalpha(str[i]) || ft_isdigit(str[i]) ||
-				ft_strnchr(".*_@#$~!%%^[]{}:?-=+`/,", str[i]) != -1)
-		return (5); 
-	if (quaote_is_open(str, i) == 0 
-			&& backslash_is_active(str, i) == 0)
+	if (ft_isalpha(str[i]) || ft_isdigit(str[i])
+		|| ft_strnchr(".*_@#$~!%%^[]{}:?-=+`/,", str[i]) != -1)
+		return (5);
+	if (quaote_is_open(str, i) == 0
+		&& backslash_is_active(str, i) == 0)
 	{
 		if (str[i] == ' ')
 			return (6);
-		if (str[i] == ')' && brackets_is_open(str, i) < 0)
+		if (str[i] == ')' && brackets_is_open(str, i + 1) < 0)
 			return (7);
 		if (str[i] == '(')
 			return (8);
@@ -23,7 +23,7 @@ int			how_is_how(char *str, int i)
 	return (3);
 }
 
-int			count_chr(char *str, char c, int n)
+int	count_chr(char *str, char c, int n)
 {
 	int	i;
 	int	count;
@@ -40,7 +40,7 @@ int			count_chr(char *str, char c, int n)
 	return (count);
 }
 
-int			check_spec_redir(char *str, int i, int flag)
+int	check_spec_redir(char *str, int i, int flag)
 {
 	int	j;
 	int	f;
@@ -49,11 +49,12 @@ int			check_spec_redir(char *str, int i, int flag)
 	f = 0;
 	if (flag >= 0 && flag <= 2)
 	{
-		while (--j > -1 && how_is_how(str, j) > 2 && f == 0)
+		while (--j > -1 && (how_is_how(str, j) > 2 || how_is_how(str, j) == -1)
+			&& f == 0)
 			f = (how_is_how(str, j) == 5 || how_is_how(str, j) == 3);
 		if (f == 0 && count_chr(str, str[i], i) != 2)
-			return (unexpected_token(ft_strdupn(&str[i], 
-					1 + (ft_strnchr("|&", str[i + 1]) > -1)), 1));
+			return (unexpected_token(ft_strdupn(&str[i],
+						1 + (ft_strnchr("|&", str[i + 1]) > -1)), 1));
 	}
 	if (flag > 8)
 	{
@@ -65,7 +66,7 @@ int			check_spec_redir(char *str, int i, int flag)
 	return (0);
 }
 
-int			check_brakets(char *str, int i, int flag)
+int	check_brakets(char *str, int i, int flag)
 {
 	int	j;
 	int	f[2];
@@ -85,12 +86,12 @@ int			check_brakets(char *str, int i, int flag)
 		if (f[0] == 1 && f[1] == 1)
 			return (unexpected_token("(", 0));
 		if ((f[0] == 1 && f[1] == 0) || (f[0] == 2 && f[1] == 1))
-			return (unexpected_token(g_strdupanychr(&str[i + 1], ") "), 1));
+			return (unexpected_token(ft_g_strdupanychr(&str[i + 1], ") "), 1));
 	}
 	return (0);
 }
 
-int			check_unexpected_token(char *str)
+int	check_unexpected_token(char *str)
 {
 	int		flag;
 	int		i;

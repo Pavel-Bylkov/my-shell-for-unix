@@ -1,14 +1,14 @@
-#include "my_shell.h"
+#include "mshell.h"
 
-int		is_builtin(char *str)
+int	is_builtin(char *str)
 {
-	return (ft_strncmp(str, "echo", 5) == 0 ||
-			ft_strncmp(str, "cd", 3) == 0 ||
-			ft_strncmp(str, "env", 4) == 0 ||
-			ft_strncmp(str, "pwd", 4) == 0 ||
-			ft_strncmp(str, "export", 7) == 0 ||
-			ft_strncmp(str, "unset", 6) == 0 ||
-			ft_strncmp(str, "exit", 5) == 0);
+	return (ft_strncmp(str, "echo", 5) == 0
+		|| ft_strncmp(str, "cd", 3) == 0
+		|| ft_strncmp(str, "env", 4) == 0
+		|| ft_strncmp(str, "pwd", 4) == 0
+		|| ft_strncmp(str, "export", 7) == 0
+		|| ft_strncmp(str, "unset", 6) == 0
+		|| ft_strncmp(str, "exit", 5) == 0);
 }
 
 char	*get_path(t_data *data)
@@ -47,7 +47,7 @@ char	*get_abs_path(char	*abs_path, char *path, char *name, int *flag)
 			close(fd);
 		}
 		else
-			ft_free(&abs_path);
+			ft_free((void **)&abs_path);
 		i[0] = i[1] + (path[i[1]] == ':') * 1;
 	}
 	return (abs_path);
@@ -65,7 +65,7 @@ char	*search_in_path(t_data *data, char *name)
 		abs_path = get_abs_path(NULL, path, name, &flag);
 		if (flag)
 		{
-			ft_free(&name);
+			ft_free((void **)&name);
 			return (abs_path);
 		}
 	}
@@ -80,7 +80,7 @@ void	find_path(t_data *data, t_pars *tmp)
 	name = tmp->argv[0];
 	if (!name)
 		return ;
-	if (!is_builtin(name) && chr_in_str('/', name) == -1
+	if (!is_builtin(name) && chr_in_str('/', name) == -1 && ft_strlen(name)
 		&& ft_strcmp(name, ".") != 0 && ft_strcmp(name, "..") != 0)
 		tmp->argv[0] = search_in_path(data, name);
 	if (chr_in_str('/', tmp->argv[0]) > -1)

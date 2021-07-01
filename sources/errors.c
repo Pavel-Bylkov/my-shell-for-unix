@@ -1,6 +1,6 @@
-#include "my_shell.h"
+#include "mshell.h"
 
-int		ft_perr(char *com, int code, char *str1, char *str2)
+int	ft_perr(char *com, int code, char *str1, char *str2)
 {
 	ft_putstr_fd(ERROR_PREFIX, 2);
 	if (com)
@@ -14,9 +14,9 @@ int		ft_perr(char *com, int code, char *str1, char *str2)
 	return (code);
 }
 
-int		unexpected_eof(char *str)
+int	unexpected_eof(char *str)
 {
-	char 	*str_err;
+	char	*str_err;
 	int		len;
 
 	str_err = ft_strdup("unexpected EOF while looking for matching `");
@@ -28,12 +28,12 @@ int		unexpected_eof(char *str)
 	else if (brackets_is_open(str, len) > 0)
 		str_err = ft_g_strjoin(str_err, 0, 0, ft_strdup(")'"));
 	ft_perr(NULL, 258, NULL, str_err);
-	ft_free(&str_err);
-	ft_free(&str);
+	ft_free((void **)&str_err);
+	ft_free((void **)&str);
 	return (258);
 }
 
-int		unexpected_eof_infile(char *str)
+int	unexpected_eof_infile(char *str)
 {
 	char	*strerr;
 
@@ -46,7 +46,7 @@ int		unexpected_eof_infile(char *str)
 	return (0);
 }
 
-int		unexpected_token(char *str, int flag)
+int	unexpected_token(char *str, int flag)
 {
 	char	*strerr;
 
@@ -56,6 +56,6 @@ int		unexpected_token(char *str, int flag)
 	ft_perr(NULL, 258, NULL, strerr);
 	free(strerr);
 	if (flag)
-		ft_free(&str);
+		ft_free((void **)&str);
 	return (258);
 }

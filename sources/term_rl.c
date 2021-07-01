@@ -1,4 +1,4 @@
-#include "my_shell.h"
+#include "mshell.h"
 
 char	*ft_del_symbol(char *str, int i)
 {
@@ -68,12 +68,12 @@ char	*term_readline(char *promt, int *error)
 	char			*term_name;
 	char			*line;
 	unsigned long	tmp;
-	
+
 	term_name = "xterm-256color";
 	tcgetattr(0, &term);
 	tmp = term.c_lflag;
 	term.c_lflag &= ~(ECHO);
-	term.c_lflag &=~(ICANON);
+	term.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
 	ft_putstr_fd(promt, 1);

@@ -1,18 +1,17 @@
-#include "my_shell.h"
+#include "mshell.h"
 
 static void	eof_exit(t_data *data)
 {
-	add_history("exit");
-	write_history(HISTORY_FILE); //! не использовать в финальной версии
+	ft_add_history("exit");
 	free_struct(data);
 	write(1, "  \e[2D", 6);
 	write(1, "exit\n", 5);
 	exit(EXIT_SUCCESS);
 }
 
-int			ft_readline(t_data *data)
+int	ft_readline(t_data *data)
 {
-	int error;
+	int		error;
 
 	error = 0;
 	while (data->line == NULL)
@@ -21,7 +20,7 @@ int			ft_readline(t_data *data)
 		if (data->line == NULL)
 			eof_exit(data);
 		else if (data->line[0] == '\0')
-			ft_free(&(data->line));
+			ft_free((void **)&(data->line));
 		else
 			error = quaote_open_mode(data);
 		if (error == 1 || error == 258)
@@ -30,7 +29,7 @@ int			ft_readline(t_data *data)
 	return (error);
 }
 
-int 		count_redir(char *str)
+int	count_redir(char *str)
 {
 	int		i[2];
 
@@ -38,15 +37,15 @@ int 		count_redir(char *str)
 	i[1] = 0;
 	while (str[++i[0]] != '\0')
 	{
-		if (ft_strncmp(&str[i[0]], "<<", 2) == 0 &&
-				backslash_is_active(str, i[0]) == 0
-				&& quaote_is_open(str, i[0]) == 0)
+		if (ft_strncmp(&str[i[0]], "<<", 2) == 0
+			&& backslash_is_active(str, i[0]) == 0
+			&& quaote_is_open(str, i[0]) == 0)
 			i[1]++;
 	}
 	return (i[1]);
 }
 
-void		count_pipes(t_data *data, int error)
+void	count_pipes(t_data *data, int error)
 {
 	int		i;
 	t_pars	*tmp;
@@ -67,17 +66,18 @@ void		count_pipes(t_data *data, int error)
 	}
 }
 
-void		main_loop(t_data *data)
+void	main_loop(t_data *data)
 {
-	int error;
+	int		error;
 
-	error = read_history(HISTORY_FILE); //! не использовать в финальной версии 	error = 0;
+	error = 0;
+	load_history();
 	while (1)
 	{
 		error = ft_readline(data);
 		data->line = brackets_clean(data->line);
 		pars_and_run(data, &error);
-		ft_free(&(data->line));
+		ft_free((void **)&(data->line));
 		ft_tmp_files_clear(&(data->tmp_files));
 		data->count_files = 0;
 	}

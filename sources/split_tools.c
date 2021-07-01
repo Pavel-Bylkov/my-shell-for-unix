@@ -1,6 +1,6 @@
-#include "my_shell.h"
+#include "mshell.h"
 
-int		backslash_is_active(char *str, int n)
+int	backslash_is_active(char *str, int n)
 {
 	int	i[2];
 
@@ -16,7 +16,7 @@ int		backslash_is_active(char *str, int n)
 	return (i[1] > 0 && i[1] % 2 == 1);
 }
 
-int		quaote_is_open(char *str, int n)
+int	quaote_is_open(char *str, int n)
 {
 	int		i[2];
 	int		f[3];
@@ -28,7 +28,7 @@ int		quaote_is_open(char *str, int n)
 	{
 		if (str[i[0]] == '\\' && f[0] == 0)
 			++i[1];
-		else if (str[i[0]] == '\'' ||  str[i[0]] == '"')
+		else if (str[i[0]] == '\'' || str[i[0]] == '"')
 		{
 			f[2] = (i[1] > 0 && i[1] % 2 == 1);
 			i[1] = 0;
@@ -43,15 +43,15 @@ int		quaote_is_open(char *str, int n)
 	return (f[0] + f[1] * 2);
 }
 
-int		chr_in_str(char c, char *s)
+int	chr_in_str(char c, char *s)
 {
-	int 	i;
+	int		i;
 
 	i = 0;
 	while (s[i])
 	{
 		if (s[i] == c && quaote_is_open(s, i) == 0
-				 && backslash_is_active(s, i) == 0)
+			&& backslash_is_active(s, i) == 0)
 			return (i);
 		i++;
 	}

@@ -1,4 +1,4 @@
-#include "my_shell.h"
+#include "mshell.h"
 
 void	open_close_fd(int k, int fd)
 {
@@ -16,10 +16,10 @@ void	open_close_fd(int k, int fd)
 		{
 			close(savefd);
 			savefd = 0;
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
+			signal(SIGINT, int_handler2);
+			signal(SIGQUIT, int_handler2);
 		}
-	}	
+	}
 }
 
 void	handler_close(int sig)
@@ -29,7 +29,7 @@ void	handler_close(int sig)
 	return ;
 }
 
-int		read_next_chr(int fd, char *str, int *error)
+int	read_next_chr(int fd, char *str, int *error)
 {
 	int		l;
 
@@ -51,13 +51,13 @@ void	ft_press_key(char **line, int pos, int *error)
 	*line = (char *)malloc(sizeof(char) + 1);
 	*line[0] = '\0';
 	l = read_next_chr(fd, str, error);
-	while (ft_strncmp(str, "\n", 1) != 0 && l > 0 && 
-		!(pos == 0 && !ft_strncmp(str, "\x04", 1)) && *error == 0)
+	while (ft_strncmp(str, "\n", 1) != 0 && l > 0
+		&& !(pos == 0 && !ft_strncmp(str, "\x04", 1)) && *error == 0)
 	{
 		choise_keys(str, line, &pos);
 		l = read_next_chr(fd, str, error);
 	}
 	open_close_fd(1, 0);
 	if ((pos == 0 && !ft_strncmp(str, "\x04", 1)) || *error == 1)
-		ft_free(line);
+		ft_free((void **)line);
 }

@@ -1,4 +1,4 @@
-#include "my_shell.h"
+#include "mshell.h"
 
 char	*quaote_backslash_clean(char *str)
 {
@@ -11,19 +11,19 @@ char	*quaote_backslash_clean(char *str)
 	j = -1;
 	while (str[++i])
 	{
-		if (str[i] == '\\' && backslash_is_active(str, i) == 0 &&
-				quaote_is_open(str, i) == 0)
+		if (str[i] == '\\' && backslash_is_active(str, i) == 0
+			&& quaote_is_open(str, i) == 0)
 			continue ;
-		if (str[i] == '\'' && backslash_is_active(str, i) == 0 &&
-				(quaote_is_open(str, i) == 1 || quaote_is_open(str, i) != 2))
+		if (str[i] == '\'' && backslash_is_active(str, i) == 0
+			&& (quaote_is_open(str, i) == 1 || quaote_is_open(str, i) != 2))
 			continue ;
-		if (str[i] == '"' && backslash_is_active(str, i) == 0 &&
-				(quaote_is_open(str, i) == 2 || quaote_is_open(str, i) != 1))
+		if (str[i] == '"' && backslash_is_active(str, i) == 0
+			&& (quaote_is_open(str, i) == 2 || quaote_is_open(str, i) != 1))
 			continue ;
 		rez[++j] = str[i];
 	}
 	rez[++j] = '\0';
-	ft_free(&str);
+	ft_free((void **)&str);
 	return (rez);
 }
 
@@ -55,9 +55,9 @@ void	check_open_redir(t_pars *new)
 	while (tmp != NULL)
 	{
 		fd = 0;
-		if (ft_strcmp(tmp->f_spec, ">")  == 0)
+		if (ft_strcmp(tmp->f_spec, ">") == 0)
 			fd = open(tmp->out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		else if (ft_strcmp(tmp->f_spec, ">>")  == 0)
+		else if (ft_strcmp(tmp->f_spec, ">>") == 0)
 			fd = open(tmp->out, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		if (fd > 0)
 			close(fd);
@@ -65,7 +65,7 @@ void	check_open_redir(t_pars *new)
 	}
 }
 
-int		check_and_clean_pars(t_data *data, t_pars *new)
+int	check_and_clean_pars(t_data *data, t_pars *new)
 {
 	int		fd;
 
@@ -84,11 +84,11 @@ int		check_and_clean_pars(t_data *data, t_pars *new)
 	return (0);
 }
 
-int 	parse_line(char *line, t_data *data, int error)
+int	parse_line(char *line, t_data *data, int error)
 {
-	int i;
-	char **commands;
-	t_pars *new;
+	int		i;
+	char	**commands;
+	t_pars	*new;
 
 	if (error != 0)
 		return (error);

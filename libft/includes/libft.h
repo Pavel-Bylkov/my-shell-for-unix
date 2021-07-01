@@ -5,7 +5,7 @@
 # include <stdlib.h>
 # include <stddef.h>
 
-typedef struct		s_list
+typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
@@ -33,8 +33,9 @@ char				*ft_strchr(const char *s, int c);
 ssize_t				ft_strnchr(const char *s, char c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *big, const char *little,
-															size_t len);
+						size_t len);
 int					ft_atoi(const char *nptr);
+unsigned long long	ft_atoi_llu(const char *nptr);
 void				*ft_calloc(size_t number, size_t size);
 char				*ft_strdup(const char *str);
 char				*ft_strdupn(const char *str, size_t len);
@@ -58,6 +59,6 @@ void				ft_lstdelone(t_list *lst, void (*del)(void*));
 void				ft_lstclear(t_list **lst, void (*del)(void*));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
-														void (*del)(void *));
+						void (*del)(void *));
 
 #endif

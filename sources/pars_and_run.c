@@ -1,4 +1,4 @@
-#include "my_shell.h"
+#include "mshell.h"
 
 void	pars_and_run(t_data *data, int *error)
 {
@@ -16,7 +16,6 @@ void	pars_and_run(t_data *data, int *error)
 			*error = parse_line(clines[i], data, *error);
 			count_pipes(data, *error);
 			data->code_exit = run_comands(data, *error);
-			//print_pars(data);
 			ft_parsclear(&(data->curr_pars));
 			data->count_files += count_redir(clines[i]);
 		}

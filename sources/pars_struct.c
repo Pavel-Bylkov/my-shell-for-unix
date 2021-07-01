@@ -1,4 +1,4 @@
-#include "my_shell.h"
+#include "mshell.h"
 
 t_pars	*ft_parsnew(int error, char *path, char **argv, char *f_spec)
 {
@@ -68,12 +68,12 @@ void	ft_parsclear(t_pars **lst)
 	{
 		tmp = (*lst)->next;
 		if ((*lst)->path)
-			ft_free(&((*lst)->path));
+			ft_free((void **)&((*lst)->path));
 		if ((*lst)->argv)
 			free_array((void **)((*lst)->argv));
 		if ((*lst)->redirect)
 			ft_redirclear(&((*lst)->redirect));
-		ft_free(lst);
+		ft_free((void **)lst);
 		*lst = tmp;
 	}
 }

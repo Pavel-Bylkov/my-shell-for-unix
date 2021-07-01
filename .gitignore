@@ -1,7 +1,7 @@
 .history
 .*.tmp
 *.tmp
-minishell
+mshell
 *.log
 
 # Prerequisites

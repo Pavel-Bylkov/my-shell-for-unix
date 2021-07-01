@@ -1,15 +1,15 @@
-NAME		= minishell
+NAME		= mshell
 
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
 
-LIBFLAGS	= -L libft -lft -lreadline -ltermcap -L/usr/local/opt/readline/lib  #-L/Users/aamarei/.brew/opt/readline/lib 
+LIBFLAGS	= -L libft -lft -lreadline -ltermcap -L/usr/local/opt/readline/lib
 
 CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g
 
-INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. -I/usr/local/opt/readline/include #-I/Users/aamarei/.brew/opt/readline/include
-HEADER		= ./includes/my_shell.h
+INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. -I/usr/local/opt/readline/include
+HEADER		= ./includes/mshell.h
 
 SRCDIR		= ./sources/
 OBJDIR		= ./objs/
@@ -28,7 +28,6 @@ FLS			= \
 			get_var_name \
 			replace_path \
 			read_stdin \
-			readdir \
 			split_argv \
 			split_command \
 			split_tools \
@@ -43,43 +42,44 @@ FLS			= \
 			tmp_files_tools \
 			str_utils \
 			tools \
+			history \
 			errors \
 			clears \
-			../ft_minishell_pipe_aam \
-			../ft_str_utils_aam \
-			../ft_export_main_aam \
-			../ft_export_aam \
-			../ft_unset_main_aam \
-			../ft_unset_aam \
-			../ft_env_main_aam \
-			../ft_exit_main_aam \
-			../ft_pwd_main_aam \
-			../ft_cd_main_aam \
-			../ft_cd_aam \
-			../ft_echo_main_aam \
-			../ft_output_err_aam \
-			../ft_cd_path_aam \
-			../ft_minishell_main_aam \
-			../ft_minishell_init_aam \
-			../ft_minishell_choice_aam \
-			../ft_minishell_utils_aam \
-			../ft_minishell_build_aam
+			ft_minishell_pipe_aam \
+			ft_str_utils_aam \
+			ft_export_main_aam \
+			ft_export_aam \
+			ft_unset_main_aam \
+			ft_unset_aam \
+			ft_env_main_aam \
+			ft_exit_main_aam \
+			ft_pwd_main_aam \
+			ft_cd_main_aam \
+			ft_cd_aam \
+			ft_echo_main_aam \
+			ft_output_err_aam \
+			ft_cd_path_aam \
+			ft_minishell_main_aam \
+			ft_minishell_init_aam \
+			ft_minishell_choice_aam \
+			ft_minishell_utils_aam \
+			ft_minishell_build_aam \
+			ft_redirect_aam
 
 SRC			= $(FLS)
 
 OBJ			= $(addprefix $(OBJDIR), $(SRC:=.o))
 DFLS		= $(SRC:=.d)
 
-all: $(LIBFT)
+all: $(LIBFT) | $(NAME)
 	$(MAKE) $(NAME)
 
-$(OBJ):			$(OBJDIR) $(OBJDIR)%.o: $(SRCDIR)%.c $(HEADER)
+$(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c $(HEADER)
 	@$(CC)		$(CFLAGS) $(INCLUDES) -c $< -o $@ -MMD
 	@echo "Compiled $@"
 
 $(NAME):		$(OBJDIR) $(LIBFT) $(OBJ)
 	@echo '----Making minishell ------'
-	#@make		-C libft/
 	$(CC)		$(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFLAGS) -o $(NAME)
 	@echo "Ready"
 
@@ -88,15 +88,12 @@ $(OBJDIR):
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
 
-tester:
-	./tests/test_42fr.sh
-
-$(LIBFT):	FORCE
+$(LIBFT):	#FORCE
 	@echo '---Making libft ------'
 	$(MAKE) -C $(LIBDIR)
 	@echo 'Making libft done'
 
-FORCE:
+#FORCE:
 
 clean:
 	$(MAKE) clean	-C $(LIBDIR)

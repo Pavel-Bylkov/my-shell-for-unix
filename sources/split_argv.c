@@ -1,6 +1,6 @@
-#include "my_shell.h"
+#include "mshell.h"
 
-static int		get_nstrs(char *str)
+static int	get_nstrs(char *str)
 {
 	int		n_strs;
 	int		i;
@@ -23,7 +23,7 @@ static int		get_nstrs(char *str)
 	return (n_strs);
 }
 
-static void		ft_strscpy(char **res, int n, char *str)
+static void	ft_strscpy(char **res, int n, char *str)
 {
 	int		i[2];
 	int		len;
@@ -50,7 +50,7 @@ static void		ft_strscpy(char **res, int n, char *str)
 	res[i[0]] = NULL;
 }
 
-char			**argv_split(char *s)
+char	**argv_split(char *s)
 {
 	char	*str;
 	char	**res;

@@ -1,9 +1,9 @@
-#include "my_shell.h"
+#include "mshell.h"
 
 void	print_pars(t_data *data)
 {
-	t_pars *tmp;
-	t_redir *last;
+	t_pars	*tmp;
+	t_redir	*last;
 	int		i;
 
 	tmp = data->curr_pars;
@@ -26,11 +26,11 @@ void	print_pars(t_data *data)
 	}
 }
 
-int run_comands(t_data *data, int error)
+int	run_comands(t_data *data, int error)
 {
 	if (error != 0)
 		return (error);
-    return (aam_main(data));
+	return (aam_main(data));
 }
 
 char	*ft_newpath(char *dir, int n, char *name)
@@ -42,12 +42,12 @@ char	*ft_newpath(char *dir, int n, char *name)
 	dir_tmp = ft_strdupn(dir, n);
 	tmp = ft_strjoin(dir_tmp, "/");
 	res = ft_strjoin(tmp, name);
-	ft_free(&dir_tmp);
-	ft_free(&tmp);
+	ft_free((void **)&dir_tmp);
+	ft_free((void **)&tmp);
 	return (res);
 }
 
-int		is_spec_chr(char c, char *str)
+int	is_spec_chr(char c, char *str)
 {
 	int	i;
 

@@ -1,4 +1,4 @@
-#include "my_shell.h"
+#include "mshell.h"
 
 void	init_struct(t_data *data, char **envp)
 {
