@@ -50,11 +50,9 @@ int	ft_export_join_loop(t_data *data, char *str, char **line, int size)
 void	ft_export_join_aam(t_data *data, char *str, int size)
 {
 	int		pos;
-	int		i;
 	char	*line;
 	int		fl;
 
-	i = -1;
 	pos = ft_char_in_str(str, '+');
 	fl = ft_export_join_loop(data, str, &line, size);
 	if (fl == 0)

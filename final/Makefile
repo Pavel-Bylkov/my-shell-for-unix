@@ -3,12 +3,12 @@ NAME		= minishell
 LIBDIR		= ./libft/
 LIBFT		= $(LIBDIR)libft.a
 
-LIBFLAGS	= -L libft -lft -lreadline -L/Users/aamarei/.brew/opt/readline/lib -ltermcap -L/usr/local/opt/readline/lib
+LIBFLAGS	= -L libft -lft -lreadline -ltermcap # -L/Users/aamarei/.brew/opt/readline/lib -L/usr/local/opt/readline/lib
 
 CFLAGS		= -Wall -Wextra -Werror
 CC			= gcc -g
 
-INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/.  -I/Users/aamarei/.brew/opt/readline/include -I/usr/local/opt/readline/include
+INCLUDES	= -I ./includes/. -I $(LIBDIR)includes/. # -I/Users/aamarei/.brew/opt/readline/include -I/usr/local/opt/readline/include
 HEADER		= ./includes/minishell.h
 
 SRCDIR		= ./sources/

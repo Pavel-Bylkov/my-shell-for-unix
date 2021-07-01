@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <term.h>
+# include <curses.h>
 # include <termios.h>
 # include <readline/readline.h>
 # include <readline/history.h>
